@@ -4,13 +4,19 @@ const { Schema } = mongoose;
 const ArticleSchema = new Schema<ArticleDocument>({
   artno: { type: String },
   description: { type: String, required: true },
-  qty: { type: String, required: true },
+  qty: { type: Number, required: true },
   condition: { type: String, required: true },
   inventoryLocation: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "InventoryLocation",
     required: true,
   },
+  images: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   purchaseValue: { type: Number },
   comment: String,
   issue: [
@@ -29,9 +35,10 @@ const ArticleSchema = new Schema<ArticleDocument>({
 export interface ArticleDocument {
   artno: string;
   description: string;
-  qty: string;
+  qty: number;
   condition: string;
   inventoryLocation: Types.ObjectId;
+  images: string[];
   purchaseValue?: number;
   comment?: string;
   issue?: [
