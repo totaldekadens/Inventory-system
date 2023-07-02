@@ -12,6 +12,22 @@ export default async function handler(
   await dbConnect();
 
   switch (method) {
+    case "GET":
+      try {
+        const getAllArticles: ArticleDocument[] | null = await Article.find({});
+
+        if (!getAllArticles) {
+          return res.status(500).send({
+            success: false,
+            data: "Server problem",
+          });
+        }
+
+        res.status(200).json({ success: true, data: getAllArticles });
+      } catch (error) {
+        res.status(400).json({ success: false, data: error });
+      }
+      break;
     case "POST":
       try {
         if (!req.body) {
@@ -27,6 +43,38 @@ export default async function handler(
         res.status(201).json({ success: true, data: article._id });
       } catch (error) {
         res.json({ success: false, data: error });
+      }
+      break;
+
+    case "PUT":
+      try {
+        if (!req.body) {
+          return res
+            .status(400)
+            .json({ success: false, data: "Bad request, check body" });
+        }
+
+        // Continue with this one later. Not done.
+
+        const updateArticle: ArticleDocument = new Article(req.body);
+
+        updateArticle.lastUpdated = todayDate;
+
+        const article = await Article.findOneAndUpdate(
+          { _id: req.body._id },
+          updateArticle,
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+
+        if (!article) {
+          return res.status(400).json({ success: false });
+        }
+        res.status(200).json({ success: true, data: article });
+      } catch (error) {
+        res.status(400).json({ success: false, data: error });
       }
       break;
     default:
