@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 const { Schema } = mongoose;
 
 const InventoryLocationSchema = new Schema<InventoryLocationDocument>({
@@ -6,6 +6,7 @@ const InventoryLocationSchema = new Schema<InventoryLocationDocument>({
 });
 
 export interface InventoryLocationDocument {
+  _id?: Types.ObjectId;
   name: string;
 }
 

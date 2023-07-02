@@ -45,7 +45,20 @@ export default async function handler(
 
     case "PUT":
       try {
-        // Fix validation for already existing inventoryLocation except the one you update
+        const inventoryLocationTaken: InventoryLocationDocument[] | null =
+          await InventoryLocation.find({
+            name: caseInsensitive(req.body.name),
+          });
+
+        if (
+          inventoryLocationTaken.length > 0 &&
+          inventoryLocationTaken[0]._id != req.body._id
+        ) {
+          return res.status(403).send({
+            success: false,
+            data: "Location name already exist",
+          });
+        }
 
         const updateInventoryLocation: InventoryLocationDocument =
           new InventoryLocation(req.body);
@@ -58,6 +71,7 @@ export default async function handler(
             runValidators: true,
           }
         );
+
         if (!inventoryLocation) {
           return res.status(400).json({ success: false });
         }
