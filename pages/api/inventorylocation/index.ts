@@ -14,10 +14,29 @@ export default async function handler(
   await dbConnect();
 
   switch (method) {
+    case "GET":
+      try {
+        const getAllInventoryLocations: InventoryLocationDocument[] | null =
+          await InventoryLocation.find({});
+
+        if (!getAllInventoryLocations) {
+          return res.status(500).send({
+            success: false,
+            data: "Server problem",
+          });
+        }
+
+        res.status(200).json({ success: true, data: getAllInventoryLocations });
+      } catch (error) {
+        res.status(400).json({ success: false, data: error });
+      }
+      break;
     case "POST":
       try {
         if (!req.body) {
-          return res.status(400).json({ success: false, data: "Bad request" });
+          return res
+            .status(400)
+            .json({ success: false, data: "Bad request, check body" });
         }
         const inventoryLocationTaken: InventoryLocationDocument | null =
           await InventoryLocation.findOne({
@@ -45,6 +64,11 @@ export default async function handler(
 
     case "PUT":
       try {
+        if (!req.body) {
+          return res
+            .status(400)
+            .json({ success: false, data: "Bad request, check body" });
+        }
         const inventoryLocationTaken: InventoryLocationDocument[] | null =
           await InventoryLocation.find({
             name: caseInsensitive(req.body.name),
