@@ -12,6 +12,22 @@ export default async function handler(
   await dbConnect();
 
   switch (method) {
+    case "GET":
+      try {
+        const getAllUsers: UserDocument[] | null = await User.find({});
+
+        if (!getAllUsers) {
+          return res.status(500).send({
+            success: false,
+            data: "Server problem",
+          });
+        }
+
+        res.status(200).json({ success: true, data: getAllUsers });
+      } catch (error) {
+        res.status(400).json({ success: false, data: error });
+      }
+      break;
     case "POST":
       try {
         if (!req.body) {
@@ -36,6 +52,43 @@ export default async function handler(
         res.status(201).json({ success: true, data: user._id });
       } catch (error) {
         res.json({ success: false, data: error });
+      }
+      break;
+
+    case "PUT":
+      try {
+        if (!req.body) {
+          return res
+            .status(400)
+            .json({ success: false, data: "Bad request, check body" });
+        }
+
+        const updateUser: UserDocument = new User();
+
+        updateUser.firstName = req.body.firstName;
+        updateUser.lastName = req.body.lastName;
+        updateUser.email = req.body.email;
+
+        if (req.body.password) {
+          updateUser.setPassword(req.body.password);
+          delete updateUser.password;
+        }
+
+        const user = await User.findOneAndUpdate(
+          { _id: req.body._id },
+          updateUser,
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+
+        if (!user) {
+          return res.status(400).json({ success: false });
+        }
+        res.status(200).json({ success: true, data: user });
+      } catch (error) {
+        res.status(400).json({ success: false, data: error });
       }
       break;
     default:

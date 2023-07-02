@@ -20,7 +20,7 @@ export default async function handler(
 
         let newArticle: ArticleDocument = new Article(req.body);
 
-        newArticle.createdDate = todayDate; // Check if it works
+        newArticle.createdDate = todayDate;
 
         const article = await Article.create(newArticle);
 

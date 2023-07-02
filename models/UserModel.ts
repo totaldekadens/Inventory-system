@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 const { Schema } = mongoose;
 
 const UserSchema = new Schema<UserDocument>({
@@ -13,6 +13,7 @@ const UserSchema = new Schema<UserDocument>({
 });
 
 export interface UserDocument {
+  _id?: Types.ObjectId;
   firstName: string;
   lastName: string;
   username: string;
