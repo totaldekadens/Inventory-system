@@ -65,13 +65,32 @@ export default async function handler(
 
         const updateUser: UserDocument = new User();
 
+        updateUser._id = req.body._id;
         updateUser.firstName = req.body.firstName;
         updateUser.lastName = req.body.lastName;
         updateUser.email = req.body.email;
 
-        if (req.body.password) {
-          updateUser.setPassword(req.body.password);
-          delete updateUser.password;
+        // Verifies old password before the new password sets. Took from [...nextauth].js
+        if (req.body.newPassword) {
+          const user = await User.findOne({ username: req.body.username }).then(
+            (res) => {
+              if (!res) {
+                throw Error("invalid user");
+              }
+              if (res) {
+                if (res.validPassword(String(req.body.oldPassword))) {
+                  return res;
+                }
+                throw Error("incorrect password");
+              }
+              throw Error("invalid user");
+            }
+          );
+
+          if (user) {
+            updateUser.setPassword(req.body.newPassword);
+            delete updateUser.password;
+          }
         }
 
         const user = await User.findOneAndUpdate(
