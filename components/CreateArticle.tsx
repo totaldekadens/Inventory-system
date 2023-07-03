@@ -5,6 +5,7 @@ import UploadForm from "./uploadForm";
 import SelectLocation from "./SelectLocation";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { IconX } from "@tabler/icons-react";
+import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
 
 // Yup schema to validate the form
 const schema = Yup.object().shape({
@@ -29,8 +30,8 @@ interface Props {
 const CreateArticle = ({ setHidden }: Props) => {
   const [selectedLocation, setSelectedLocation] =
     useState<InventoryLocationDocument | null>(null);
-  const [value, setValue] = useState<any>([]);
   const [imageList, setImageList] = useState<string[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
   const [error, setError] = useState<string>("");
   const formik = useFormik({
     initialValues: {
@@ -65,6 +66,8 @@ const CreateArticle = ({ setHidden }: Props) => {
           images: imageList,
           inventoryLocation: selectedLocation?._id,
         };
+        // Upload images to Cloudinary
+        await UploadToImagesToServer(fileList);
 
         const request = {
           method: "POST",
@@ -181,8 +184,8 @@ const CreateArticle = ({ setHidden }: Props) => {
           />
           <UploadForm
             setImageList={setImageList}
-            setValue={setValue}
-            value={value}
+            setValue={setFileList}
+            value={fileList}
           />
           {error ? <ErrorMessage message={error} /> : null}
           <div className="mt-5 w-full flex justify-end">
