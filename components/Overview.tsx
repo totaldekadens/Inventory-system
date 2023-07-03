@@ -13,11 +13,12 @@ import {
   articleContext,
 } from "./context/ArticleProvider";
 import CreateArticle from "./CreateArticle";
+import Link from "next/link";
 
 const Overview = () => {
   const { currentArticles, setCurrentArticles, articles } =
     useContext(articleContext);
-  const [hidden, setHidden] = useState<boolean>(true);
+  /*  const [hidden, setHidden] = useState<boolean>(true); */
   const [updatedArticles, setUpdatedArticles] = useState<
     PopulatedArticleDocument[] | []
   >([]);
@@ -101,17 +102,21 @@ const Overview = () => {
               Här har du en lista på dina samtliga lagerförda artiklar
             </p>
           </div>
-          <div className="mt-16 mb-16 sm:ml-16 sm:mt-0 sm:flex-none">
+
+          <Link
+            href="/create"
+            className="mt-16 mb-16 sm:ml-16 sm:mt-0 sm:flex-none"
+          >
             <button
-              onClick={() => {
+              /*  onClick={() => {
                 setHidden(false);
-              }}
+              }} */
               type="button"
               className=" rounded-md flex items-center bg-gray-900 px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Lägg till artikel <IconPlus width={20} height={20} />
             </button>
-          </div>
+          </Link>
         </div>
         <div className="mt-8 flow-root">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between mt-4 mb-8">
@@ -259,7 +264,7 @@ const Overview = () => {
           </div>
         </div>
       </div>
-      {!hidden ? <CreateArticle setHidden={setHidden} /> : null}
+      {/* {!hidden ? <CreateArticle setHidden={setHidden} /> : null} */}
     </>
   );
 };

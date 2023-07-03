@@ -24,11 +24,7 @@ const ErrorMessage = ({ message }: any) => {
   );
 };
 
-interface Props {
-  setHidden: Dispatch<SetStateAction<boolean>>;
-}
-
-const CreateArticle = ({ setHidden }: Props) => {
+const CreateArticle = ({}) => {
   const { setCurrentArticles } = useContext(articleContext);
   const [selectedLocation, setSelectedLocation] =
     useState<InventoryLocationDocument | null>(null);
@@ -109,18 +105,13 @@ const CreateArticle = ({ setHidden }: Props) => {
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
   return (
-    <div className=" bg-white sm:bg-black/30  absolute inset-0 flex sm:items-center justify-center sm:rounded-lg">
-      <div className="px-4 z-50 py-5 bg-white sm:p-6 max-w-2xl w-full">
+    <div className=" w-full bg-white flex sm:items-center justify-center sm:rounded-lg">
+      <div className="px-4 py-5 bg-white sm:p-6 max-w-2xl w-full">
         <div className="pb-8 sm:pb-0 w-full flex justify-between">
           <h3 className="text-2xl sm:text-base font-semibold leading-6 text-gray-900">
             Lägg till artikel
           </h3>
-          <IconX
-            className="cursor-pointer"
-            onClick={() => {
-              setHidden(true);
-            }}
-          />
+          {/* <IconX className="cursor-pointer" /> */}
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 mt-7">
@@ -205,7 +196,7 @@ const CreateArticle = ({ setHidden }: Props) => {
           <div className="mt-5 w-full flex justify-end">
             <button
               type="submit"
-              className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-indigo-600 px-3 py-3 sm:py-2 text-sm font-semibold text-indigo-50 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-indigo-700"
+              className="inline-flex w-full sm:w-36 justify-center items-center rounded-md bg-indigo-600 px-3 py-3 text-sm font-semibold text-indigo-50 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-indigo-700"
             >
               Skapa
             </button>
