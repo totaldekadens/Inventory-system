@@ -14,6 +14,7 @@ import {
   articleContext,
 } from "@/components/context/ArticleProvider";
 import { inventoryLocationContext } from "@/components/context/InventoryLocationProvider";
+import CreateArticle from "@/components/CreateArticle";
 
 interface Props {
   articles: PopulatedArticleDocument[];
@@ -23,6 +24,7 @@ interface Props {
 export default function Index({ articles, inventoryLocations }: Props) {
   const { setCurrentArticles, setArticles } = useContext(articleContext);
   const { setInventoryLocations } = useContext(inventoryLocationContext);
+
   useEffect(() => {
     setCurrentArticles(articles);
     setArticles(articles);

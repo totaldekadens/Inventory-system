@@ -20,7 +20,6 @@ const InventoryLocationProvider: FC<PropsWithChildren> = (props) => {
     InventoryLocationDocument[] | null
   >([]);
 
-  console.log(inventoryLocations);
   return (
     <inventoryLocationContext.Provider
       value={{ inventoryLocations, setInventoryLocations }}
