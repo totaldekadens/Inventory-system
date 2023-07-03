@@ -1,6 +1,5 @@
 import Head from "next/head";
-import { useSession } from "next-auth/react";
-import Header from "@/components/layout/Header";
+import Header from "@/components/Layout/Header";
 import { GetServerSideProps } from "next";
 import Article, { ArticleDocument } from "@/models/ArticleModel";
 import dbConnect from "@/lib/dbConnect";
