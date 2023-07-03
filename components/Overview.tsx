@@ -24,33 +24,69 @@ const Overview = () => {
 
   let articlesCopy = [...currentArticles];
 
-  const addQty = (article: PopulatedArticleDocument) => {
-    let foundIndex = articlesCopy.findIndex(
-      (artCopy) => artCopy._id === article._id
-    );
-    if (foundIndex >= 0) {
-      articlesCopy[foundIndex].qty++;
+  const addQty = async (article: PopulatedArticleDocument) => {
+    try {
+      let foundIndex = articlesCopy.findIndex(
+        (artCopy) => artCopy._id === article._id
+      );
+      if (foundIndex >= 0) {
+        articlesCopy[foundIndex].qty++;
 
-      // Todo: Continue here. Set qty to DB
+        const updatedArticle: any = { ...articlesCopy[foundIndex] };
+        updatedArticle.inventoryLocation = updatedArticle.inventoryLocation._id;
+
+        const request = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedArticle),
+        };
+
+        const response = await fetch("/api/article", request);
+        const result = await response.json();
+        if (!result.success) {
+          throw Error(result.data);
+        }
+      }
+      setUpdatedArticles(articlesCopy);
+    } catch (err) {
+      console.error(err);
     }
-    setUpdatedArticles(articlesCopy);
   };
 
-  const deleteQty = (article: PopulatedArticleDocument) => {
-    let foundIndex = articlesCopy.findIndex(
-      (artCopy) => artCopy._id === article._id
-    );
-    if (foundIndex >= 0) {
-      if (articlesCopy[foundIndex].qty > 0) {
-        articlesCopy[foundIndex].qty--;
+  const deleteQty = async (article: PopulatedArticleDocument) => {
+    try {
+      let foundIndex = articlesCopy.findIndex(
+        (artCopy) => artCopy._id === article._id
+      );
+      if (foundIndex >= 0) {
+        if (articlesCopy[foundIndex].qty > 0) {
+          articlesCopy[foundIndex].qty--;
 
-        const copy: any = { ...articlesCopy[foundIndex] };
-        copy.inventoryLocation = copy.inventoryLocation._id;
-        // Todo: Continue here. Set qty to DB
-        console.log(copy);
+          const updatedArticle: any = { ...articlesCopy[foundIndex] };
+          updatedArticle.inventoryLocation =
+            updatedArticle.inventoryLocation._id;
+
+          const request = {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedArticle),
+          };
+
+          const response = await fetch("/api/article", request);
+          const result = await response.json();
+          if (!result.success) {
+            throw Error(result.data);
+          }
+        }
       }
+      setUpdatedArticles(articlesCopy);
+    } catch (err) {
+      console.error(err);
     }
-    setUpdatedArticles(articlesCopy);
   };
 
   return (
@@ -169,12 +205,19 @@ const Overview = () => {
                             </td>
                             <td className="whitespace-nowrap hidden sm:table-cell px-3 py-5 text-sm text-gray-500">
                               <div className="mt-3 w-full gap-2 items-center  text-gray-500 flex flex-wrap">
-                                <div className="rounded-full cursor-pointer p-1 flex items-center justify-center border">
+                                <div
+                                  onClick={() => deleteQty(article)}
+                                  className="rounded-full cursor-pointer p-1 flex items-center justify-center border"
+                                >
                                   <IconMinus width={16} height={16} />
                                 </div>
                                 {article.qty} st{" "}
                                 <div className="rounded-full cursor-pointer p-1 flex items-center justify-center border">
-                                  <IconPlus width={16} height={16} />
+                                  <IconPlus
+                                    onClick={() => addQty(article)}
+                                    width={16}
+                                    height={16}
+                                  />
                                 </div>
                               </div>
                             </td>
@@ -186,7 +229,7 @@ const Overview = () => {
                                 <IconX
                                   className="text-red-600 hover:text-red-900 cursor-pointer"
                                   onClick={async () => {
-                                    const test = confirm("Är du säker?");
+                                    const test = confirm("Är du säker?"); // Todo: Update this one later
                                     if (test) {
                                       await fetch(
                                         `api/article/${article._id}`,

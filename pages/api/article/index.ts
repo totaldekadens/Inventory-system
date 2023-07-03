@@ -70,7 +70,9 @@ export default async function handler(
         );
 
         if (!article) {
-          return res.status(400).json({ success: false });
+          return res
+            .status(400)
+            .json({ success: false, data: "Article not updated" });
         }
         res.status(200).json({ success: true, data: article });
       } catch (error) {
