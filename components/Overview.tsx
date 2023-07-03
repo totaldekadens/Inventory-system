@@ -6,7 +6,7 @@ import { articleContext } from "./context/ArticleProvider";
 import CreateArticle from "./CreateArticle";
 
 const Overview = () => {
-  const { currentArticles } = useContext(articleContext);
+  const { currentArticles, setCurrentArticles } = useContext(articleContext);
   const [hidden, setHidden] = useState<boolean>(true);
 
   return (
@@ -118,7 +118,28 @@ const Overview = () => {
                             <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                               <div className="flex gap-5">
                                 <IconEdit className="text-indigo-600 hover:text-indigo-900 cursor-pointer" />
-                                <IconX className="text-red-600 hover:text-red-900 cursor-pointer" />
+                                <IconX
+                                  className="text-red-600 hover:text-red-900 cursor-pointer"
+                                  onClick={async () => {
+                                    const test = confirm("Är du säker?");
+                                    if (test) {
+                                      await fetch(
+                                        `api/article/${article._id}`,
+                                        {
+                                          method: "DELETE",
+                                        }
+                                      );
+
+                                      const response = await fetch(
+                                        "/api/article/"
+                                      );
+                                      const result = await response.json();
+                                      if (result.success) {
+                                        setCurrentArticles(result.data);
+                                      }
+                                    }
+                                  }}
+                                />
                               </div>
                             </td>
                           </tr>

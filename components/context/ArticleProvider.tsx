@@ -1,8 +1,10 @@
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
+import { Types } from "mongoose";
 import React, { useEffect } from "react";
 import { FC, PropsWithChildren, useState } from "react";
 
 export interface PopulatedArticleDocument {
+  _id: Types.ObjectId;
   artno: string;
   description: string;
   qty: number;

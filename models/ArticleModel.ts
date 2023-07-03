@@ -33,6 +33,7 @@ const ArticleSchema = new Schema<ArticleDocument>({
 });
 
 export interface ArticleDocument {
+  _id?: Types.ObjectId;
   artno: string;
   description: string;
   qty: number;

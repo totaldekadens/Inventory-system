@@ -1,11 +1,12 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import UploadForm from "./uploadForm";
 import SelectLocation from "./SelectLocation";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { IconX } from "@tabler/icons-react";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
+import { articleContext } from "./context/ArticleProvider";
 
 // Yup schema to validate the form
 const schema = Yup.object().shape({
@@ -28,6 +29,7 @@ interface Props {
 }
 
 const CreateArticle = ({ setHidden }: Props) => {
+  const { setCurrentArticles } = useContext(articleContext);
   const [selectedLocation, setSelectedLocation] =
     useState<InventoryLocationDocument | null>(null);
   const [imageList, setImageList] = useState<string[]>([]);
@@ -81,9 +83,17 @@ const CreateArticle = ({ setHidden }: Props) => {
         const result = await response.json();
 
         if (result.success) {
-          alert("Artikeln är inlagd!"); // Fix a proper pop up later
+          alert("Artikeln är inlagd!"); // Fix a proper pop up later. Ask if you want to continue or close window
           formik.resetForm();
           setImageList([]);
+          setFileList([]);
+
+          // Updates list
+          const response = await fetch("/api/article/");
+          const result = await response.json();
+          if (result.success) {
+            setCurrentArticles(result.data);
+          }
         } else {
           setError("Något gick fel!");
         }
