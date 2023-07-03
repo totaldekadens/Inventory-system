@@ -1,6 +1,8 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
+import ArticlesProvider from "@/components/context/ArticleProvider";
+import InventoryLocationProvider from "@/components/context/InventoryLocationProvider";
 
 export default function App({
   Component,
@@ -8,7 +10,11 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <InventoryLocationProvider>
+        <ArticlesProvider>
+          <Component {...pageProps} />
+        </ArticlesProvider>
+      </InventoryLocationProvider>
     </SessionProvider>
   );
 }

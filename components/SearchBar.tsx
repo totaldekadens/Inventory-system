@@ -1,22 +1,21 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { articleContext } from "./context/ArticleProvider";
 
-interface Props {
-  articles: any[];
-  setCurrentArticles: any;
-}
-
-const SearchBar = ({ articles, setCurrentArticles }: Props) => {
+const SearchBar = () => {
+  const { setCurrentArticles, articles } = useContext(articleContext);
   const [query, setQuery] = useState("");
 
   // Filtering articles depending on search input.
   useEffect(() => {
     const updateArticles = async () => {
-      const filterArticles = articles.filter(
-        (article) =>
-          article.artno.toUpperCase().includes(query.toUpperCase()) ||
-          article.description.toUpperCase().includes(query.toUpperCase())
-      );
-      setCurrentArticles(filterArticles);
+      if (articles) {
+        const filterArticles = articles.filter(
+          (article) =>
+            article.artno.toUpperCase().includes(query.toUpperCase()) ||
+            article.description.toUpperCase().includes(query.toUpperCase())
+        );
+        setCurrentArticles(filterArticles);
+      }
     };
     updateArticles();
   }, [query]);
