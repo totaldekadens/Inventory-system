@@ -1,27 +1,71 @@
-import { useContext, useState } from "react";
-import SearchBar from "./SearchBar";
-import SearchBarKombo from "./SearchBarKombo";
-import { IconEdit, IconPlus, IconX } from "@tabler/icons-react";
-import { articleContext } from "./context/ArticleProvider";
+import { useContext, useRef, useState } from "react";
+import SearchBar from "./searchbars/SearchBar";
+import SearchBarKombo from "./searchbars/SearchBarKombo";
+import {
+  IconEdit,
+  IconMinus,
+  IconPlus,
+  IconX,
+  IconCheck,
+} from "@tabler/icons-react";
+import {
+  PopulatedArticleDocument,
+  articleContext,
+} from "./context/ArticleProvider";
 import CreateArticle from "./CreateArticle";
 
 const Overview = () => {
-  const { currentArticles, setCurrentArticles } = useContext(articleContext);
+  const { currentArticles, setCurrentArticles, articles } =
+    useContext(articleContext);
   const [hidden, setHidden] = useState<boolean>(true);
+  const [updatedArticles, setUpdatedArticles] = useState<
+    PopulatedArticleDocument[] | []
+  >([]);
+
+  let articlesCopy = [...currentArticles];
+
+  const addQty = (article: PopulatedArticleDocument) => {
+    let foundIndex = articlesCopy.findIndex(
+      (artCopy) => artCopy._id === article._id
+    );
+    if (foundIndex >= 0) {
+      articlesCopy[foundIndex].qty++;
+
+      // Todo: Continue here. Set qty to DB
+    }
+    setUpdatedArticles(articlesCopy);
+  };
+
+  const deleteQty = (article: PopulatedArticleDocument) => {
+    let foundIndex = articlesCopy.findIndex(
+      (artCopy) => artCopy._id === article._id
+    );
+    if (foundIndex >= 0) {
+      if (articlesCopy[foundIndex].qty > 0) {
+        articlesCopy[foundIndex].qty--;
+
+        const copy: any = { ...articlesCopy[foundIndex] };
+        copy.inventoryLocation = copy.inventoryLocation._id;
+        // Todo: Continue here. Set qty to DB
+        console.log(copy);
+      }
+    }
+    setUpdatedArticles(articlesCopy);
+  };
 
   return (
     <>
-      <div className="px-4 sm:px-6 lg:px-8 mt-8 w-full">
-        <div className="sm:flex sm:items-center">
+      <div className="px-4 sm:px-6 lg:px-8 mt-24 sm:mt-8 w-full pb-20">
+        <div className="flex flex-col sm:flex-row items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">
+            <h1 className="text-lg sm:text-base text-center sm:text-left font-semibold leading-6 text-gray-900">
               Överblick - Lagerartiklar
             </h1>
-            <p className="mt-2 text-sm text-gray-700">
+            <p className="mt-2 text-sm text-center sm:text-left text-gray-700">
               Här har du en lista på dina samtliga lagerförda artiklar
             </p>
           </div>
-          <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <div className="mt-16 mb-16 sm:ml-16 sm:mt-0 sm:flex-none">
             <button
               onClick={() => {
                 setHidden(false);
@@ -34,7 +78,7 @@ const Overview = () => {
           </div>
         </div>
         <div className="mt-8 flow-root">
-          <div className="flex justify-between mt-4 mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between mt-4 mb-8">
             <SearchBar />
             <SearchBarKombo />
           </div>
@@ -51,13 +95,13 @@ const Overview = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className="px-3 py-3.5 hidden lg:table-cell text-left text-sm font-semibold text-gray-900"
                     >
                       Skick
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className="px-3 py-3.5 hidden sm:flex text-left text-sm font-semibold text-gray-900"
                     >
                       Antal
                     </th>
@@ -83,7 +127,7 @@ const Overview = () => {
 
                         return (
                           <tr key={i}>
-                            <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
+                            <td className="md:whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                               <div className="flex items-center">
                                 <div className="h-24 w-24 flex-shrink-0">
                                   <img
@@ -96,28 +140,49 @@ const Overview = () => {
                                   <div className="font-medium text-gray-900">
                                     {article.artno}
                                   </div>
-                                  <div className="mt-1 text-gray-500">
+                                  <div className="mt-1 text-gray-500 flex flex-wrap">
                                     {article.description}
+                                  </div>
+                                  <div className="mt-3 w-full gap-2 items-center sm:hidden text-gray-500 flex flex-wrap">
+                                    <div
+                                      onClick={() => deleteQty(article)}
+                                      className="rounded-full cursor-pointer p-1 flex items-center justify-center border"
+                                    >
+                                      <IconMinus width={16} height={16} />{" "}
+                                    </div>
+                                    {article.qty} st{" "}
+                                    <div
+                                      onClick={() => addQty(article)}
+                                      className="rounded-full cursor-pointer p-1 flex items-center justify-center border"
+                                    >
+                                      <IconPlus width={16} height={16} />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </td>
-                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                              <div className="text-gray-900">
+
+                            <td className="whitespace-nowrap hidden lg:table-cell  px-3 py-5 text-sm text-gray-500">
+                              <div className="text-gray-900 h-full ">
                                 {article.condition}
                               </div>
                             </td>
-                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                              <span className="inline-flex items-center rounded-md  px-2 py-1 text-xs font-semibold text-gray-800 ">
-                                {article.qty}
-                              </span>
+                            <td className="whitespace-nowrap hidden sm:table-cell px-3 py-5 text-sm text-gray-500">
+                              <div className="mt-3 w-full gap-2 items-center  text-gray-500 flex flex-wrap">
+                                <div className="rounded-full cursor-pointer p-1 flex items-center justify-center border">
+                                  <IconMinus width={16} height={16} />
+                                </div>
+                                {article.qty} st{" "}
+                                <div className="rounded-full cursor-pointer p-1 flex items-center justify-center border">
+                                  <IconPlus width={16} height={16} />
+                                </div>
+                              </div>
                             </td>
                             <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                               {article.inventoryLocation.name}
                             </td>
                             <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                              <div className="flex gap-5">
-                                <IconEdit className="text-indigo-600 hover:text-indigo-900 cursor-pointer" />
+                              <div className="flex flex-col sm:flex-row gap-5">
                                 <IconX
                                   className="text-red-600 hover:text-red-900 cursor-pointer"
                                   onClick={async () => {

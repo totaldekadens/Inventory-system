@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import UploadForm from "./uploadForm";
-import SelectLocation from "./SelectLocation";
+import SelectLocation from "./searchbars/SelectLocation";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { IconX } from "@tabler/icons-react";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
@@ -103,13 +103,16 @@ const CreateArticle = ({ setHidden }: Props) => {
     },
   });
 
+  const inputClass =
+    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto";
+
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
   return (
-    <div className="absolute inset-0 flex items-center justify-center sm:rounded-lg">
-      <div className="px-4 py-5 bg-slate-200 sm:p-6 max-w-2xl w-full">
-        <div className="w-full flex justify-between">
-          <h3 className="text-base font-semibold leading-6 text-gray-900">
+    <div className=" bg-white sm:bg-black/30  absolute inset-0 flex sm:items-center justify-center sm:rounded-lg">
+      <div className="px-4 z-50 py-5 bg-white sm:p-6 max-w-2xl w-full">
+        <div className="pb-8 sm:pb-0 w-full flex justify-between">
+          <h3 className="text-2xl sm:text-base font-semibold leading-6 text-gray-900">
             Lägg till artikel
           </h3>
           <IconX
@@ -128,22 +131,23 @@ const CreateArticle = ({ setHidden }: Props) => {
             onChange={handleChange}
             type="text"
             autoComplete="Leverantörs artikelnummer"
-            className="bg-dark-50/20 focus:ring-light-300 dark:text-light-50 relative mb-2 block h-11 w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset dark:placeholder:text-gray-600 sm:text-sm sm:leading-6 md:h-auto"
+            className={inputClass}
             placeholder="Leverantörens artikelnummer"
           />
 
           <label htmlFor="description" className="sr-only">
             Beskrivning
           </label>
-          <input
+          <textarea
             id="description"
             name="description"
-            type="text"
+            rows={4}
             autoComplete="description"
             value={values.description}
             onChange={handleChange}
             required
-            className="bg-dark-50/20 focus:ring-light-300 dark:text-light-50 relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset dark:placeholder:text-gray-600 sm:text-sm sm:leading-6 md:h-auto"
+            style={{ height: "100px" }}
+            className={inputClass}
             placeholder="Beskrivning*"
           />
           <input
@@ -154,7 +158,7 @@ const CreateArticle = ({ setHidden }: Props) => {
             value={values.qty}
             onChange={handleChange}
             required
-            className="bg-dark-50/20 focus:ring-light-300 dark:text-light-50 relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset dark:placeholder:text-gray-600 sm:text-sm sm:leading-6 md:h-auto"
+            className={inputClass}
             placeholder="Antal*"
           />
           <input
@@ -165,7 +169,7 @@ const CreateArticle = ({ setHidden }: Props) => {
             value={values.condition}
             onChange={handleChange}
             required
-            className="bg-dark-50/20 focus:ring-light-300 dark:text-light-50 relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset dark:placeholder:text-gray-600 sm:text-sm sm:leading-6 md:h-auto"
+            className={inputClass}
             placeholder="Beskriv skicket på artikeln*"
           />
           <SelectLocation
@@ -179,7 +183,7 @@ const CreateArticle = ({ setHidden }: Props) => {
             autoComplete="purchaseValue"
             value={values.purchaseValue}
             onChange={handleChange}
-            className="bg-dark-50/20 focus:ring-light-300 dark:text-light-50 relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset dark:placeholder:text-gray-600 sm:text-sm sm:leading-6 md:h-auto"
+            className={inputClass}
             placeholder="Inköpspris"
           />
           <input
@@ -189,7 +193,7 @@ const CreateArticle = ({ setHidden }: Props) => {
             autoComplete="comment"
             value={values.comment}
             onChange={handleChange}
-            className="bg-dark-50/20 focus:ring-light-300 dark:text-light-50 relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset dark:placeholder:text-gray-600 sm:text-sm sm:leading-6 md:h-auto"
+            className={inputClass}
             placeholder="Kommentar"
           />
           <UploadForm
@@ -201,7 +205,7 @@ const CreateArticle = ({ setHidden }: Props) => {
           <div className="mt-5 w-full flex justify-end">
             <button
               type="submit"
-              className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-indigo-600 px-3 py-3 sm:py-2 text-sm font-semibold text-indigo-50 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-indigo-700"
             >
               Skapa
             </button>

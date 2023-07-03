@@ -1,24 +1,25 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useRef, useState } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
-import { inventoryLocationContext } from "./context/InventoryLocationProvider";
-import { articleContext } from "./context/ArticleProvider";
+import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import { IconX } from "@tabler/icons-react";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-const SearchBarKombo = () => {
+interface Props {
+  selectedLocation: InventoryLocationDocument | null;
+  setSelectedLocation: Dispatch<
+    SetStateAction<InventoryLocationDocument | null>
+  >;
+}
+
+const SelectLocation = ({ selectedLocation, setSelectedLocation }: Props) => {
   const { inventoryLocations } = useContext(inventoryLocationContext);
-  const { currentArticles, setCurrentArticles, articles } =
-    useContext(articleContext);
+
   const [query, setQuery] = useState("");
-  const [selectedLocation, setSelectedLocation] =
-    useState<InventoryLocationDocument | null>(null);
-  const selectedLocationRef = useRef<InventoryLocationDocument | null>(null);
-  selectedLocationRef.current = selectedLocation;
 
   const filteredLocation =
     query === ""
@@ -26,25 +27,6 @@ const SearchBarKombo = () => {
       : inventoryLocations!.filter((location) => {
           return location.name.toLowerCase().includes(query.toLowerCase());
         });
-
-  // Todo: Make it better
-  useEffect(() => {
-    if (selectedLocation) {
-      if (currentArticles && currentArticles.length > 1) {
-        const updateArticlesByLocation = currentArticles.filter(
-          (article) => article.inventoryLocation._id == selectedLocation?._id
-        );
-        setCurrentArticles(updateArticlesByLocation);
-      } else if (articles) {
-        const updateArticlesByLocation = articles.filter(
-          (article) => article.inventoryLocation._id == selectedLocation?._id
-        );
-        setCurrentArticles(updateArticlesByLocation);
-      }
-    } else {
-      setCurrentArticles(articles);
-    }
-  }, [selectedLocation]);
 
   return (
     <div className="flex items-center gap-2">
@@ -56,8 +38,8 @@ const SearchBarKombo = () => {
         <div className="relative flex items-center">
           <Combobox.Input
             type="search"
-            placeholder="Sök på lagerplats.."
-            className="w-full flex items-center rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="Välj lagerplats*"
+            className="w-full flex items-center rounded-md border-0 h-11 bg-white py-1.5 pl-3 pr-10 text-gray-900  ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(location: InventoryLocationDocument) =>
               location?.name
@@ -133,4 +115,4 @@ const SearchBarKombo = () => {
   );
 };
 
-export default SearchBarKombo;
+export default SelectLocation;

@@ -27,13 +27,13 @@ export interface PopulatedArticleDocument {
 }
 
 interface articleContextData {
-  currentArticles: PopulatedArticleDocument[] | null;
+  currentArticles: PopulatedArticleDocument[] | [];
   setCurrentArticles: React.Dispatch<
-    React.SetStateAction<PopulatedArticleDocument[] | null>
+    React.SetStateAction<PopulatedArticleDocument[] | []>
   >;
-  articles: PopulatedArticleDocument[] | null;
+  articles: PopulatedArticleDocument[] | [];
   setArticles: React.Dispatch<
-    React.SetStateAction<PopulatedArticleDocument[] | null>
+    React.SetStateAction<PopulatedArticleDocument[] | []>
   >;
 }
 
@@ -45,11 +45,9 @@ export const articleContext = React.createContext<articleContextData>({
 });
 
 const ArticlesProvider: FC<PropsWithChildren> = (props) => {
-  const [articles, setArticles] = useState<PopulatedArticleDocument[] | null>(
-    []
-  );
+  const [articles, setArticles] = useState<PopulatedArticleDocument[] | []>([]);
   const [currentArticles, setCurrentArticles] = useState<
-    PopulatedArticleDocument[] | null
+    PopulatedArticleDocument[] | []
   >([]);
 
   return (
