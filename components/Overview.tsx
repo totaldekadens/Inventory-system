@@ -1,3 +1,4 @@
+import { useState } from "react";
 import SearchBar from "./SearchBar";
 import SearchBarKombo from "./SearchBarKombo";
 
@@ -6,8 +7,9 @@ interface Props {
 }
 
 const Overview = ({ articles }: Props) => {
+  const [currentArticles, setCurrentArticles] = useState(articles);
   return (
-    <div className="px-4 sm:px-6 lg:px-8 mt-8">
+    <div className="px-4 sm:px-6 lg:px-8 mt-8 w-full">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900">
@@ -28,7 +30,10 @@ const Overview = ({ articles }: Props) => {
       </div>
       <div className="mt-8 flow-root">
         <div className="flex justify-between mt-4 mb-8">
-          <SearchBar />
+          <SearchBar
+            articles={articles}
+            setCurrentArticles={setCurrentArticles}
+          />
           <SearchBarKombo />
         </div>
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -66,7 +71,7 @@ const Overview = ({ articles }: Props) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {articles.map((article, i) => (
+                {currentArticles.map((article, i) => (
                   <tr key={i}>
                     <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                       <div className="flex items-center">

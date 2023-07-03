@@ -36,6 +36,7 @@ export default async function handler(
 
     case "DELETE":
       try {
+        // Todo:  Check if an article is on the location, it shall not be able to delete before the article is moved to a new location.
         const deletedLocation = await InventoryLocation.deleteOne({ _id: id });
         if (deletedLocation.deletedCount < 1) {
           return res
