@@ -50,7 +50,6 @@ const ArticlesProvider: FC<PropsWithChildren> = (props) => {
     PopulatedArticleDocument[] | null
   >([]);
 
-  console.log(currentArticles);
   return (
     <articleContext.Provider
       value={{ articles, setArticles, currentArticles, setCurrentArticles }}
