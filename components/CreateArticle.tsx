@@ -1,20 +1,22 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import UploadForm from "./uploadForm";
 import SelectLocation from "./searchbars/SelectLocation";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
-import { IconX } from "@tabler/icons-react";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
 import { articleContext } from "./context/ArticleProvider";
+import ForSaleRadioButton from "./buttons/ForSaleRadioButton";
 
 // Yup schema to validate the form
 const schema = Yup.object().shape({
-  artno: Yup.string(),
-  description: Yup.string().required(),
+  supplierArtno: Yup.string(),
+  title: Yup.string().required(),
+  description: Yup.string(),
   qty: Yup.number().required(),
   condition: Yup.string().required(),
   purchaseValue: Yup.number(),
+  price: Yup.number(),
   comment: Yup.string(),
 });
 
@@ -25,6 +27,8 @@ const ErrorMessage = ({ message }: any) => {
 };
 
 const CreateArticle = ({}) => {
+  const [forSale, setForSale] = useState(false);
+
   const { setCurrentArticles } = useContext(articleContext);
   const [selectedLocation, setSelectedLocation] =
     useState<InventoryLocationDocument | null>(null);
@@ -33,11 +37,13 @@ const CreateArticle = ({}) => {
   const [error, setError] = useState<string>("");
   const formik = useFormik({
     initialValues: {
-      artno: "",
+      supplierArtno: "",
+      title: "",
       description: "",
       qty: "",
       condition: "",
       purchaseValue: "",
+      price: "",
       comment: "",
     },
 
@@ -46,20 +52,25 @@ const CreateArticle = ({}) => {
 
     // Handle form submission
     onSubmit: async ({
-      artno,
+      supplierArtno,
+      title,
       description,
       qty,
       condition,
       purchaseValue,
+      price,
       comment,
     }) => {
       try {
         const newArticle = {
-          artno,
+          supplierArtno,
+          title,
           description,
           qty,
           condition,
           purchaseValue,
+          forSale,
+          price,
           comment,
           images: imageList,
           inventoryLocation: selectedLocation?._id,
@@ -116,14 +127,25 @@ const CreateArticle = ({}) => {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 mt-7">
           <input
-            id="artno"
-            name="artno"
-            value={values.artno}
+            id="supplierArtno"
+            name="supplierArtno"
+            value={values.supplierArtno}
             onChange={handleChange}
             type="text"
-            autoComplete="Leverantörs artikelnummer"
+            autoComplete="Leverantörens artikelnummer"
             className={inputClass}
             placeholder="Leverantörens artikelnummer"
+          />
+          <input
+            id="title"
+            name="title"
+            value={values.title}
+            onChange={handleChange}
+            type="text"
+            required
+            autoComplete="Titel"
+            className={inputClass}
+            placeholder="Titel*"
           />
 
           <label htmlFor="description" className="sr-only">
@@ -136,10 +158,9 @@ const CreateArticle = ({}) => {
             autoComplete="description"
             value={values.description}
             onChange={handleChange}
-            required
             style={{ height: "100px" }}
             className={inputClass}
-            placeholder="Beskrivning*"
+            placeholder="Beskrivning"
           />
           <input
             id="qty"
@@ -167,16 +188,24 @@ const CreateArticle = ({}) => {
             setSelectedLocation={setSelectedLocation}
             selectedLocation={selectedLocation}
           />
-          <input
-            id="purchaseValue"
-            name="purchaseValue"
-            type="number"
-            autoComplete="purchaseValue"
-            value={values.purchaseValue}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="Inköpspris"
-          />
+          <div className="relative">
+            <input
+              id="purchaseValue"
+              name="purchaseValue"
+              type="number"
+              autoComplete="purchaseValue"
+              value={values.purchaseValue}
+              onChange={handleChange}
+              className={inputClass}
+              placeholder="Inköpspris"
+            />
+            <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+              <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
+                Kr
+              </div>
+            </div>
+          </div>
+
           <input
             id="comment"
             name="comment"
@@ -185,8 +214,28 @@ const CreateArticle = ({}) => {
             value={values.comment}
             onChange={handleChange}
             className={inputClass}
-            placeholder="Kommentar"
+            placeholder="Övrig kommentar"
           />
+          <ForSaleRadioButton forSale={forSale} setForSale={setForSale} />
+          {forSale ? (
+            <div className="relative">
+              <input
+                id="price"
+                name="price"
+                type="number"
+                autoComplete="price"
+                value={values.price}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="Till vilket pris?"
+              />
+              <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
+                  Kr
+                </div>
+              </div>
+            </div>
+          ) : null}
           <UploadForm
             setImageList={setImageList}
             setValue={setFileList}

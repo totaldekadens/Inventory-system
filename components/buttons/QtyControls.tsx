@@ -3,7 +3,7 @@ import {
   PopulatedArticleDocument,
   articleContext,
 } from "../context/ArticleProvider";
-import { FC, useContext } from "react";
+import { useContext } from "react";
 
 interface Props {
   articleObject: PopulatedArticleDocument;

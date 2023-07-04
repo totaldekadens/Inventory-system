@@ -18,7 +18,7 @@ interface Props {
 
 const SelectLocation = ({ selectedLocation, setSelectedLocation }: Props) => {
   const { inventoryLocations } = useContext(inventoryLocationContext);
-
+  console.log(inventoryLocations);
   const [query, setQuery] = useState("");
 
   const filteredLocation =
