@@ -36,6 +36,18 @@ export default async function handler(
 
         let newArticle: ArticleDocument = new Article(req.body);
 
+        let createUniqueArtno: number;
+
+        const getAllArticles: ArticleDocument[] | null = await Article.find({});
+
+        if (getAllArticles.length == 0) {
+          createUniqueArtno = 1;
+        } else {
+          getAllArticles.sort((a, b) => (a.artno < b.artno ? 1 : -1));
+          createUniqueArtno = Number(getAllArticles[0].artno) + 1;
+        }
+
+        newArticle.artno = createUniqueArtno;
         newArticle.createdDate = todayDate;
 
         const article = await Article.create(newArticle);
