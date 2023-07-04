@@ -1,7 +1,7 @@
-import { IconEdit } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "../../context/ArticleProvider";
-import ForSaleRadioButton from "@/components/buttons/ForSaleRadioButton";
 import { useState } from "react";
+import SidebarEdit from "./SidebarEdit.tsx";
+import SidebarRead from "./SidebarRead";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -9,88 +9,25 @@ interface Props {
 }
 
 const ArticleSidebar = ({ article, className }: Props) => {
-  const [forSale, setForSale] = useState(article.forSale);
-
+  const [edit, setEdit] = useState(false);
   return (
-    <aside className={className}>
-      <div className="flex justify-between mb-4">
-        <div>
-          <h1 className="text-xl font-medium text-gray-900">{article.title}</h1>
-          <p className="text-lg font-medium tracking-tight text-gray-900/70 ">
-            {article.supplierArtno}
-          </p>
-        </div>
-        <IconEdit />
-      </div>
-      <div className="flex justify-between flex-wrap">
-        <div>
-          <div className=" font-medium text-gray-900 mt-4 lg:mt-8  ">Skick</div>
-          <div className="text-gray-900/80">{article.condition}</div>
-        </div>
-        <div>
-          <div className=" font-medium text-gray-900 mt-4 lg:mt-8  ">Plats</div>
-          <div className="text-gray-900/80">
-            {article.inventoryLocation.name}
-          </div>
-        </div>
-        <div>
-          <div className=" font-medium text-gray-900 mt-4 lg:mt-8">Antal</div>
-          <div className="text-gray-900/80">{article.qty} st</div>
-        </div>
-      </div>
-
-      <div>
-        <div className=" font-medium text-gray-900 mt-4 lg:mt-8">
-          Beskrivning
-        </div>
-        <div className="text-gray-900/80">
-          {article.description ? article.description : "Ingen beskrivning"}
-        </div>
-      </div>
-
-      <div className="mt-4 lg:row-span-3 lg:mt-8">
-        <div className="w-full flex justify-between">
-          <div className=" font-medium text-gray-900 mt-2 ">
-            Mer information
-          </div>
-        </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">Art. no:</p>
-          <p>{article.artno}</p>
-        </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">
-            Leverantörens art. no:{" "}
-          </p>
-          <p> {article.supplierArtno ? article.supplierArtno : "-"}</p>
-        </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">Försäljningspris:</p>
-          <p>{article.price ? article.price + " kr" : "-"}</p>
-        </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">Inköpspris: </p>
-          <p> {article.purchaseValue ? article.purchaseValue + " kr" : "-"} </p>
-        </div>
-
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">
-            Senast uppdaterad:{" "}
-          </p>
-          <p>
-            {" "}
-            {article.lastUpdated ? article.lastUpdated : article.createdDate}
-          </p>
-        </div>
-
-        {/* For sale */}
-        <ForSaleRadioButton
+    <>
+      {edit ? (
+        <SidebarEdit
           article={article}
-          forSale={forSale}
-          setForSale={setForSale}
+          edit={edit}
+          setEdit={setEdit}
+          className={className}
         />
-      </div>
-    </aside>
+      ) : (
+        <SidebarRead
+          article={article}
+          edit={edit}
+          setEdit={setEdit}
+          className={className}
+        />
+      )}
+    </>
   );
 };
 

@@ -1,22 +1,15 @@
 import { useState, useEffect, Dispatch, SetStateAction, FC } from "react";
-import {
-  Button,
-  Image,
-  FileInput,
-  Flex,
-  Title,
-  Text,
-  Box,
-} from "@mantine/core";
+import { Image, FileInput, Flex, Text, Box } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 
 type Props = {
   setImageList: Dispatch<SetStateAction<string[]>>;
   value: File[];
   setValue: Dispatch<SetStateAction<File[]>>;
+  title?: string;
 };
 
-const UploadForm: FC<Props> = ({ setImageList, value, setValue }) => {
+const UploadForm: FC<Props> = ({ setImageList, value, setValue, title }) => {
   const [createObjectURL, setCreateObjectURL] = useState<string[]>([]);
 
   useEffect(() => {
@@ -31,12 +24,9 @@ const UploadForm: FC<Props> = ({ setImageList, value, setValue }) => {
 
   return (
     <Box mt={20} mb={20}>
-      <Title order={6} color={"#212529"} size={13}>
-        Lägg till bilder:
-      </Title>{" "}
-      <Text size={12}>
-        Bilderna bör ha vit eller transparant bakgrund. Godkända format: png,
-        jpg, jpeg, webp
+      <label>{title ? title : "Lägg till bilder:"}</label>{" "}
+      <Text size={12} mb={2}>
+        Godkända format: png, jpg, jpeg, webp
       </Text>
       <FileInput
         icon={<IconUpload />}

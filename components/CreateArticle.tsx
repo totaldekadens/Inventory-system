@@ -9,7 +9,7 @@ import { articleContext } from "./context/ArticleProvider";
 import ForSaleRadioButton from "./buttons/ForSaleRadioButton";
 
 // Yup schema to validate the form
-const schema = Yup.object().shape({
+export const schema = Yup.object().shape({
   supplierArtno: Yup.string(),
   title: Yup.string().required(),
   description: Yup.string(),
@@ -20,7 +20,7 @@ const schema = Yup.object().shape({
   comment: Yup.string(),
 });
 
-const ErrorMessage = ({ message }: any) => {
+export const ErrorMessage = ({ message }: any) => {
   return (
     <span className="text-xs text-red-600 dark:text-red-500">{message}</span>
   );

@@ -22,7 +22,7 @@ interface Props {
 export default function Index({ articles, inventoryLocations }: Props) {
   const { setCurrentArticles, setArticles } = useContext(articleContext);
   const { setInventoryLocations } = useContext(inventoryLocationContext);
-  console.log(inventoryLocations);
+
   useEffect(() => {
     setCurrentArticles(articles);
     setArticles(articles);

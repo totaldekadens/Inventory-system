@@ -16,7 +16,6 @@ const Overview = () => {
   const [currentArticle, setCurrentArticle] =
     useState<PopulatedArticleDocument>();
 
-  console.log(currentArticle);
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8 mt-24 sm:mt-8 w-full pb-20">
@@ -72,13 +71,13 @@ const Overview = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 hidden sm:flex text-left text-sm font-semibold text-gray-900"
+                      className="px-3 py-3.5 hidden md:flex text-left text-sm font-semibold text-gray-900"
                     >
                       Antal
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className="pl-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
                       Lagerplats
                     </th>
@@ -137,7 +136,7 @@ const Overview = () => {
                                   </div>
 
                                   {/* Qty controls - mobile device */}
-                                  <div className="mt-3 w-full gap-2 items-center sm:hidden text-gray-500 flex flex-wrap">
+                                  <div className="mt-3 w-full gap-2 items-center md:hidden text-gray-500 flex whitespace-nowrap">
                                     <QtyControls articleObject={article} />
                                   </div>
                                 </div>
@@ -150,13 +149,13 @@ const Overview = () => {
                               </div>
                             </td>
                             {/* Antal - tab and desktop */}
-                            <td className="whitespace-nowrap hidden sm:table-cell px-3 py-5 text-sm text-gray-500">
+                            <td className="whitespace-nowrap hidden md:table-cell px-3 py-5 text-sm text-gray-500">
                               <div className="mt-3 w-full gap-2 items-center  text-gray-500 flex flex-wrap">
                                 <QtyControls articleObject={article} />
                               </div>
                             </td>
                             {/* Lagerplats */}
-                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                            <td className="whitespace-nowrap pl-3 py-5 text-sm text-gray-500">
                               {article.inventoryLocation.name}
                             </td>
                             {/* Edit/Remove - Icons */}
