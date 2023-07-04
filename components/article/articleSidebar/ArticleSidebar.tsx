@@ -28,6 +28,12 @@ const ArticleSidebar = ({ article, className }: Props) => {
           <div className="text-gray-900/80">{article.condition}</div>
         </div>
         <div>
+          <div className=" font-medium text-gray-900 mt-4 lg:mt-8  ">Plats</div>
+          <div className="text-gray-900/80">
+            {article.inventoryLocation.name}
+          </div>
+        </div>
+        <div>
           <div className=" font-medium text-gray-900 mt-4 lg:mt-8">Antal</div>
           <div className="text-gray-900/80">{article.qty} st</div>
         </div>
