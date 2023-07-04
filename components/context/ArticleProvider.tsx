@@ -5,10 +5,14 @@ import { FC, PropsWithChildren, useState } from "react";
 
 export interface PopulatedArticleDocument {
   _id: Types.ObjectId;
-  artno: string;
-  description: string;
+  artno: number;
+  supplierArtno?: string;
+  title: string;
+  description?: string;
   qty: number;
   condition: string;
+  forSale: boolean;
+  price?: number;
   inventoryLocation: InventoryLocationDocument;
   images: string[];
   purchaseValue?: number;

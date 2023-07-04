@@ -2,15 +2,21 @@ import { useContext, useRef, useState } from "react";
 import SearchBar from "./searchbars/SearchBar";
 import SearchBarKombo from "./searchbars/SearchBarKombo";
 import { IconPlus, IconX } from "@tabler/icons-react";
-import { articleContext } from "./context/ArticleProvider";
+import {
+  PopulatedArticleDocument,
+  articleContext,
+} from "./context/ArticleProvider";
 import Link from "next/link";
 import QtyControls from "./buttons/QtyControls";
+import ArticleView from "./article/articleView/ArticleView";
 
 const Overview = () => {
-  const { currentArticles, setCurrentArticles, articles } =
-    useContext(articleContext);
+  const { currentArticles, setCurrentArticles } = useContext(articleContext);
   const [open, setOpen] = useState(false);
+  const [currentArticle, setCurrentArticle] =
+    useState<PopulatedArticleDocument>();
 
+  console.log(currentArticle);
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8 mt-24 sm:mt-8 w-full pb-20">
@@ -96,7 +102,13 @@ const Overview = () => {
                             {/* Artikel */}
                             <td className="md:whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                               <div className="flex items-center">
-                                <div className="h-24 w-24 flex-shrink-0">
+                                <div
+                                  className="h-24 w-24 flex-shrink-0 cursor-pointer"
+                                  onClick={() => {
+                                    setOpen(true);
+                                    setCurrentArticle(article);
+                                  }}
+                                >
                                   <img
                                     className="h-24 w-24 rounded-sm"
                                     src={path}
@@ -104,12 +116,26 @@ const Overview = () => {
                                   />
                                 </div>
                                 <div className="ml-4">
-                                  <div className="font-medium text-gray-900">
-                                    {article.artno}
+                                  <div
+                                    className="font-medium text-gray-900 cursor-pointer "
+                                    onClick={() => {
+                                      setOpen(true);
+                                      setCurrentArticle(article);
+                                    }}
+                                  >
+                                    {article.title}
                                   </div>
-                                  <div className="mt-1 text-gray-500 flex flex-wrap">
-                                    {article.description}
+
+                                  <div
+                                    className="mt-1 text-gray-500 flex flex-wrap cursor-pointer"
+                                    onClick={() => {
+                                      setOpen(true);
+                                      setCurrentArticle(article);
+                                    }}
+                                  >
+                                    {article.supplierArtno}
                                   </div>
+
                                   {/* Qty controls - mobile device */}
                                   <div className="mt-3 w-full gap-2 items-center sm:hidden text-gray-500 flex flex-wrap">
                                     <QtyControls articleObject={article} />
@@ -161,6 +187,12 @@ const Overview = () => {
                                 />
                               </div>
                             </td>
+                            {open && currentArticle ? (
+                              <ArticleView
+                                setOpen={setOpen}
+                                article={currentArticle}
+                              />
+                            ) : null}
                           </tr>
                         );
                       })}

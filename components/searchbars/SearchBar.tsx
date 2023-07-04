@@ -11,8 +11,19 @@ const SearchBar = () => {
       if (articles) {
         const filterArticles = articles.filter(
           (article) =>
-            article.artno.toUpperCase().includes(query.toUpperCase()) ||
-            article.description.toUpperCase().includes(query.toUpperCase())
+            article.artno
+              .toString()
+              .toUpperCase()
+              .includes(query.toUpperCase()) ||
+            (article.description &&
+              article.description
+                .toUpperCase()
+                .includes(query.toUpperCase())) ||
+            (article.supplierArtno &&
+              article.supplierArtno
+                .toUpperCase()
+                .includes(query.toUpperCase())) ||
+            article.title.toUpperCase().includes(query.toUpperCase())
         );
         setCurrentArticles(filterArticles);
       }
