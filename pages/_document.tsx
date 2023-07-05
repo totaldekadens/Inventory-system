@@ -8,7 +8,7 @@ export default function Document() {
         style={{
           display: "fixed",
           inset: 0,
-          backgroundImage: `url("/bg4.png")`,
+          backgroundImage: `url("/bg6.png")`,
           minHeight: "100vh",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
