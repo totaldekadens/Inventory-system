@@ -29,10 +29,10 @@ const Overview = () => {
     ? currentArticles.reduce((sum, item) => sum + item.qty, 0)
     : null; */
 
-  let totalSum = currentArticles?.reduce(
+  /*   let totalSum = currentArticles?.reduce(
     (sum, item) => sum + (item.price ? item.price : 0) * item.qty,
     0
-  );
+  ); */
   const { inventoryLocations } = useContext(inventoryLocationContext);
   return (
     <>
@@ -257,7 +257,7 @@ const Overview = () => {
               />
               <p>Du har ett försäljningsvärde på totalt:</p>
 
-              <p className="font-semibold text-xl ">{totalSum} kr</p>
+              <p className="font-semibold text-xl ">{/* {totalSum} */} 0 kr</p>
             </div>
           </div>
         </div>
