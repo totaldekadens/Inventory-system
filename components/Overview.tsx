@@ -25,9 +25,9 @@ const Overview = () => {
     useState<PopulatedArticleDocument>();
 
   // Total amount of articles
-  let totalAmount = currentArticles
+  /*   let totalAmount = currentArticles
     ? currentArticles.reduce((sum, item) => sum + item.qty, 0)
-    : null;
+    : null; */
 
   let totalSum = currentArticles?.reduce(
     (sum, item) => sum + (item.price ? item.price : 0) * item.qty,
@@ -237,7 +237,9 @@ const Overview = () => {
             <div className="flex-1 w-full sm:w-auto text-gray-800  justify-center flex items-center flex-col p-7 gap-4">
               <IconPackages width={38} height={38} className="text-[#264133]" />{" "}
               <p>Du har lagt in totalt:</p>
-              <p className="font-semibold text-xl ">{totalAmount} produkter</p>
+              <p className="font-semibold text-xl ">
+                {/* totalAmount ? totalAmount : */ 0} produkter
+              </p>
             </div>
             <div className="flex-1 w-full sm:w-auto  text-gray-800   justify-center flex items-center flex-col p-7 gap-4">
               <IconServer2 width={38} height={38} className="text-[#264133]" />
