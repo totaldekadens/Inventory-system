@@ -22,16 +22,25 @@ He´s demands:
 ### Desktop
 
 Overview
-![Skärmavbild 2023-07-05 kl  15 18 02](https://github.com/totaldekadens/Inventory-system/assets/90898648/0e275af9-9282-492f-baf5-404ca54dafe6)
+![desk1](https://github.com/totaldekadens/Inventory-system/assets/90898648/1cb4b5ab-db53-41ec-84e3-4a856a42a3d3)
+![desk2](https://github.com/totaldekadens/Inventory-system/assets/90898648/20ca099e-48c3-4e83-b0b1-8dcfda0e7ab9)
+![desk3](https://github.com/totaldekadens/Inventory-system/assets/90898648/de40daec-cd65-4139-ac5d-f073a7120171)
+
+
 
 Article view - Read
-![Skärmavbild 2023-07-05 kl  15 18 23](https://github.com/totaldekadens/Inventory-system/assets/90898648/dc8e0646-1789-4433-91f4-e9a293c47d42)
+![desk-r-1](https://github.com/totaldekadens/Inventory-system/assets/90898648/15db7ecc-29eb-40bf-ad89-35dea1825000)
+
+
 
 Article view - Edit
-![Skärmavbild 2023-07-05 kl  15 18 39](https://github.com/totaldekadens/Inventory-system/assets/90898648/bede4d02-ab7e-4afd-988c-65c2a799964d)
+![desk-e-1](https://github.com/totaldekadens/Inventory-system/assets/90898648/b2289820-9fb3-4333-bc96-18ff3de9d4f4)
+![desk-e-2](https://github.com/totaldekadens/Inventory-system/assets/90898648/eac5e627-b029-4f27-a050-bec16e665e54)
+
 
 Create article
-![Skärmavbild 2023-07-05 kl  15 19 01](https://github.com/totaldekadens/Inventory-system/assets/90898648/e03a755c-7bd4-47e5-b006-8e457ab47506)
+![desk-c-1](https://github.com/totaldekadens/Inventory-system/assets/90898648/3f29280e-8b07-4f83-8279-c21a1ac04c53)
+![desk-c-2](https://github.com/totaldekadens/Inventory-system/assets/90898648/264fb2a4-848d-4d72-82a4-683aa64f6474)
 
 
 ### Mobile
