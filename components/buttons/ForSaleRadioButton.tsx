@@ -34,10 +34,10 @@ const ForSaleRadioButton = ({ article, forSale, setForSale }: Props) => {
                     className={({ active, checked }) =>
                       classNames(
                         active && checked
-                          ? "ring ring-offset-1 bg-indigo-500 ring-indigo-500"
+                          ? "ring ring-offset-1 bg-[#4A7660] ring-[#4A7660]"
                           : "",
                         !active && checked
-                          ? "ring-2 ring-indigo-500 bg-indigo-500 "
+                          ? "ring-2 ring-[#4A7660] bg-[#4A7660]"
                           : "",
                         "relative -m-0.5 flex ring-1 cursor-pointer items-center justify-center rounded-full p-1.5 focus:outline-none"
                       )

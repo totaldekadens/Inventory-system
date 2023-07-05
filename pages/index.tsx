@@ -35,7 +35,7 @@ export default function Index({ articles, inventoryLocations }: Props) {
         <title>Överblick</title>
       </Head>
       <Header />
-      <main className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 md:mt-20 lg:px-8">
+      <main className="flex min-h-full items-center justify-center px-2 py-12 sm:px-6 md:mt-20 lg:px-8">
         <Overview />
       </main>
     </>

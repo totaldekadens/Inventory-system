@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Button from "@/components/buttons/Button";
-
+import Image from "next/image";
 // Yup schema to validate the form
 const schema = Yup.object().shape({
   username: Yup.string().required(),
@@ -64,14 +64,19 @@ export default function SignIn() {
       <Head>
         <title>Logga in</title>
       </Head>
-      <div className="flex min-h-full flex-1 items-center justify-center px-4 py-12 sm:px-6 md:mt-20 lg:px-8">
-        <div className="w-full max-w-sm space-y-10">
+      <div className="flex min-h-full flex-1 items-center  justify-center px-4  sm:px-6 lg:px-8">
+        {" "}
+        <div className="w-full max-w-sm space-y-10 h-screen flex flex-col justify-center">
           {session.data ? null : (
             <>
-              <div>
-                <h2 className="text-dark-200 dark:text-light-200 mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
-                  Välkommen!
-                </h2>
+              <div className="flex w-full justify-center ">
+                <Image
+                  src={"/logo_black.png"}
+                  width={300}
+                  height={100}
+                  alt="Bild på logga"
+                  className="contain"
+                />
               </div>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="relative -space-y-px rounded-md ">
@@ -89,7 +94,7 @@ export default function SignIn() {
                       autoComplete="username"
                       required
                       className="bg-dark-50/20 focus:ring-light-300 dark:text-light-50 relative mb-2 block h-11 w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset dark:placeholder:text-gray-600 sm:text-sm sm:leading-6 md:h-auto"
-                      placeholder="Username"
+                      placeholder="Användarnamn"
                     />
                   </div>
                   <div>
@@ -105,7 +110,7 @@ export default function SignIn() {
                       onChange={handleChange}
                       required
                       className="bg-dark-50/20 focus:ring-light-300 dark:text-light-50 relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset dark:placeholder:text-gray-600 sm:text-sm sm:leading-6 md:h-auto"
-                      placeholder="Password"
+                      placeholder="Lösenord"
                     />
                     {error ? <ErrorMessage message={error} /> : null}
                   </div>

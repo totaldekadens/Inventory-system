@@ -47,8 +47,9 @@ const SearchBarKombo = () => {
   }, [selectedLocation]);
 
   return (
-    <div className="flex w-full sm:w-auto items-center gap-2">
+    <div className="flex w-full sm:w-auto items-center gap-2 ">
       <Combobox
+        className="w-full"
         as="div"
         value={selectedLocation}
         onChange={setSelectedLocation}
@@ -56,8 +57,8 @@ const SearchBarKombo = () => {
         <div className="relative w-full sm:w-auto flex items-center">
           <Combobox.Input
             type="search"
-            placeholder="Sök på lagerplats.."
-            className="w-full flex items-center rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="Lagerplats.."
+            className="w-full flex items-center rounded-md border-0 bg-white py-3.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(location: InventoryLocationDocument) =>
               location?.name

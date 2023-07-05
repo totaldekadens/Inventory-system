@@ -82,7 +82,7 @@ const QtyControls = ({ articleObject }: Props) => {
     <>
       <div
         onClick={() => deleteQty(articleObject)}
-        className="rounded-full cursor-pointer p-1 flex items-center justify-center border"
+        className="rounded-full cursor-pointer p-1 flex items-center justify-center border "
       >
         <IconMinus width={16} height={16} />{" "}
       </div>

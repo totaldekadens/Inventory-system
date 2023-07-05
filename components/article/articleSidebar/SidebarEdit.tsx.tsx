@@ -11,6 +11,7 @@ import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
 import SelectLocation from "@/components/searchbars/SelectLocation";
 import UploadForm from "@/components/uploadForm";
+import Button from "@/components/buttons/Button";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -255,15 +256,17 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
         />
         {error ? <ErrorMessage message={error} /> : null}
         <div className="mt-5 w-full flex flex-col sm:flex-row gap-2 justify-end">
-          <button className="inline-flex w-full sm:w-36 justify-center items-center rounded-md bg-red-600 px-3 py-3 text-sm font-semibold text-indigo-50 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-indigo-700">
-            Avbryt
-          </button>
-          <button
+          <Button
+            title="Avbryt"
+            variant="danger"
+            className=" px-3 py-3  font-semibold"
+          />
+          <Button
+            variant="positive"
+            title="  Uppdatera artikel"
             type="submit"
-            className="inline-flex w-full sm:w-36 justify-center items-center rounded-md bg-indigo-600 px-3 py-3 text-sm font-semibold text-indigo-50 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-indigo-700"
-          >
-            Uppdatera artikel
-          </button>
+            className=" px-3 py-3 text-sm font-semibold "
+          />
         </div>
       </form>
     </aside>

@@ -7,14 +7,17 @@ import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
 import { articleContext } from "./context/ArticleProvider";
 import ForSaleRadioButton from "./buttons/ForSaleRadioButton";
+import Button from "./buttons/Button";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
   supplierArtno: Yup.string(),
-  title: Yup.string().required(),
+  title: Yup.string().max(37, "Max 37 tecken!").required(),
   description: Yup.string(),
-  qty: Yup.number().required(),
-  condition: Yup.string().required(),
+  qty: Yup.number().required("Fyll i antal!"),
+  condition: Yup.string()
+    .max(25, "Max 25 tecken!")
+    .required("Fyll i skicket på din artikel!"),
   purchaseValue: Yup.number(),
   price: Yup.number(),
   comment: Yup.string(),
@@ -98,6 +101,7 @@ const CreateArticle = ({}) => {
           // Updates list
           const response = await fetch("/api/article/");
           const result = await response.json();
+          console.log(result);
           if (result.success) {
             setCurrentArticles(result.data);
           }
@@ -115,8 +119,9 @@ const CreateArticle = ({}) => {
 
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
+
   return (
-    <div className=" w-full bg-white flex sm:items-center justify-center sm:rounded-lg">
+    <div className=" w-full flex sm:items-center justify-center sm:rounded-lg">
       <div className="px-4 py-5 bg-white sm:p-6 max-w-2xl w-full">
         <div className="pb-8 sm:pb-0 w-full flex justify-between">
           <h3 className="text-2xl sm:text-base font-semibold leading-6 text-gray-900">
@@ -136,17 +141,27 @@ const CreateArticle = ({}) => {
             className={inputClass}
             placeholder="Leverantörens artikelnummer"
           />
+          {errors.supplierArtno && touched.supplierArtno ? (
+            <div className="text-red-600 pl-3 -mt-3 text-xs">
+              {errors.supplierArtno}
+            </div>
+          ) : null}
           <input
             id="title"
             name="title"
             value={values.title}
             onChange={handleChange}
             type="text"
-            required
+            // required
             autoComplete="Titel"
             className={inputClass}
             placeholder="Titel*"
           />
+          {errors.title && touched.title ? (
+            <div className="text-red-600 pl-3 -mt-3 text-xs">
+              {errors.title}
+            </div>
+          ) : null}
 
           <label htmlFor="description" className="sr-only">
             Beskrivning
@@ -162,6 +177,11 @@ const CreateArticle = ({}) => {
             className={inputClass}
             placeholder="Beskrivning"
           />
+          {errors.description && touched.description ? (
+            <div className="text-red-600 pl-3 -mt-3 text-xs">
+              {errors.description}
+            </div>
+          ) : null}
           <input
             id="qty"
             name="qty"
@@ -169,10 +189,13 @@ const CreateArticle = ({}) => {
             autoComplete="qty"
             value={values.qty}
             onChange={handleChange}
-            required
+            //required
             className={inputClass}
             placeholder="Antal*"
           />
+          {errors.qty && touched.qty ? (
+            <div className="text-red-600 pl-3 -mt-3 text-xs">{errors.qty}</div>
+          ) : null}
           <input
             id="condition"
             name="condition"
@@ -180,10 +203,15 @@ const CreateArticle = ({}) => {
             autoComplete="condition"
             value={values.condition}
             onChange={handleChange}
-            required
+            //required
             className={inputClass}
             placeholder="Beskriv skicket på artikeln*"
           />
+          {errors.condition && touched.condition ? (
+            <div className="text-red-600 pl-3 -mt-3 text-xs">
+              {errors.condition}
+            </div>
+          ) : null}
           <SelectLocation
             setSelectedLocation={setSelectedLocation}
             selectedLocation={selectedLocation}
@@ -204,6 +232,11 @@ const CreateArticle = ({}) => {
                 Kr
               </div>
             </div>
+            {errors.purchaseValue && touched.purchaseValue ? (
+              <div className="text-red-600 pl-3 -mt-3 text-xs">
+                {errors.purchaseValue}
+              </div>
+            ) : null}
           </div>
 
           <input
@@ -243,12 +276,12 @@ const CreateArticle = ({}) => {
           />
           {error ? <ErrorMessage message={error} /> : null}
           <div className="mt-5 w-full flex justify-end">
-            <button
+            <Button
+              title="Skapa"
               type="submit"
-              className="inline-flex w-full sm:w-36 justify-center items-center rounded-md bg-indigo-600 px-3 py-3 text-sm font-semibold text-indigo-50 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-indigo-700"
-            >
-              Skapa
-            </button>
+              variant="positive"
+              className=" w-full sm:w-36 px-3 py-3"
+            />
           </div>
         </form>
       </div>

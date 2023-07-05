@@ -2,9 +2,9 @@ import clsx from "clsx";
 import Link from "next/link";
 
 const variantStyle = {
-  danger: " text-light-50 bg-red-600 hover:bg-red-500",
+  danger: " text-white bg-red-500 hover:bg-red-500",
   positive:
-    "bg-indigo-600 dark:text-white dark:bg-indigo-500 dark:hover:bg-indigo-400 text-light-50 hover:bg-indigo-500 focus-visible:outline-dark-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+    "bg-[#264133] text-white  hover:bg-[#2F5140] focus-visible:outline-dark-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
   normal:
     "bg-light-400 dark:text-dark-300 dark:bg-light-100/90 text-light-50 hover:bg-light-400/60 focus-visible:outline-dark-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
   modest:

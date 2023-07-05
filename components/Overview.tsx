@@ -36,7 +36,7 @@ const Overview = () => {
           >
             <button
               type="button"
-              className=" rounded-md flex items-center bg-gray-900 px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className=" rounded-md flex items-center bg-[#264133] px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Lägg till artikel <IconPlus width={20} height={20} />
             </button>
@@ -47,13 +47,16 @@ const Overview = () => {
           {/* Searchbars */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between mt-4 mb-8">
             <SearchBar />
+            <div className="text-xs px-2 hidden sm:flex w-full sm:w-20 whitespace-nowrap justify-center  items-center">
+              och / eller
+            </div>
             <SearchBarKombo />
           </div>
 
           {/* Article list */}
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 ">
+              <table className="min-w-full  ">
                 {/* Headers */}
                 <thead>
                   <tr>
@@ -90,17 +93,17 @@ const Overview = () => {
                   </tr>
                 </thead>
                 {/* Content */}
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y divide-gray-200 bg-[#FCFCFC]  ">
                   {!currentArticles
                     ? null
                     : currentArticles.map((article, i) => {
                         const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${article.images[0]}`;
 
                         return (
-                          <tr key={i}>
+                          <tr key={i} className="">
                             {/* Artikel */}
-                            <td className="md:whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                              <div className="flex items-center">
+                            <td className="md:whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-3 ">
+                              <div className="flex">
                                 <div
                                   className="h-24 w-24 flex-shrink-0 cursor-pointer"
                                   onClick={() => {
@@ -114,29 +117,33 @@ const Overview = () => {
                                     alt="Bild på artikel"
                                   />
                                 </div>
-                                <div className="ml-4">
-                                  <div
-                                    className="font-medium text-gray-900 cursor-pointer "
-                                    onClick={() => {
-                                      setOpen(true);
-                                      setCurrentArticle(article);
-                                    }}
-                                  >
-                                    {article.title}
-                                  </div>
+                                <div className="ml-4 flex flex-col justify-between">
+                                  <div>
+                                    <div className="relative h-5">
+                                      <div
+                                        className="font-medium whitespace-nowrap text-gray-900 cursor-pointer  absolute truncate" //absolute left-0 -top-5
+                                        onClick={() => {
+                                          setOpen(true);
+                                          setCurrentArticle(article);
+                                        }}
+                                      >
+                                        {article.title}
+                                      </div>
+                                    </div>
 
-                                  <div
-                                    className="mt-1 text-gray-500 flex flex-wrap cursor-pointer"
-                                    onClick={() => {
-                                      setOpen(true);
-                                      setCurrentArticle(article);
-                                    }}
-                                  >
-                                    {article.supplierArtno}
+                                    <div
+                                      className="mt-1 text-gray-500 flex flex-wrap cursor-pointer"
+                                      onClick={() => {
+                                        setOpen(true);
+                                        setCurrentArticle(article);
+                                      }}
+                                    >
+                                      {article.supplierArtno}
+                                    </div>
                                   </div>
 
                                   {/* Qty controls - mobile device */}
-                                  <div className="mt-3 w-full gap-2 items-center md:hidden text-gray-500 flex whitespace-nowrap">
+                                  <div className="mt-3 w-full gap-2 items-center md:hidden text-gray-800 flex whitespace-nowrap">
                                     <QtyControls articleObject={article} />
                                   </div>
                                 </div>
@@ -150,17 +157,19 @@ const Overview = () => {
                             </td>
                             {/* Antal - tab and desktop */}
                             <td className="whitespace-nowrap hidden md:table-cell px-3 py-5 text-sm text-gray-500">
-                              <div className="mt-3 w-full gap-2 items-center  text-gray-500 flex flex-wrap">
+                              <div className="mt-3 w-full gap-2 items-center  text-gray-800  flex flex-wrap">
                                 <QtyControls articleObject={article} />
                               </div>
                             </td>
                             {/* Lagerplats */}
-                            <td className="whitespace-nowrap pl-3 py-5 text-sm text-gray-500">
-                              {article.inventoryLocation.name}
+                            <td className="whitespace-nowrap pl-3 py-5 text-sm  text-gray-500">
+                              <div className="flex items-end md:items-center h-24">
+                                {article.inventoryLocation.name}
+                              </div>
                             </td>
                             {/* Edit/Remove - Icons */}
-                            <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                              <div className="flex flex-col sm:flex-row gap-5">
+                            <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 ">
+                              <div className="flex h-24 flex-col md:flex-row items-center justify-end md:justify-center">
                                 <IconX
                                   className="text-red-600 hover:text-red-900 cursor-pointer"
                                   onClick={async () => {
