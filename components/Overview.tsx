@@ -1,7 +1,13 @@
 import { useContext, useRef, useState } from "react";
 import SearchBar from "./searchbars/SearchBar";
 import SearchBarKombo from "./searchbars/SearchBarKombo";
-import { IconPlus, IconX } from "@tabler/icons-react";
+import {
+  IconCurrencyKroneSwedish,
+  IconPackages,
+  IconPlus,
+  IconServer2,
+  IconX,
+} from "@tabler/icons-react";
 import {
   PopulatedArticleDocument,
   articleContext,
@@ -9,6 +15,8 @@ import {
 import Link from "next/link";
 import QtyControls from "./buttons/QtyControls";
 import ArticleView from "./article/articleView/ArticleView";
+import { inventoryLocationContext } from "./context/InventoryLocationProvider";
+import Button from "./buttons/Button";
 
 const Overview = () => {
   const { currentArticles, setCurrentArticles } = useContext(articleContext);
@@ -16,34 +24,48 @@ const Overview = () => {
   const [currentArticle, setCurrentArticle] =
     useState<PopulatedArticleDocument>();
 
+  // Total amount of articles
+  let totalAmount = currentArticles.reduce((sum, item) => sum + item.qty, 0);
+  let totalSum = currentArticles.reduce(
+    (sum, item) => sum + (item.price ? item.price : 0) * item.qty,
+    0
+  );
+  const { inventoryLocations } = useContext(inventoryLocationContext);
   return (
     <>
-      <div className="px-4 sm:px-6 lg:px-8 mt-24 sm:mt-8 w-full pb-20">
+      <div className="px-4 sm:px-6 lg:px-8 mt-10 md:mt-10 sm:mt-8 w-full pb-20">
         {/* Introduction and "create article"-button */}
-        <div className="flex flex-col sm:flex-row items-center">
-          <div className="sm:flex-auto">
-            <h1 className="text-lg sm:text-base text-center sm:text-left font-semibold leading-6 text-gray-900">
-              Överblick - Lagerartiklar
-            </h1>
-            <p className="mt-2 text-sm text-center sm:text-left text-gray-700">
-              Här har du en lista på dina samtliga lagerförda artiklar
-            </p>
+        <div className="flex  items-center w-full justify-center  h-[520px] mb-10 ">
+          <div className="min-w-[250px] pt-20 lg:pt-32 h-full items-center flex flex-col flex-1 md:flex-0 ">
+            <p className="text-3xl mb-10 ">Välkommen tillbaka, Patrik!</p>
+            <div className=" block sm:hidden h-44 mb-14 ">
+              <img className="w-full h-full object-contain" src="/mole.png" />
+            </div>
+            <div className="flex gap-3 flex-wrap">
+              <Link href="/create" className="sm:mt-0 sm:flex-none">
+                <button
+                  type="button"
+                  className=" rounded-md flex items-center bg-[#264133] px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Lägg till artikel <IconPlus width={20} height={20} />
+                </button>
+              </Link>
+              <Link href="/create" className="sm:mt-0 sm:flex-none">
+                <button
+                  type="button"
+                  className=" rounded-md flex items-center bg-[#264133] px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Hantera lagerplatser
+                </button>
+              </Link>
+            </div>
           </div>
-
-          <Link
-            href="/create"
-            className="mt-16 mb-16 sm:ml-16 sm:mt-0 sm:flex-none"
-          >
-            <button
-              type="button"
-              className=" rounded-md flex items-center bg-[#264133] px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Lägg till artikel <IconPlus width={20} height={20} />
-            </button>
-          </Link>
+          <div className="flex-1 md:flex-0 max-w-[600px] hidden sm:block ">
+            <img className="w-full" src="/mole.png" />
+          </div>
         </div>
 
-        <div className="mt-8 flow-root">
+        <div className=" flow-root">
           {/* Searchbars */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between mt-4 mb-8">
             <SearchBar />
@@ -206,6 +228,31 @@ const Overview = () => {
                       })}
                 </tbody>
               </table>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-6 mt-20">
+            <div className="flex-1 w-full sm:w-auto text-gray-800  justify-center flex items-center flex-col p-7 gap-4">
+              <IconPackages width={38} height={38} className="text-[#264133]" />{" "}
+              <p>Du har lagt in totalt:</p>
+              <p className="font-semibold text-xl ">{totalAmount} produkter</p>
+            </div>
+            <div className="flex-1 w-full sm:w-auto  text-gray-800   justify-center flex items-center flex-col p-7 gap-4">
+              <IconServer2 width={38} height={38} className="text-[#264133]" />
+              <p>Du har totalt:</p>
+
+              <p className="font-semibold text-xl ">
+                {inventoryLocations?.length} st lagerplatser
+              </p>
+            </div>
+            <div className="flex-1 w-full sm:w-auto  text-gray-800  justify-center flex items-center flex-col p-7 gap-4">
+              <IconCurrencyKroneSwedish
+                width={38}
+                height={38}
+                className="text-[#264133]"
+              />
+              <p>Du har ett försäljningsvärde på totalt:</p>
+
+              <p className="font-semibold text-xl ">{totalSum} kr</p>
             </div>
           </div>
         </div>
