@@ -46,8 +46,10 @@ Create article
 ### Mobile
 
 Overview
+![IMG_4759](https://github.com/totaldekadens/Inventory-system/assets/90898648/e8eac7f1-2823-4e95-9386-a8916021cdc2)
+![IMG_4760](https://github.com/totaldekadens/Inventory-system/assets/90898648/c4a36d68-8e8a-4616-9be2-2cf810ca54dc)
+![IMG_4761](https://github.com/totaldekadens/Inventory-system/assets/90898648/31cd54f3-f395-4f22-acef-4dd64b697370)
 
-![Skärmavbild 2023-07-05 kl  15 21 03](https://github.com/totaldekadens/Inventory-system/assets/90898648/1b12e310-c113-4a52-a6a2-31f381401486)
 
 Article view - Read
 
