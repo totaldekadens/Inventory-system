@@ -112,7 +112,7 @@ const Overview = () => {
                                   }}
                                 >
                                   <img
-                                    className="h-24 w-24 rounded-sm"
+                                    className="h-24 w-24 rounded-sm object-cover"
                                     src={path}
                                     alt="Bild på artikel"
                                   />

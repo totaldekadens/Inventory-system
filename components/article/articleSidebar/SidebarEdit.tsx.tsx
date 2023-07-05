@@ -110,7 +110,10 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
   return (
-    <aside className="col-span-4">
+    <aside
+      className="flex flex-col col-span-1 md:px-6 mx-auto max-w-8xl py-6 w-full h-full"
+      style={{ maxWidth: "600px" }}
+    >
       <form onSubmit={handleSubmit} className="">
         <div className="flex justify-between w-full mb-4">
           <div className="w-full flex flex-col gap-3">
@@ -260,6 +263,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             title="Avbryt"
             variant="danger"
             className=" px-3 py-3  font-semibold"
+            onClick={() => setEdit(false)}
           />
           <Button
             variant="positive"

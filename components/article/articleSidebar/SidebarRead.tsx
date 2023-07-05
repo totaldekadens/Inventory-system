@@ -13,7 +13,7 @@ const SidebarRead = ({ article, className, edit, setEdit }: Props) => {
   const [forSale, setForSale] = useState(article.forSale);
 
   return (
-    <aside className={className}>
+    <aside className={className} style={{ maxWidth: "600px" }}>
       <div className="flex justify-between mb-4">
         <div>
           <h1 className="text-xl font-medium text-gray-900">{article.title}</h1>
