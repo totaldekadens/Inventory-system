@@ -25,8 +25,11 @@ const Overview = () => {
     useState<PopulatedArticleDocument>();
 
   // Total amount of articles
-  let totalAmount = currentArticles.reduce((sum, item) => sum + item.qty, 0);
-  let totalSum = currentArticles.reduce(
+  let totalAmount = currentArticles
+    ? currentArticles.reduce((sum, item) => sum + item.qty, 0)
+    : null;
+
+  let totalSum = currentArticles?.reduce(
     (sum, item) => sum + (item.price ? item.price : 0) * item.qty,
     0
   );
