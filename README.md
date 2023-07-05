@@ -42,15 +42,21 @@ Overview
 
 Article view - Read
 
-![Skärmavbild 2023-07-05 kl  15 21 24](https://github.com/totaldekadens/Inventory-system/assets/90898648/d6201484-3aa9-4d4a-bb61-8a103d7442e9)
-![Skärmavbild 2023-07-05 kl  15 21 36](https://github.com/totaldekadens/Inventory-system/assets/90898648/93d67efe-527e-42c1-bb37-414565b91163)
+![r1](https://github.com/totaldekadens/Inventory-system/assets/90898648/bb03ceee-550e-43e8-b1c2-733263673834)
+![r2](https://github.com/totaldekadens/Inventory-system/assets/90898648/f584bf3e-c299-496b-9e2f-028174037b5f)
+
+
 
 Article view - Edit
 
-![Skärmavbild 2023-07-05 kl  15 21 55](https://github.com/totaldekadens/Inventory-system/assets/90898648/6fb17acc-af45-4801-92ed-d9ea190605fb)
-![Skärmavbild 2023-07-05 kl  15 22 15](https://github.com/totaldekadens/Inventory-system/assets/90898648/97beda28-3eff-402e-8ee2-7e1a0798909f)
+![e1](https://github.com/totaldekadens/Inventory-system/assets/90898648/99e22380-931b-4bcd-b7b0-e8f5d29be885)
+![e2](https://github.com/totaldekadens/Inventory-system/assets/90898648/bfde10b5-8d3a-452e-9d7f-a6ac0f516f35)
+![e3](https://github.com/totaldekadens/Inventory-system/assets/90898648/3b8e4ff1-cc28-47a1-94a5-162bc3124502)
+
+
 
 Create article
 
-![Skärmavbild 2023-07-05 kl  15 27 53](https://github.com/totaldekadens/Inventory-system/assets/90898648/be5bd47c-66e2-469c-b9d0-b63391c6ad50)
-![Skärmavbild 2023-07-05 kl  15 28 01](https://github.com/totaldekadens/Inventory-system/assets/90898648/5fa496df-2fad-4baf-afbc-e76b02a6cc56)
+![c1](https://github.com/totaldekadens/Inventory-system/assets/90898648/cc413665-8246-47fa-a8b9-9fde4ca2c6df)
+![c2](https://github.com/totaldekadens/Inventory-system/assets/90898648/913fd8e8-b37c-4d2d-b9d6-287d2241c7db)
+
