@@ -9,6 +9,7 @@ const Overview = () => {
       {/* Introduction */}
       <Hero />
       <div className="flow-root">
+        <div className="w-full text-3xl mb-7 ">Överblick</div>
         {/* Searchbars and filter */}
         <Filter />
         {/* Table of all filtered articles */}
