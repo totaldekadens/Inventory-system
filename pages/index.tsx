@@ -14,20 +14,28 @@ import {
   articleContext,
 } from "@/components/context/ArticleProvider";
 import { inventoryLocationContext } from "@/components/context/InventoryLocationProvider";
+import { vehicleContext } from "@/components/context/VehicleProvider";
 
 interface Props {
   articles: PopulatedArticleDocument[];
   inventoryLocations: InventoryLocationDocument[];
+  vehicleModels: VehicleDocument[];
 }
 
-export default function Index({ articles, inventoryLocations }: Props) {
+export default function Index({
+  articles,
+  inventoryLocations,
+  vehicleModels,
+}: Props) {
   const { setCurrentArticles, setArticles } = useContext(articleContext);
+  const { vehicles, setVehicles } = useContext(vehicleContext);
   const { setInventoryLocations } = useContext(inventoryLocationContext);
 
   useEffect(() => {
     setCurrentArticles(articles);
     setArticles(articles);
     setInventoryLocations(inventoryLocations);
+    setVehicles(vehicleModels);
   }, []);
 
   return (
@@ -46,7 +54,7 @@ export default function Index({ articles, inventoryLocations }: Props) {
 export const getServerSideProps: GetServerSideProps = async () => {
   await dbConnect();
 
-  const getArticles = await Article.find({})
+  const getArticles: PopulatedArticleDocument[] = await Article.find({})
     .populate({
       path: "inventoryLocation",
       model: InventoryLocation,
@@ -56,12 +64,18 @@ export const getServerSideProps: GetServerSideProps = async () => {
       model: Vehicle,
     });
 
+  const ascendingArticles = getArticles.sort((a, b) =>
+    a.createdDate > b.createdDate ? 1 : -1
+  );
+
   const getInventoryLocations = await InventoryLocation.find({});
+  const getVehicleModels = await Vehicle.find({});
 
   return {
     props: {
-      articles: JSON.parse(JSON.stringify(getArticles)),
+      articles: JSON.parse(JSON.stringify(ascendingArticles)),
       inventoryLocations: JSON.parse(JSON.stringify(getInventoryLocations)),
+      vehicleModels: JSON.parse(JSON.stringify(getVehicleModels)),
     },
   };
 };

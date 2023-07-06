@@ -57,9 +57,11 @@ const Table = () => {
           {/* Content */}
           <tbody className="divide-y divide-gray-200 bg-[#FCFCFC] relative">
             {currentArticles.length < 1 ? (
-              <div className="bg-transparent p-3 h-11 flex  ">
-                <p className="">Sökningen gav ingen träff</p>
-              </div>
+              <tr className="bg-transparent p-3 h-11 flex  ">
+                <td>
+                  <p className="">Sökningen gav ingen träff</p>
+                </td>
+              </tr>
             ) : (
               currentArticles.map((article, i) => {
                 const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${article.images[0]}`;

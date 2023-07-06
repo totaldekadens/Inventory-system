@@ -12,7 +12,6 @@ function classNames(...classes: any) {
 }
 
 const SearchBarKomboModels = () => {
-  const { inventoryLocations } = useContext(inventoryLocationContext);
   const { currentArticles, setCurrentArticles, articles } =
     useContext(articleContext);
   const [query, setQuery] = useState("");

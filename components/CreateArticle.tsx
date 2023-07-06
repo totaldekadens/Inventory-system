@@ -8,6 +8,9 @@ import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
 import { articleContext } from "./context/ArticleProvider";
 import ForSaleRadioButton from "./buttons/ForSaleRadioButton";
 import Button from "./buttons/Button";
+import SelectModels from "./searchbars/SelectModels";
+import { ArticleDocument } from "@/models/ArticleModel";
+import { Types } from "mongoose";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -31,10 +34,12 @@ export const ErrorMessage = ({ message }: any) => {
 
 const CreateArticle = ({}) => {
   const [forSale, setForSale] = useState(false);
-
   const { setCurrentArticles } = useContext(articleContext);
+
   const [selectedLocation, setSelectedLocation] =
     useState<InventoryLocationDocument | null>(null);
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
+
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
   const [error, setError] = useState<string>("");
@@ -65,18 +70,34 @@ const CreateArticle = ({}) => {
       comment,
     }) => {
       try {
+        if (imageList.length < 1) {
+          setError("Lägg till minst en bild");
+          return;
+        }
+
+        if (selectedModels.length < 1) {
+          setError("Välj minst en fordonsmodell");
+          return;
+        }
+
+        if (!selectedLocation) {
+          setError("Välj en lagerplats");
+          return;
+        }
+
         const newArticle = {
           supplierArtno,
+          vehicleModels: selectedModels as unknown as Types.ObjectId[],
           title,
           description,
-          qty,
+          qty: Number(qty),
           condition,
-          purchaseValue,
+          purchaseValue: Number(purchaseValue),
           forSale,
-          price,
+          price: Number(price),
           comment,
           images: imageList,
-          inventoryLocation: selectedLocation?._id,
+          inventoryLocation: selectedLocation?._id as unknown as Types.ObjectId,
         };
         // Upload images to Cloudinary
         await UploadToImagesToServer(fileList);
@@ -212,10 +233,17 @@ const CreateArticle = ({}) => {
               {errors.condition}
             </div>
           ) : null}
-          <SelectLocation
-            setSelectedLocation={setSelectedLocation}
-            selectedLocation={selectedLocation}
-          />
+          <div className="flex flex-col sm:flex-row gap-2">
+            <SelectModels
+              setSelectedModel={setSelectedModels}
+              selectedModel={selectedModels}
+            />
+            <SelectLocation
+              setSelectedLocation={setSelectedLocation}
+              selectedLocation={selectedLocation}
+            />
+          </div>
+
           <div className="relative">
             <input
               id="purchaseValue"
