@@ -22,7 +22,6 @@ const ArticleSidebar = ({ article, className }: Props) => {
       ) : (
         <SidebarRead
           article={article}
-          edit={edit}
           setEdit={setEdit}
           className={className}
         />

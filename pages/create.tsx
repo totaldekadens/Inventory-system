@@ -1,18 +1,7 @@
 import Head from "next/head";
 import Header from "@/components/Layout/Header";
-import { GetServerSideProps } from "next";
-import Article, { ArticleDocument } from "@/models/ArticleModel";
-import dbConnect from "@/lib/dbConnect";
-import Overview from "@/components/Overview";
-import InventoryLocation, {
-  InventoryLocationDocument,
-} from "@/models/InventoryLocationModel";
-import { useContext, useEffect } from "react";
-import {
-  PopulatedArticleDocument,
-  articleContext,
-} from "@/components/context/ArticleProvider";
-import { inventoryLocationContext } from "@/components/context/InventoryLocationProvider";
+import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
+import { PopulatedArticleDocument } from "@/components/context/ArticleProvider";
 import CreateArticle from "@/components/CreateArticle";
 
 interface Props {
