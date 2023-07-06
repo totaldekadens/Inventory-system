@@ -1,17 +1,13 @@
 import { IconEdit } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "../../context/ArticleProvider";
-import ForSaleRadioButton from "@/components/buttons/ForSaleRadioButton";
 import { Dispatch, SetStateAction, useState } from "react";
 
 interface Props {
   article: PopulatedArticleDocument;
   className?: string;
-  edit: boolean;
   setEdit: Dispatch<SetStateAction<boolean>>;
 }
-const SidebarRead = ({ article, className, edit, setEdit }: Props) => {
-  const [forSale, setForSale] = useState(article.forSale);
-
+const SidebarRead = ({ article, className, setEdit }: Props) => {
   return (
     <aside className={className} style={{ maxWidth: "600px" }}>
       <div className="flex justify-between mb-4">
