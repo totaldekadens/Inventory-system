@@ -8,7 +8,7 @@ export interface PopulatedArticleDocument {
   _id: Types.ObjectId;
   artno: number;
   supplierArtno?: string;
-  vehicleModels?: VehicleDocument[];
+  vehicleModels: VehicleDocument[];
   title: string;
   description?: string;
   qty: number;

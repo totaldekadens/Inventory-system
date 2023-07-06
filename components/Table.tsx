@@ -53,129 +53,139 @@ const Table = () => {
               />
             </tr>
           </thead>
+
           {/* Content */}
-          <tbody className="divide-y divide-gray-200 bg-[#FCFCFC]">
-            {!currentArticles
-              ? null
-              : currentArticles.map((article, i) => {
-                  const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${article.images[0]}`;
+          <tbody className="divide-y divide-gray-200 bg-[#FCFCFC] relative">
+            {currentArticles.length < 1 ? (
+              <div className="bg-transparent p-3 h-11 flex  ">
+                <p className="">Sökningen gav ingen träff</p>
+              </div>
+            ) : (
+              currentArticles.map((article, i) => {
+                const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${article.images[0]}`;
 
-                  return (
-                    <tr key={i} className="">
-                      {/* Artikel */}
-                      <td className="md:whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-3 ">
-                        <div className="flex">
-                          <div
-                            className="h-24 w-24 flex-shrink-0 cursor-pointer"
-                            onClick={() => {
-                              setOpen(true);
-                              setCurrentArticle(article);
-                            }}
-                          >
-                            <img
-                              className="h-24 w-24 rounded-sm object-cover"
-                              src={path}
-                              alt="Bild på artikel"
-                            />
-                          </div>
-                          <div className="ml-4 flex flex-col justify-between">
-                            <div>
-                              <div className="relative h-5">
-                                <div
-                                  className="font-medium whitespace-nowrap text-gray-900 cursor-pointer  absolute truncate"
-                                  onClick={() => {
-                                    setOpen(true);
-                                    setCurrentArticle(article);
-                                  }}
-                                >
-                                  {article.title}
-                                </div>
-                              </div>
-                              {/* Modell Mobile & Tab */}
-                              <div className="mt-1 w-full gap-2 items-center lg:hidden text-gray-500 flex whitespace-nowrap">
-                                {article.vehicleModels?.map((model) => (
-                                  <div className="text-gray-500 h-full">
-                                    {model.name}
-                                  </div>
-                                ))}
-                              </div>
-
+                return (
+                  <tr key={i} className="">
+                    {/* Artikel */}
+                    <td className="md:whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-3 ">
+                      <div className="flex">
+                        {/* Image */}
+                        <div
+                          className="h-24 w-24 flex-shrink-0 cursor-pointer"
+                          onClick={() => {
+                            setOpen(true);
+                            setCurrentArticle(article);
+                          }}
+                        >
+                          <img
+                            className="h-24 w-24 rounded-sm object-cover"
+                            src={path}
+                            alt="Bild på artikel"
+                          />
+                        </div>
+                        <div className="ml-4 flex flex-col justify-between">
+                          <div>
+                            {/* Title */}
+                            <div className="relative h-5">
                               <div
-                                className="mt-1 text-gray-500 flex flex-wrap cursor-pointer"
+                                className="font-medium whitespace-nowrap text-gray-900 cursor-pointer  absolute truncate"
                                 onClick={() => {
                                   setOpen(true);
                                   setCurrentArticle(article);
                                 }}
                               >
-                                {article.supplierArtno}
+                                {article.title}
                               </div>
                             </div>
+                            {/* Modell Mobile & Tab */}
 
-                            {/* Qty controls - mobile device */}
-                            <div className="mt-3 w-full gap-2 items-center md:hidden text-gray-800 flex whitespace-nowrap">
-                              <QtyControls articleObject={article} />
+                            <div className="mt-1 w-full gap-2 items-center lg:hidden text-gray-500 flex flex-wrap sm:whitespace-nowrap  ">
+                              {article.vehicleModels?.map((model, i) => (
+                                <div key={i} className="text-gray-500 h-full  ">
+                                  {model.name}
+                                  {article.vehicleModels &&
+                                  article.vehicleModels.length - 1 == i
+                                    ? ""
+                                    : ", "}
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Supplier part no */}
+                            <div
+                              className="mt-1 text-gray-500 flex flex-wrap cursor-pointer"
+                              onClick={() => {
+                                setOpen(true);
+                                setCurrentArticle(article);
+                              }}
+                            >
+                              {article.supplierArtno}
                             </div>
                           </div>
-                        </div>
-                      </td>
-                      {/* Modell */}
-                      <td className="whitespace-nowrap hidden lg:table-cell py-5 text-sm text-gray-500 flex-wrap">
-                        {article.vehicleModels?.map((model) => (
-                          <div className="text-gray-900 h-full ">
-                            {model.name}
-                          </div>
-                        ))}
-                      </td>
-                      {/* Skick */}
-                      <td className="whitespace-nowrap hidden lg:table-cell  px-3 py-5 text-sm text-gray-500">
-                        <div className="text-gray-900 h-full ">
-                          {article.condition}
-                        </div>
-                      </td>
-                      {/* Antal - tab and desktop */}
-                      <td className="whitespace-nowrap hidden md:table-cell px-3 py-5 text-sm text-gray-500">
-                        <div className="mt-3 w-full gap-2 items-center  text-gray-800  flex flex-wrap">
-                          <QtyControls articleObject={article} />
-                        </div>
-                      </td>
-                      {/* Lagerplats */}
-                      <td className="whitespace-nowrap pl-3 py-5 text-sm  text-gray-500">
-                        <div className="flex items-end md:items-center h-24">
-                          {article.inventoryLocation.name}
-                        </div>
-                      </td>
-                      {/* Edit/Remove - Icons */}
-                      <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 ">
-                        <div className="flex h-24 flex-col md:flex-row items-center justify-end md:justify-center">
-                          <IconX
-                            className="text-red-600 hover:text-red-900 cursor-pointer"
-                            onClick={async () => {
-                              const test = confirm("Är du säker?");
-                              // Todo: Update this one later
-                              if (test) {
-                                await fetch(`api/article/${article._id}`, {
-                                  method: "DELETE",
-                                });
 
-                                const response = await fetch("/api/article/");
-                                const result = await response.json();
-                                if (result.success) {
-                                  setCurrentArticles(result.data);
-                                }
-                              }
-                            }}
-                          />
+                          {/* Qty controls - mobile device */}
+                          <div className="mt-3 w-full gap-2 items-center md:hidden text-gray-800 flex whitespace-nowrap">
+                            <QtyControls articleObject={article} />
+                          </div>
                         </div>
-                      </td>
-                      {open && currentArticle ? (
-                        <ArticleView
-                          setOpen={setOpen}
-                          article={currentArticle}
+                      </div>
+                    </td>
+                    {/* Modell */}
+                    <td className="whitespace-nowrap hidden lg:table-cell py-5 text-sm text-gray-500 flex-wrap">
+                      {article.vehicleModels?.map((model, i) => (
+                        <div key={i} className="text-gray-900 h-full ">
+                          {model.name}
+                        </div>
+                      ))}
+                    </td>
+                    {/* Skick */}
+                    <td className="whitespace-nowrap hidden lg:table-cell  px-3 py-5 text-sm text-gray-500">
+                      <div className="text-gray-900 h-full ">
+                        {article.condition}
+                      </div>
+                    </td>
+                    {/* Antal - tab and desktop */}
+                    <td className="whitespace-nowrap hidden md:table-cell px-3 py-5 text-sm text-gray-500">
+                      <div className="mt-3 w-full gap-2 items-center  text-gray-800  flex flex-wrap">
+                        <QtyControls articleObject={article} />
+                      </div>
+                    </td>
+                    {/* Lagerplats */}
+                    <td className="whitespace-nowrap pl-3 py-5 text-sm  text-gray-500">
+                      <div className="flex items-end md:items-center h-24">
+                        {article.inventoryLocation.name}
+                      </div>
+                    </td>
+                    {/* Edit/Remove - Icons */}
+                    <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 ">
+                      <div className="flex h-24 flex-col md:flex-row items-center justify-end md:justify-center">
+                        <IconX
+                          className="text-red-600 hover:text-red-900 cursor-pointer"
+                          onClick={async () => {
+                            const test = confirm("Är du säker?");
+                            // Todo: Update this one later
+                            if (test) {
+                              await fetch(`api/article/${article._id}`, {
+                                method: "DELETE",
+                              });
+
+                              const response = await fetch("/api/article/");
+                              const result = await response.json();
+                              if (result.success) {
+                                setCurrentArticles(result.data);
+                              }
+                            }
+                          }}
                         />
-                      ) : null}
-                    </tr>
-                  );
-                })}
+                      </div>
+                    </td>
+                    {open && currentArticle ? (
+                      <ArticleView setOpen={setOpen} article={currentArticle} />
+                    ) : null}
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
