@@ -37,6 +37,10 @@ const Table = () => {
             <tr>
               <Th header="Artikel" className="sm:pl-0 text-left pl-4 pr-3" />
               <Th
+                header="Modell"
+                className="sm:pl-0 text-left pl-4 pr-3 hidden lg:table-cell"
+              />
+              <Th
                 header="Skick"
                 className=" hidden lg:table-cell text-left px-3"
               />
@@ -87,6 +91,14 @@ const Table = () => {
                                   {article.title}
                                 </div>
                               </div>
+                              {/* Modell Mobile & Tab */}
+                              <div className="mt-1 w-full gap-2 items-center lg:hidden text-gray-500 flex whitespace-nowrap">
+                                {article.vehicleModels?.map((model) => (
+                                  <div className="text-gray-500 h-full">
+                                    {model.name}
+                                  </div>
+                                ))}
+                              </div>
 
                               <div
                                 className="mt-1 text-gray-500 flex flex-wrap cursor-pointer"
@@ -105,6 +117,14 @@ const Table = () => {
                             </div>
                           </div>
                         </div>
+                      </td>
+                      {/* Modell */}
+                      <td className="whitespace-nowrap hidden lg:table-cell py-5 text-sm text-gray-500 flex-wrap">
+                        {article.vehicleModels?.map((model) => (
+                          <div className="text-gray-900 h-full ">
+                            {model.name}
+                          </div>
+                        ))}
                       </td>
                       {/* Skick */}
                       <td className="whitespace-nowrap hidden lg:table-cell  px-3 py-5 text-sm text-gray-500">

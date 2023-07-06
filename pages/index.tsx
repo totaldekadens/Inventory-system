@@ -7,6 +7,7 @@ import Overview from "@/components/Overview";
 import InventoryLocation, {
   InventoryLocationDocument,
 } from "@/models/InventoryLocationModel";
+import Vehicle, { VehicleDocument } from "@/models/VehicleModel";
 import { useContext, useEffect } from "react";
 import {
   PopulatedArticleDocument,
@@ -45,10 +46,15 @@ export default function Index({ articles, inventoryLocations }: Props) {
 export const getServerSideProps: GetServerSideProps = async () => {
   await dbConnect();
 
-  const getArticles = await Article.find({}).populate({
-    path: "inventoryLocation",
-    model: InventoryLocation,
-  });
+  const getArticles = await Article.find({})
+    .populate({
+      path: "inventoryLocation",
+      model: InventoryLocation,
+    })
+    .populate({
+      path: "vehicleModels",
+      model: Vehicle,
+    });
 
   const getInventoryLocations = await InventoryLocation.find({});
 

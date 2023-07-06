@@ -1,4 +1,5 @@
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
+import { VehicleDocument } from "@/models/VehicleModel";
 import { Types } from "mongoose";
 import React, { useEffect } from "react";
 import { FC, PropsWithChildren, useState } from "react";
@@ -7,6 +8,7 @@ export interface PopulatedArticleDocument {
   _id: Types.ObjectId;
   artno: number;
   supplierArtno?: string;
+  vehicleModels?: VehicleDocument[];
   title: string;
   description?: string;
   qty: number;

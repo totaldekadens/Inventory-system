@@ -23,7 +23,7 @@ const SelectLocation = ({
   placeholder,
 }: Props) => {
   const { inventoryLocations } = useContext(inventoryLocationContext);
-  console.log(inventoryLocations);
+
   const [query, setQuery] = useState("");
 
   const filteredLocation =
