@@ -1,15 +1,18 @@
 import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
-
+import { useSession } from "next-auth/react";
 const Hero = () => {
+  const { data: session } = useSession();
   return (
-    <div className="flex  items-center w-full justify-center  h-[520px] mb-10 ">
-      <div className="min-w-[250px] pt-20 lg:pt-32 h-full items-center flex flex-col flex-1 md:flex-0 ">
-        <p className="text-3xl mb-10 ">Välkommen tillbaka, Patrik!</p>
-        <div className=" block sm:hidden h-44 mb-14 ">
-          <img className="w-full h-full object-contain" src="/mole.png" />
+    <div className="flex  items-center w-full justify-center  h-[590px] mb-10 ">
+      <div className="min-w-[250px] pt-14  sm:pt-20 lg:pt-32 h-full items-center flex flex-col flex-1 md:flex-0 ">
+        <p className="text-3xl mb-10 ">
+          {`Välkommen tillbaka, ${session?.user?.firstName}!`}
+        </p>
+        <div className=" block sm:hidden h-64 mb-20 ">
+          <img className="w-full h-full object-contain" src="/mole2.png" />
         </div>
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-3 flex-wrap justify-center sm:justify-start ">
           <Link href="/create" className="sm:mt-0 sm:flex-none">
             <button
               type="button"
@@ -28,8 +31,8 @@ const Hero = () => {
           </Link>
         </div>
       </div>
-      <div className="flex-1 md:flex-0 max-w-[600px] hidden sm:block ">
-        <img className="w-full" src="/mole2.png" />
+      <div className="flex-1 md:flex-0  hidden sm:flex justify-center ">
+        <img className="w-full max-w-[600px]" src="/mole2.png" />
       </div>
     </div>
   );
