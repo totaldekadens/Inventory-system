@@ -61,6 +61,17 @@ const SidebarRead = ({ article, className, setEdit }: Props) => {
           <p> {article.supplierArtno ? article.supplierArtno : "-"}</p>
         </div>
         <div className=" grid grid-cols-2">
+          <p className=" tracking-tight text-gray-900/80">Fordonsmodell: </p>
+          {article.vehicleModels?.map((model, i) => (
+            <p key={i} className=" ">
+              {model.name}
+              {article.vehicleModels && article.vehicleModels.length - 1 == i
+                ? ""
+                : ", "}
+            </p>
+          ))}
+        </div>
+        <div className=" grid grid-cols-2">
           <p className=" tracking-tight text-gray-900/80">Försäljningspris:</p>
           <p>{article.price ? article.price + " kr" : "-"}</p>
         </div>
