@@ -1,14 +1,14 @@
 import Head from "next/head";
 import Header from "@/components/Layout/Header";
 import { GetServerSideProps } from "next";
-import Article, { ArticleDocument } from "@/models/ArticleModel";
+import Article from "@/models/ArticleModel";
 import dbConnect from "@/lib/dbConnect";
 import Overview from "@/components/Overview";
 import InventoryLocation, {
   InventoryLocationDocument,
 } from "@/models/InventoryLocationModel";
 import Vehicle, { VehicleDocument } from "@/models/VehicleModel";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import {
   PopulatedArticleDocument,
   articleContext,

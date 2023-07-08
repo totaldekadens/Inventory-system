@@ -1,11 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
-import Article, { ArticleDocument } from "@/models/ArticleModel";
+import Article from "@/models/ArticleModel";
 import { NextApiRequest, NextApiResponse } from "next";
-import InventoryLocation, {
-  InventoryLocationDocument,
-} from "@/models/InventoryLocationModel";
-import Vehicle, { VehicleDocument } from "@/models/VehicleModel";
-import { PopulatedArticleDocument } from "@/components/context/ArticleProvider";
+import InventoryLocation from "@/models/InventoryLocationModel";
+import Vehicle from "@/models/VehicleModel";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
