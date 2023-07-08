@@ -1,3 +1,4 @@
+
 # Inventory-system
 
 Creating a system where my husband easily can keep track of his inventory of various spare parts, among other things. 
@@ -6,11 +7,42 @@ He´s demands:
 
 * Different articles must be able to be in the same inventory location ✅
 * Shall be able to modify, add and remove articles ✅
-* Shall be able to change the inventory location of the article ✅ 
+  * Backend:
+      * Create ✅
+      * Read ✅
+      * Update ✅
+      * Delete ✅
+  * Frontend:
+      * Create ✅
+      * Read ✅
+      * Update ✅  (Edit with vehicle model is left)
+      * Delete ✅
+* Shall be able to change the inventory location of the article ✅
 * Able to add multiple images to an article ✅
 * Be able to search by inventory location, article number and description ✅
-* Categories not needed ✅
+* Add, remove and modify a vehicle model
+    * Backend:
+      * Create ✅
+      * Read ✅
+      * Update ✅
+      * Delete ✅
+  * Frontend:
+      * Create 
+      * Read 
+      * Update 
+      * Delete 
 * Add, remove and modify an inventory location
+  * Backend:
+      * Create ✅
+      * Read ✅
+      * Update ✅
+      * Delete ✅
+  * Frontend:
+      * Create 
+      * Read 
+      * Update 
+      * Delete 
+  
 * Fix scrap cause and make it possible to see the history of each article
 * Able to filter out "On sale"-articles
 * Landing page for visitors to see spare parts available for sale
@@ -21,53 +53,64 @@ He´s demands:
 
 ### Desktop
 
-Overview
-![desk1](https://github.com/totaldekadens/Inventory-system/assets/90898648/1cb4b5ab-db53-41ec-84e3-4a856a42a3d3)
-![desk2](https://github.com/totaldekadens/Inventory-system/assets/90898648/20ca099e-48c3-4e83-b0b1-8dcfda0e7ab9)
-![desk3](https://github.com/totaldekadens/Inventory-system/assets/90898648/de40daec-cd65-4139-ac5d-f073a7120171)
+#### Login
+![l1](https://github.com/totaldekadens/Inventory-system/assets/90898648/64b97af7-2e8a-437c-914e-5c5a3faccd55)
 
 
 
-Article view - Read
-![desk-r-1](https://github.com/totaldekadens/Inventory-system/assets/90898648/15db7ecc-29eb-40bf-ad89-35dea1825000)
+#### Overview
+![d1](https://github.com/totaldekadens/Inventory-system/assets/90898648/e3f7c537-f1fc-41ff-a89e-185ca0f164be)
+![d2](https://github.com/totaldekadens/Inventory-system/assets/90898648/1a805164-348b-4e17-adbb-980a93036931)
+![d3](https://github.com/totaldekadens/Inventory-system/assets/90898648/36409be5-3209-49a0-8206-8d87a49fd4a9)
 
 
 
-Article view - Edit
-![desk-e-1](https://github.com/totaldekadens/Inventory-system/assets/90898648/b2289820-9fb3-4333-bc96-18ff3de9d4f4)
-![desk-e-2](https://github.com/totaldekadens/Inventory-system/assets/90898648/eac5e627-b029-4f27-a050-bec16e665e54)
+#### Article view - Read
+![r1](https://github.com/totaldekadens/Inventory-system/assets/90898648/6c7bc7ee-a098-40d3-8a05-791424c925ca)
 
 
-Create article
-![desk-c-1](https://github.com/totaldekadens/Inventory-system/assets/90898648/3f29280e-8b07-4f83-8279-c21a1ac04c53)
-![desk-c-2](https://github.com/totaldekadens/Inventory-system/assets/90898648/264fb2a4-848d-4d72-82a4-683aa64f6474)
+
+#### Article view - Edit
+![e1](https://github.com/totaldekadens/Inventory-system/assets/90898648/7bb38fca-0700-4b7e-9fa5-728001bf58ac)
+![e2](https://github.com/totaldekadens/Inventory-system/assets/90898648/3fb02ddf-9ad3-4f7d-ad0a-13460f89c8fb)
+
+
+
+#### Create article
+![c1](https://github.com/totaldekadens/Inventory-system/assets/90898648/3e87f235-10f7-4a6b-b276-3cc40384b78c)
+![c2](https://github.com/totaldekadens/Inventory-system/assets/90898648/bce26894-92f1-4783-a8e7-6da32c6dd65a)
+
 
 
 ### Mobile
 
-Overview
-![IMG_4759](https://github.com/totaldekadens/Inventory-system/assets/90898648/e8eac7f1-2823-4e95-9386-a8916021cdc2)
-![IMG_4760](https://github.com/totaldekadens/Inventory-system/assets/90898648/c4a36d68-8e8a-4616-9be2-2cf810ca54dc)
-![IMG_4761](https://github.com/totaldekadens/Inventory-system/assets/90898648/31cd54f3-f395-4f22-acef-4dd64b697370)
+
+#### Login
+![ml1](https://github.com/totaldekadens/Inventory-system/assets/90898648/7f8343d6-e38c-450b-ad9a-2b5bd1fe7428)
 
 
-Article view - Read
-
-![r1](https://github.com/totaldekadens/Inventory-system/assets/90898648/bb03ceee-550e-43e8-b1c2-733263673834)
-![r2](https://github.com/totaldekadens/Inventory-system/assets/90898648/f584bf3e-c299-496b-9e2f-028174037b5f)
-
-
-
-Article view - Edit
-
-![e1](https://github.com/totaldekadens/Inventory-system/assets/90898648/99e22380-931b-4bcd-b7b0-e8f5d29be885)
-![e2](https://github.com/totaldekadens/Inventory-system/assets/90898648/bfde10b5-8d3a-452e-9d7f-a6ac0f516f35)
-![e3](https://github.com/totaldekadens/Inventory-system/assets/90898648/3b8e4ff1-cc28-47a1-94a5-162bc3124502)
+#### Overview
+![md1](https://github.com/totaldekadens/Inventory-system/assets/90898648/d9cb923e-9b21-49a3-840b-0590c790e861)
+![md2](https://github.com/totaldekadens/Inventory-system/assets/90898648/aacb9ab7-2a65-4e9a-bd06-b0de92923ded)
+![md3](https://github.com/totaldekadens/Inventory-system/assets/90898648/f2074203-840e-4f6b-8843-112606909dc2)
 
 
 
-Create article
+#### Article view - Read
+![mr1](https://github.com/totaldekadens/Inventory-system/assets/90898648/1038b9fa-5bc9-4df3-b62c-179f1a8a7dc3)
+![mr2](https://github.com/totaldekadens/Inventory-system/assets/90898648/0854196a-c17e-45cd-b7f4-2d177f08f9fc)
 
-![c1](https://github.com/totaldekadens/Inventory-system/assets/90898648/cc413665-8246-47fa-a8b9-9fde4ca2c6df)
-![c2](https://github.com/totaldekadens/Inventory-system/assets/90898648/913fd8e8-b37c-4d2d-b9d6-287d2241c7db)
+
+
+#### Article view - Edit
+![me1](https://github.com/totaldekadens/Inventory-system/assets/90898648/37c71d90-b89c-4c51-93ce-34c3d93bbdd9)
+![me2](https://github.com/totaldekadens/Inventory-system/assets/90898648/1fc00a30-1da1-47d9-808d-0e97eed09813)
+
+
+
+#### Create article
+![mc1](https://github.com/totaldekadens/Inventory-system/assets/90898648/3a02af0a-d9ed-44c5-b01b-2186bf104621)
+![mc2](https://github.com/totaldekadens/Inventory-system/assets/90898648/7b16901a-5dc7-4248-a192-629f2246c8a1)
+![mc3](https://github.com/totaldekadens/Inventory-system/assets/90898648/65b255c2-e8c0-4429-b0d7-339e8d296404)
+
 
