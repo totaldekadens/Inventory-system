@@ -16,7 +16,10 @@ const Hero = () => {
           }!`}
         </p>
         <div className=" block sm:hidden h-64 mb-20 ">
-          <img className="w-full h-full object-contain" src="/mole2.png" />
+          <img
+            className={`heroImage w-full h-full object-contain`}
+            src="/mole2.png"
+          />
         </div>
         <div className="flex gap-3 flex-wrap justify-center sm:justify-start ">
           <button
@@ -38,10 +41,7 @@ const Hero = () => {
         </div>
       </div>
       <div className="flex-1 md:flex-0  hidden sm:flex justify-center ">
-        <img
-          className={clsx(`heroImage`, `w-full max-w-[600px]`)}
-          src="/mole2.png"
-        />
+        <img className={`heroImage w-full max-w-[600px]`} src="/mole2.png" />
       </div>
       {createArticle ? (
         <NewArticle setCreateArticle={setCreateArticle} />
