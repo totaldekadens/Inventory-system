@@ -3,11 +3,12 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import NewArticle from "./NewArticle";
+import { clsx } from "@mantine/core";
 const Hero = () => {
   const { data: session } = useSession();
   const [createArticle, setCreateArticle] = useState(false);
   return (
-    <div className="flex relative items-center w-full justify-center  h-[590px] mb-10 ">
+    <div className="flex relative items-center w-full justify-center h-[590px]  sm:h-[400px]  lg:h-[590px] mb-10 ">
       <div className="min-w-[250px] pt-14  sm:pt-20 lg:pt-32 h-full items-center flex flex-col flex-1 md:flex-0 ">
         <p className="text-3xl mb-10 ">
           {`Välkommen tillbaka${
@@ -37,7 +38,10 @@ const Hero = () => {
         </div>
       </div>
       <div className="flex-1 md:flex-0  hidden sm:flex justify-center ">
-        <img className="w-full max-w-[600px]" src="/mole2.png" />
+        <img
+          className={clsx(`heroImage`, `w-full max-w-[600px]`)}
+          src="/mole2.png"
+        />
       </div>
       {createArticle ? (
         <NewArticle setCreateArticle={setCreateArticle} />
