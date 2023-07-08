@@ -8,7 +8,7 @@ import InventoryLocation, {
   InventoryLocationDocument,
 } from "@/models/InventoryLocationModel";
 import Vehicle, { VehicleDocument } from "@/models/VehicleModel";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   PopulatedArticleDocument,
   articleContext,
@@ -64,8 +64,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
       model: Vehicle,
     });
 
-  const ascendingArticles = getArticles.sort((a, b) =>
-    a.createdDate > b.createdDate ? 1 : -1
+  const descendingArticles = getArticles.sort((a, b) =>
+    a.createdDate < b.createdDate ? 1 : -1
   );
 
   const getInventoryLocations = await InventoryLocation.find({});
@@ -73,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   return {
     props: {
-      articles: JSON.parse(JSON.stringify(ascendingArticles)),
+      articles: JSON.parse(JSON.stringify(descendingArticles)),
       inventoryLocations: JSON.parse(JSON.stringify(getInventoryLocations)),
       vehicleModels: JSON.parse(JSON.stringify(getVehicleModels)),
     },

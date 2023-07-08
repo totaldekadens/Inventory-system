@@ -12,6 +12,8 @@ import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
 import SelectLocation from "@/components/searchbars/SelectLocation";
 import UploadForm from "@/components/uploadForm";
 import Button from "@/components/buttons/Button";
+import SelectModels from "@/components/searchbars/SelectModels";
+import { Types } from "mongoose";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -23,11 +25,21 @@ interface Props {
 const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
   const [forSale, setForSale] = useState(article.forSale);
   const { setCurrentArticles } = useContext(articleContext);
+
   const [selectedLocation, setSelectedLocation] =
-    useState<InventoryLocationDocument | null>(null);
+    useState<InventoryLocationDocument | null>(article.inventoryLocation);
+
+  const initialSelectedModels = article.vehicleModels.map((model, i) =>
+    model._id ? model._id.toString() : `${i}`
+  );
+
+  const [selectedModels, setSelectedModels] = useState<string[]>(
+    initialSelectedModels
+  );
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
   const [error, setError] = useState<string>("");
+
   const formik = useFormik({
     initialValues: {
       supplierArtno: article.supplierArtno,
@@ -55,10 +67,21 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       comment,
     }) => {
       try {
+        if (selectedModels.length < 1) {
+          setError("Välj minst en fordonsmodell");
+          return;
+        }
+
+        if (!selectedLocation) {
+          setError("Välj en lagerplats");
+          return;
+        }
+
         const updateArticle = {
           _id: article._id,
           artno: article.artno,
           supplierArtno,
+          vehicleModels: selectedModels,
           title,
           description,
           qty,
@@ -70,6 +93,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           images: imageList.length > 0 ? imageList : article.images,
           inventoryLocation: selectedLocation?._id,
         };
+
         // Upload images to Cloudinary
         await UploadToImagesToServer(fileList);
 
@@ -195,17 +219,23 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             </div>
             <div>
               <label>Lagerplats</label>
-              <p>Nuvarande lagerplats: {article.inventoryLocation.name}</p>
               <SelectLocation
                 placeholder="Välj ny lagerplats"
                 setSelectedLocation={setSelectedLocation}
                 selectedLocation={selectedLocation}
               />
             </div>
+            <div>
+              <label>Fordonsmodeller</label>
+              <SelectModels
+                setSelectedModel={setSelectedModels}
+                selectedModel={selectedModels}
+              />
+            </div>
           </div>
         </div>
         <label>Inköpspris</label>
-        <div className="relative">
+        <div className="relative mb-4">
           <input
             id="purchaseValue"
             name="purchaseValue"
