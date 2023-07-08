@@ -34,7 +34,11 @@ export default async function handler(
           });
         }
 
-        res.status(200).json({ success: true, data: getAllArticles });
+        const descendingArticles = getAllArticles.sort((a, b) =>
+          a.createdDate < b.createdDate ? 1 : -1
+        );
+
+        res.status(200).json({ success: true, data: descendingArticles });
       } catch (error) {
         res.status(400).json({ success: false, data: error });
       }

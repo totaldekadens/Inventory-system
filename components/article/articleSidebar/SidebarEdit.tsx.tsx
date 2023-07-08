@@ -5,7 +5,6 @@ import {
 } from "../../context/ArticleProvider";
 import ForSaleRadioButton from "@/components/buttons/ForSaleRadioButton";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
-import { ErrorMessage, schema } from "@/components/CreateArticle";
 import { useFormik } from "formik";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
@@ -14,6 +13,7 @@ import UploadForm from "@/components/uploadForm";
 import Button from "@/components/buttons/Button";
 import SelectModels from "@/components/searchbars/SelectModels";
 import { Types } from "mongoose";
+import { ErrorMessage, schema } from "@/components/NewArticle";
 
 interface Props {
   article: PopulatedArticleDocument;

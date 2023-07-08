@@ -2,8 +2,11 @@ import Link from "next/link";
 import LogoutButton from "../buttons/LogoutButton";
 import Image from "next/image";
 import { IconPlus } from "@tabler/icons-react";
+import { useState } from "react";
+import NewArticle from "../NewArticle";
 
 const Header = () => {
+  const [createArticle, setCreateArticle] = useState(false);
   return (
     <header className=" top-0 z-10 bg-white right-0 left-0 h-42 flex items-center justify-between py-6 sm:py-12 px-8 sm:px-12 lg:px-16">
       <Link
@@ -22,11 +25,19 @@ const Header = () => {
         <Link href={"#"} className=" mr-10 hidden md:flex ">
           Hantera lagerplatser
         </Link>
-        <Link href={"/create"} className=" gap-0 mr-10  hidden md:flex  ">
+        <div
+          onClick={() => {
+            setCreateArticle(true);
+          }}
+          className=" cursor-pointer gap-0 mr-10  hidden md:flex  "
+        >
           Lägg till artikel <IconPlus width={14} height={14} strokeWidth={3} />
-        </Link>
+        </div>
         <LogoutButton />
       </div>
+      {createArticle ? (
+        <NewArticle setCreateArticle={setCreateArticle} />
+      ) : null}
     </header>
   );
 };
