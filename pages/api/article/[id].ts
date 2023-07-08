@@ -1,7 +1,11 @@
 import dbConnect from "@/lib/dbConnect";
 import Article, { ArticleDocument } from "@/models/ArticleModel";
 import { NextApiRequest, NextApiResponse } from "next";
-
+import InventoryLocation, {
+  InventoryLocationDocument,
+} from "@/models/InventoryLocationModel";
+import Vehicle, { VehicleDocument } from "@/models/VehicleModel";
+import { PopulatedArticleDocument } from "@/components/context/ArticleProvider";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -16,7 +20,15 @@ export default async function handler(
   switch (method) {
     case "GET":
       try {
-        const article: ArticleDocument | null = await Article.findById(id);
+        const article = await Article.findById(id)
+          .populate({
+            path: "inventoryLocation",
+            model: InventoryLocation,
+          })
+          .populate({
+            path: "vehicleModels",
+            model: Vehicle,
+          });
 
         if (!article) {
           return res.status(403).send({

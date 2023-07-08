@@ -11,7 +11,7 @@ const Slider = ({ article }: Props) => {
       {article.images.map((image, i) => {
         const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${image}`;
         return (
-          <SplideSlide className="flex justify-center">
+          <SplideSlide key={i} className="flex justify-center">
             <Image
               src={path}
               alt={"Bild på artikel"}

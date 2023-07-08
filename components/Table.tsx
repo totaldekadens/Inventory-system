@@ -28,6 +28,8 @@ const Table = () => {
   const [open, setOpen] = useState(false);
   const [currentArticle, setCurrentArticle] =
     useState<PopulatedArticleDocument>();
+
+  console.log(currentArticles);
   return (
     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
       <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 ">
@@ -181,15 +183,15 @@ const Table = () => {
                         />
                       </div>
                     </td>
-                    {open && currentArticle ? (
-                      <ArticleView setOpen={setOpen} article={currentArticle} />
-                    ) : null}
                   </tr>
                 );
               })
             )}
           </tbody>
         </table>
+        {open && currentArticle ? (
+          <ArticleView setOpen={setOpen} article={currentArticle} />
+        ) : null}
       </div>
     </div>
   );
