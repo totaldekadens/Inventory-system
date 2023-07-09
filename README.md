@@ -15,7 +15,7 @@ He´s demands:
   * Frontend:
       * Create ✅
       * Read ✅
-      * Update ✅  (Edit with vehicle model is left)
+      * Update ✅  
       * Delete ✅
 * Shall be able to change the inventory location of the article ✅
 * Able to add multiple images to an article ✅
@@ -44,7 +44,7 @@ He´s demands:
       * Delete 
   
 * Fix scrap cause and make it possible to see the history of each article
-* Able to filter out "On sale"-articles
+* Able to filter out "On sale"-articles ✅
 * Landing page for visitors to see spare parts available for sale
 
 
@@ -54,32 +54,36 @@ He´s demands:
 ### Desktop
 
 #### Login
+
 ![l1](https://github.com/totaldekadens/Inventory-system/assets/90898648/64b97af7-2e8a-437c-914e-5c5a3faccd55)
 
 
-
 #### Overview
-![d1](https://github.com/totaldekadens/Inventory-system/assets/90898648/e3f7c537-f1fc-41ff-a89e-185ca0f164be)
-![d2](https://github.com/totaldekadens/Inventory-system/assets/90898648/1a805164-348b-4e17-adbb-980a93036931)
-![d3](https://github.com/totaldekadens/Inventory-system/assets/90898648/36409be5-3209-49a0-8206-8d87a49fd4a9)
+
+![d1_old](https://github.com/totaldekadens/Inventory-system/assets/90898648/d3ebd704-408c-47d7-acc8-6512f25aee31)
+![d1](https://github.com/totaldekadens/Inventory-system/assets/90898648/096fbfe1-1852-4d37-9709-0df046a4e6a3)
+![d2](https://github.com/totaldekadens/Inventory-system/assets/90898648/046fcd2e-7922-40c9-98b6-4d32f438ca18)
+
 
 
 
 #### Article view - Read
-![r1](https://github.com/totaldekadens/Inventory-system/assets/90898648/6c7bc7ee-a098-40d3-8a05-791424c925ca)
+
+![r1](https://github.com/totaldekadens/Inventory-system/assets/90898648/cf7ea298-8203-4217-84d3-255485f0bb7c)
 
 
 
 #### Article view - Edit
-![e1](https://github.com/totaldekadens/Inventory-system/assets/90898648/7bb38fca-0700-4b7e-9fa5-728001bf58ac)
-![e2](https://github.com/totaldekadens/Inventory-system/assets/90898648/3fb02ddf-9ad3-4f7d-ad0a-13460f89c8fb)
+
+![e1](https://github.com/totaldekadens/Inventory-system/assets/90898648/fd080266-949c-4895-8b81-572a487c16fe)
+![e2](https://github.com/totaldekadens/Inventory-system/assets/90898648/90850d78-f50f-4a55-86dc-bad0cd07002b)
 
 
 
 #### Create article
-![c1](https://github.com/totaldekadens/Inventory-system/assets/90898648/3e87f235-10f7-4a6b-b276-3cc40384b78c)
-![c2](https://github.com/totaldekadens/Inventory-system/assets/90898648/bce26894-92f1-4783-a8e7-6da32c6dd65a)
 
+![c1](https://github.com/totaldekadens/Inventory-system/assets/90898648/3ce6bb9f-f1de-41dd-a1ff-0cbdd62b6877)
+![c2](https://github.com/totaldekadens/Inventory-system/assets/90898648/ffac582e-eb04-43a5-ad9f-52f0a6cdfffc)
 
 
 ### Mobile
@@ -90,27 +94,31 @@ He´s demands:
 
 
 #### Overview
-![md1](https://github.com/totaldekadens/Inventory-system/assets/90898648/d9cb923e-9b21-49a3-840b-0590c790e861)
-![md2](https://github.com/totaldekadens/Inventory-system/assets/90898648/aacb9ab7-2a65-4e9a-bd06-b0de92923ded)
-![md3](https://github.com/totaldekadens/Inventory-system/assets/90898648/f2074203-840e-4f6b-8843-112606909dc2)
 
+![md1](https://github.com/totaldekadens/Inventory-system/assets/90898648/e0ab29ec-f943-4a9b-9f0d-800156ffd7c6)
+![md2](https://github.com/totaldekadens/Inventory-system/assets/90898648/fc76a1c5-054b-4e46-87eb-ac2c04e72d60)
+![md3](https://github.com/totaldekadens/Inventory-system/assets/90898648/06d721e6-9258-426f-bd7e-29a9d9c59b8c)
 
 
 #### Article view - Read
-![mr1](https://github.com/totaldekadens/Inventory-system/assets/90898648/1038b9fa-5bc9-4df3-b62c-179f1a8a7dc3)
-![mr2](https://github.com/totaldekadens/Inventory-system/assets/90898648/0854196a-c17e-45cd-b7f4-2d177f08f9fc)
+
+![mr1](https://github.com/totaldekadens/Inventory-system/assets/90898648/f228f0b8-ebf2-4af5-a395-bf080057adad)
+![mr2](https://github.com/totaldekadens/Inventory-system/assets/90898648/9a240025-9f8f-4d4b-8882-4d1210376164)
+
 
 
 
 #### Article view - Edit
-![me1](https://github.com/totaldekadens/Inventory-system/assets/90898648/37c71d90-b89c-4c51-93ce-34c3d93bbdd9)
-![me2](https://github.com/totaldekadens/Inventory-system/assets/90898648/1fc00a30-1da1-47d9-808d-0e97eed09813)
 
+![me1](https://github.com/totaldekadens/Inventory-system/assets/90898648/57dea1d6-475e-40a1-85dc-be70f584b725)
+![me2](https://github.com/totaldekadens/Inventory-system/assets/90898648/10b852c0-f276-498b-be7c-69d472a08035)
+![me3](https://github.com/totaldekadens/Inventory-system/assets/90898648/33a2f286-f26b-4f39-8f79-9eb7505fcfcc)
 
 
 #### Create article
-![mc1](https://github.com/totaldekadens/Inventory-system/assets/90898648/3a02af0a-d9ed-44c5-b01b-2186bf104621)
-![mc2](https://github.com/totaldekadens/Inventory-system/assets/90898648/7b16901a-5dc7-4248-a192-629f2246c8a1)
-![mc3](https://github.com/totaldekadens/Inventory-system/assets/90898648/65b255c2-e8c0-4429-b0d7-339e8d296404)
+
+![mc1](https://github.com/totaldekadens/Inventory-system/assets/90898648/975af76a-ef1c-46b1-b633-147a2ba13218)
+![mc2](https://github.com/totaldekadens/Inventory-system/assets/90898648/e08b55b1-4598-48f0-9ce9-9e9e36dd5e03)
+
 
 
