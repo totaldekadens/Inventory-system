@@ -146,7 +146,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
   const { errors, touched, values, handleChange, handleSubmit } = formik;
 
   return (
-    <div className="pt-10 sm:pt-0 z-20 fixed inset-0 bg-black/10 flex justify-center ">
+    <div className="pt-10 sm:pt-0 z-20 fixed inset-0 bg-black/20 flex justify-center ">
       <div className="pt-5 sm:pt-0 pb-10  sm:px-2 sm:pb-16 shadow-lg rounded-lg absolute top-0 bottom-0 my-0 sm:my-10 md:my-20 w-full  sm:w-auto  bg-white overflow-y-auto">
         <div className="flex sm:hidden  w-full justify-end px-5 ">
           <IconX

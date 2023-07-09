@@ -1,7 +1,9 @@
-import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import { PopulatedArticleDocument } from "./context/ArticleProvider";
 import Image from "next/image";
+import { RefObject, useEffect, useRef, useState } from "react";
+
 interface Props {
   article: PopulatedArticleDocument;
 }
@@ -11,7 +13,11 @@ const Slider = ({ article }: Props) => {
       {article.images.map((image, i) => {
         const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${image}`;
         return (
-          <SplideSlide key={i} className="flex justify-center">
+          <SplideSlide
+            key={i}
+            style={{ height: "100%" }}
+            className="flex justify-center"
+          >
             <Image
               src={path}
               alt={"Bild på artikel"}
@@ -19,7 +25,7 @@ const Slider = ({ article }: Props) => {
               height={600}
               priority={i === 0}
               quality="85"
-              className="object-contain"
+              className="object-contain h-full max-h-full"
             />
           </SplideSlide>
         );

@@ -24,7 +24,7 @@ const UploadForm: FC<Props> = ({ setImageList, value, setValue, title }) => {
 
   return (
     <Box mt={20} mb={20}>
-      <label>{title ? title : "Lägg till bilder:"}</label>{" "}
+      <p className="font-medium">{title ? title : "Lägg till bilder:"}</p>{" "}
       <Text size={12} mb={2}>
         Godkända format: png, jpg, jpeg, webp
       </Text>

@@ -5,7 +5,7 @@ import Table from "./Table";
 
 const Overview = () => {
   return (
-    <div className="px-4 sm:px-6 lg:px-8 mt-10 md:mt-10 sm:mt-8 w-full pb-20">
+    <div className="px-4 sm:px-6 lg:px-8 mt-10 md:mt-10 sm:mt-8 w-full pb-20 max-w-8xl">
       {/* Introduction */}
       <Hero />
       <div className="flow-root">
