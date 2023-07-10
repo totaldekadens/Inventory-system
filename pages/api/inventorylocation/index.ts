@@ -76,7 +76,7 @@ export default async function handler(
 
         if (
           inventoryLocationTaken.length > 0 &&
-          inventoryLocationTaken[0]._id != req.body._id
+          inventoryLocationTaken[0].name != req.body.name
         ) {
           return res.status(403).send({
             success: false,

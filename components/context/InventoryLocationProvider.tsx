@@ -3,9 +3,9 @@ import React, { useEffect } from "react";
 import { FC, PropsWithChildren, useState } from "react";
 
 interface inventoryLocationContextData {
-  inventoryLocations: InventoryLocationDocument[] | null;
+  inventoryLocations: InventoryLocationDocument[] | [];
   setInventoryLocations: React.Dispatch<
-    React.SetStateAction<InventoryLocationDocument[] | null>
+    React.SetStateAction<InventoryLocationDocument[] | []>
   >;
 }
 
@@ -17,7 +17,7 @@ export const inventoryLocationContext =
 
 const InventoryLocationProvider: FC<PropsWithChildren> = (props) => {
   const [inventoryLocations, setInventoryLocations] = useState<
-    InventoryLocationDocument[] | null
+    InventoryLocationDocument[] | []
   >([]);
 
   return (

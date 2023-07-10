@@ -85,11 +85,8 @@ const NewLocation = () => {
   const { errors, touched, values, handleChange, handleSubmit } = formik;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full flex items-center justify-between"
-    >
-      <div className="flex">
+    <form onSubmit={handleSubmit} className="w-full flex items-center gap-3">
+      <div className="flex gap-2">
         <div className="gap-3 py-2 whitespace-nowrap w-[150px] flex flex-col max-w-[150px] items-center">
           <input
             id="name"
@@ -99,7 +96,7 @@ const NewLocation = () => {
             type="text"
             autoComplete="Namn"
             className={
-              "focus:ring-light-300 bg-transparent relative block h-11 w-full rounded-md border-0 py-1.5   text-gray-900 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto"
+              "focus:ring-light-300  ring-1 ring-inset ring-gray-300 bg-transparent relative block h-11 w-full rounded-md border-0 py-1.5   text-gray-900 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto"
             }
             placeholder="Namn"
           />
@@ -117,7 +114,7 @@ const NewLocation = () => {
             onChange={handleChange}
             type="text"
             autoComplete="Beskrivning"
-            className="focus:ring-light-300  bg-transparent relative block h-11 w-full rounded-md border-0 py-1.5   text-gray-600 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto"
+            className="focus:ring-light-300  ring-1 ring-inset ring-gray-300  bg-transparent relative block h-11 w-full rounded-md border-0 py-1.5   text-gray-600 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto"
             placeholder="Fyll i beskrivning.."
           />
           {errors.description && touched.description ? (

@@ -1,8 +1,15 @@
-import { Dispatch, SetStateAction, useContext } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { IconX } from "@tabler/icons-react";
 import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import HandleLocation from "./HandleLocation";
 import NewLocation from "./NewLocation";
+import SearchBarLocations from "../searchbars/SearchBarLocations";
 
 interface Props {
   setHandleLocations: Dispatch<SetStateAction<boolean>>;
@@ -12,6 +19,13 @@ const HandleLocations = ({ setHandleLocations }: Props) => {
   const { inventoryLocations, setInventoryLocations } = useContext(
     inventoryLocationContext
   );
+  const [filteredLocations, setFilteredLocations] =
+    useState(inventoryLocations);
+
+  // If InventoryLocations change, update filteredLocatons
+  useEffect(() => {
+    setFilteredLocations(inventoryLocations);
+  }, [inventoryLocations]);
 
   return (
     <div className="pt-10 sm:pt-0 z-20 fixed inset-0 bg-black/20 flex justify-center ">
@@ -41,16 +55,32 @@ const HandleLocations = ({ setHandleLocations }: Props) => {
             </div>
             {/* Add new inventory location */}
             <div>
-              <div className="py-2 text-sm pl-2 font-semibold text-gray-900 text-start max-w-[150px] w-[150px]">
+              <div className="py-2 text-sm mt-10  font-semibold text-gray-900 text-start max-w-[150px] w-[150px]">
                 Lägg till lagerplats
               </div>
-              <div className="divide-gray-200 relative bg-[#FCFCFC] divide-y">
+              <div className="divide-gray-200 relative bg-white divide-y">
+                {" "}
+                {/* border border-t-0 border-x-0 border-b-gray-300  */}
                 <NewLocation />
               </div>
             </div>
 
+            <div className="w-full my-10 bg-gray-300 rounded-lg h-[2px]" />
+
+            <div className="py-2 text-sm  mt-10  font-semibold text-gray-900 text-start max-w-[150px] w-[150px]">
+              Hantera lagerplatser
+            </div>
+            {/* Search inventory location */}
+            <div className=" mt-3 ">
+              <div className="divide-gray-200 relative bg-[#f4f4f4] divide-y">
+                <SearchBarLocations
+                  setFilteredLocations={setFilteredLocations}
+                />
+              </div>
+            </div>
+
             {/* Inventory list with Edit */}
-            <div className="w-full mt-10 ">
+            <div className="w-full mt-3 ">
               <div className="w-full flex">
                 <div className="w-full flex justify-between">
                   <div className="flex">
@@ -66,9 +96,9 @@ const HandleLocations = ({ setHandleLocations }: Props) => {
                   </div>
                 </div>
               </div>
-              <div className="divide-y w-full divide-gray-200 relative bg-[#FCFCFC]">
-                {inventoryLocations
-                  ? inventoryLocations?.map((location, i) => (
+              <div className="divide-y w-full divide-gray-300 relative bg-white">
+                {filteredLocations.length > 0
+                  ? filteredLocations.map((location, i) => (
                       <HandleLocation key={i} location={location} />
                     ))
                   : null}

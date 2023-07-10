@@ -2,12 +2,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useContext, useState } from "react";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
-import {
-  IconExclamationCircle,
-  IconPigMoney,
-  IconRefresh,
-  IconX,
-} from "@tabler/icons-react";
+import { IconPigMoney, IconRefresh, IconX } from "@tabler/icons-react";
 import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import { articleContext } from "../context/ArticleProvider";
 import HoverInfo from "../HoverInfo";
@@ -37,7 +32,8 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
   const { inventoryLocations, setInventoryLocations } = useContext(
     inventoryLocationContext
   );
-
+  console.log("location");
+  console.log(location);
   const hasArticles = articles.some(
     (article) => article.inventoryLocation._id == location._id
   );
@@ -48,6 +44,7 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
       description: location.description,
     },
 
+    enableReinitialize: true,
     // Pass the Yup schema to validate the form
     validationSchema: schema,
 
@@ -59,7 +56,7 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
           name,
           description,
         };
-        console.log("kommer jag in?");
+
         const request = {
           method: "PUT",
           headers: {
@@ -109,7 +106,7 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
             className={
               "focus:ring-light-300 bg-transparent relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto"
             }
-            placeholder="Leverantörens artikelnummer"
+            placeholder={"Namn"}
           />
           {errors.name && touched.name ? (
             <div className="text-red-600 pl-3 ml-[52px] -mt-3 text-xs">
@@ -125,7 +122,7 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
             onChange={handleChange}
             type="text"
             autoComplete="Beskrivning"
-            className="focus:ring-light-300  bg-transparent relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-600 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto"
+            className="focus:ring-light-300 mr-4  bg-transparent relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-600 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto"
             placeholder="Fyll i beskrivning.."
           />
           {errors.description && touched.description ? (
