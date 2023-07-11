@@ -32,8 +32,7 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
   const { inventoryLocations, setInventoryLocations } = useContext(
     inventoryLocationContext
   );
-  console.log("location");
-  console.log(location);
+
   const hasArticles = articles.some(
     (article) => article.inventoryLocation._id == location._id
   );
@@ -178,7 +177,10 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
                   }}
                 />
               ) : (
-                <HoverInfo />
+                <HoverInfo
+                  text={"Vill du radera? Platsen måste vara tom först."}
+                  width={330}
+                />
               )}
             </>
           )}
