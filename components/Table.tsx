@@ -7,6 +7,7 @@ import {
 import QtyControls from "./buttons/QtyControls";
 import ArticleView from "./article/articleView/ArticleView";
 import clsx from "clsx";
+import { Spoiler } from "@mantine/core";
 
 interface ThProps {
   header: string;
@@ -103,15 +104,22 @@ const Table = () => {
                             {/* Modell Mobile & Tab */}
 
                             <div className="mt-1 w-full gap-2 items-center lg:hidden text-gray-500 flex flex-wrap sm:whitespace-nowrap  ">
-                              {article.vehicleModels?.map((model, i) => (
-                                <div key={i} className="text-gray-500 h-full  ">
-                                  {model.name}
-                                  {article.vehicleModels &&
-                                  article.vehicleModels.length - 1 == i
-                                    ? ""
-                                    : ", "}
-                                </div>
-                              ))}
+                              <Spoiler
+                                styles={{ control: { color: "#264133" } }}
+                                color="#264133"
+                                key={i}
+                                maxHeight={20}
+                                showLabel={`+ ${
+                                  article.vehicleModels.length - 1
+                                }`}
+                                hideLabel="Dölj"
+                              >
+                                {article.vehicleModels?.map((model, i) => (
+                                  <div className="text-gray-500 h-full ">
+                                    {model.name}
+                                  </div>
+                                ))}
+                              </Spoiler>
                             </div>
 
                             {/* Supplier part no */}
@@ -135,11 +143,20 @@ const Table = () => {
                     </td>
                     {/* Modell */}
                     <td className="whitespace-nowrap hidden lg:table-cell py-5 text-sm text-gray-500 flex-wrap">
-                      {article.vehicleModels?.map((model, i) => (
-                        <div key={i} className="text-gray-900 h-full ">
-                          {model.name}
-                        </div>
-                      ))}
+                      <Spoiler
+                        styles={{ control: { color: "#264133" } }}
+                        color="#264133"
+                        key={i}
+                        maxHeight={20}
+                        showLabel={`+ ${article.vehicleModels.length - 1}`}
+                        hideLabel="Dölj"
+                      >
+                        {article.vehicleModels?.map((model, i) => (
+                          <div className="text-gray-900 h-full ">
+                            {model.name}
+                          </div>
+                        ))}
+                      </Spoiler>
                     </td>
                     {/* Skick */}
                     <td className="whitespace-nowrap hidden lg:table-cell  px-3 py-5 text-sm text-gray-500">
