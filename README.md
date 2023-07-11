@@ -38,10 +38,10 @@ He´s demands:
       * Update ✅
       * Delete ✅
   * Frontend:
-      * Create 
-      * Read 
-      * Update 
-      * Delete 
+      * Create ✅
+      * Read ✅
+      * Update ✅
+      * Delete ✅
   
 * Fix scrap cause and make it possible to see the history of each article
 * Able to filter out "On sale"-articles ✅
@@ -85,6 +85,11 @@ He´s demands:
 ![c1](https://github.com/totaldekadens/Inventory-system/assets/90898648/3ce6bb9f-f1de-41dd-a1ff-0cbdd62b6877)
 ![c2](https://github.com/totaldekadens/Inventory-system/assets/90898648/ffac582e-eb04-43a5-ad9f-52f0a6cdfffc)
 
+#### Handle inventory locations
+
+<img width="1365" alt="location" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/ef073dfa-e796-4fc0-b877-2e5b378eebbb">
+<img width="1367" alt="locationedit" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/43db6288-0b2f-4ee0-b648-234848d9658f">
+
 
 ### Mobile
 
@@ -119,6 +124,10 @@ He´s demands:
 
 ![mc1](https://github.com/totaldekadens/Inventory-system/assets/90898648/975af76a-ef1c-46b1-b633-147a2ba13218)
 ![mc2](https://github.com/totaldekadens/Inventory-system/assets/90898648/e08b55b1-4598-48f0-9ce9-9e9e36dd5e03)
+
+
+#### Handle inventory locations
+<img width="306" alt="locationmobil" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/671e3783-242d-419f-bad0-bbf8a503e714">
 
 
 
