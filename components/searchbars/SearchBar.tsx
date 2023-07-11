@@ -17,6 +17,7 @@ const SearchBar = ({
   useEffect(() => {
     const updateList = async () => {
       if (listOfObjects) {
+        // If list of articles
         if (articles) {
           const filterList = listOfObjects.filter(
             (object) =>
@@ -35,6 +36,8 @@ const SearchBar = ({
               object.title.toUpperCase().includes(query.toUpperCase())
           );
           setFilteredObjectList(filterList);
+
+          // If list of Vehicle models or Inventory locations
         } else {
           const filterList = listOfObjects.filter((object) =>
             object.name.toUpperCase().includes(query.toUpperCase())

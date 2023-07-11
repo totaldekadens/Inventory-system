@@ -32,8 +32,8 @@ const HandleVehicleModel = ({ model }: Props) => {
   const { articles } = useContext(articleContext);
   const { vehicles, setVehicles } = useContext(vehicleContext);
 
-  const hasArticles = articles.some(
-    (article) => article.inventoryLocation._id == model._id
+  const hasArticles = articles.some((article) =>
+    article.vehicleModels.some((hej) => hej._id == model._id)
   );
 
   const formik = useFormik({
@@ -157,7 +157,12 @@ const HandleVehicleModel = ({ model }: Props) => {
                   }}
                 />
               ) : (
-                <HoverInfo />
+                <HoverInfo
+                  text={
+                    "Vill du radera? Ta bort artiklar kopplade till modellen."
+                  }
+                  width={390}
+                />
               )}
             </>
           )}
