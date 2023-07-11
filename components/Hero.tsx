@@ -5,10 +5,12 @@ import { useState } from "react";
 import NewArticle from "./NewArticle";
 import { clsx } from "@mantine/core";
 import HandleLocations from "./handleLocations/HandleLocations";
+import HandleVehicleModels from "./handleVehicleModels/HandleVehicleModels";
 const Hero = () => {
   const { data: session } = useSession();
   const [createArticle, setCreateArticle] = useState(false);
   const [handleLocations, setHandleLocations] = useState(false);
+  const [handleVehiceModels, setHandleVehicleModels] = useState(false);
   return (
     <div className="flex relative items-center w-full justify-center h-[590px]  sm:h-[400px]  lg:h-[550px] xl:h-[510px]  mb-10 ">
       <div className="min-w-[250px] pt-14  sm:pt-20 lg:pt-32 h-full items-center flex flex-col flex-1 md:flex-0 ">
@@ -39,6 +41,13 @@ const Hero = () => {
           >
             Hantera lagerplatser
           </button>
+          <button
+            onClick={() => setHandleVehicleModels(true)}
+            type="button"
+            className=" rounded-md sm:mt-0 sm:flex-none flex items-center bg-[#264133] px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Hantera modeller
+          </button>
         </div>
       </div>
       <div className="flex-1 md:flex-0  hidden sm:flex justify-center ">
@@ -49,6 +58,9 @@ const Hero = () => {
       ) : null}
       {handleLocations ? (
         <HandleLocations setHandleLocations={setHandleLocations} />
+      ) : null}
+      {handleVehiceModels ? (
+        <HandleVehicleModels setHandleVehicleModels={setHandleVehicleModels} />
       ) : null}
     </div>
   );
