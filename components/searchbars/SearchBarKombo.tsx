@@ -1,68 +1,120 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
-import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
-import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import { articleContext } from "../context/ArticleProvider";
 import { IconX } from "@tabler/icons-react";
+import { VehicleDocument } from "@/models/VehicleModel";
+import { useRemoveDuplicates } from "@/lib/useRemoveDuplicates";
+import clsx from "clsx";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-const SearchBarKombo = () => {
-  const { inventoryLocations } = useContext(inventoryLocationContext);
+interface Props {
+  property: "inventoryLocation" | "vehicleModels";
+}
+
+const SearchBarKombo = ({ property }: Props) => {
   const { currentArticles, setCurrentArticles, articles } =
     useContext(articleContext);
-  const [query, setQuery] = useState("");
-  const [selectedLocation, setSelectedLocation] =
-    useState<InventoryLocationDocument | null>(null);
-  const selectedLocationRef = useRef<InventoryLocationDocument | null>(null);
-  selectedLocationRef.current = selectedLocation;
 
-  const filteredLocation =
+  const [query, setQuery] = useState("");
+
+  const [selectedObject, setSelectedObject] = useState<any | null>(null);
+  const selectedObjectRef = useRef<any | null>(null);
+  selectedObjectRef.current = selectedObject;
+
+  const objectList: any[] = [];
+  currentArticles.forEach((article) => {
+    if (property) {
+    }
+
+    if (Array.isArray(article[property])) {
+      article.vehicleModels.forEach((model: any) => {
+        objectList.push(model);
+      });
+    } else {
+      objectList.push(article[property]);
+    }
+  });
+
+  // Remove duplicates
+  const uniqueObjects = useRemoveDuplicates(objectList);
+
+  // Sort keys from A - Ö
+  const ascendingObjects = uniqueObjects.sort((a, b) =>
+    a.name > b.name ? 1 : -1
+  );
+
+  const filteredList =
     query === ""
-      ? inventoryLocations
-      : inventoryLocations!.filter((location) => {
-          return location.name.toLowerCase().includes(query.toLowerCase());
+      ? ascendingObjects
+      : ascendingObjects!.filter((object) => {
+          return object.name.toLowerCase().includes(query.toLowerCase());
         });
 
-  // Todo: Make it better
+  // Make this better
   useEffect(() => {
-    if (selectedLocation) {
+    if (selectedObject) {
       if (currentArticles && currentArticles.length > 1) {
-        const updateArticlesByLocation = currentArticles.filter(
-          (article) => article.inventoryLocation._id == selectedLocation?._id
-        );
-        setCurrentArticles(updateArticlesByLocation);
+        if (property == "vehicleModels") {
+          const updateArticlesByProperty = articles.filter((article) =>
+            article[property].some(
+              (object) => object._id == selectedObject?._id
+            )
+          );
+          setCurrentArticles(updateArticlesByProperty);
+        } else {
+          const updateArticlesByProperty = currentArticles.filter(
+            (article) => article.inventoryLocation._id == selectedObject?._id
+          );
+          setCurrentArticles(updateArticlesByProperty);
+        }
       } else if (articles) {
-        const updateArticlesByLocation = articles.filter(
-          (article) => article.inventoryLocation._id == selectedLocation?._id
+        const updateArticlesByProperty = articles.filter((article) =>
+          article.vehicleModels.some(
+            (vehicle) => vehicle._id == selectedObject?._id
+          )
         );
-        setCurrentArticles(updateArticlesByLocation);
+        setCurrentArticles(updateArticlesByProperty);
       }
     } else {
       setCurrentArticles(articles);
     }
-  }, [selectedLocation]);
+  }, [selectedObject]);
 
   return (
-    <div className="flex w-full sm:min-w-[145px] sm:w-[145px] items-center gap-2 ">
+    <div
+      className={clsx(
+        property == "inventoryLocation"
+          ? ` sm:min-w-[145px] sm:w-[145px]`
+          : `sm:w-[220px] min-w-[220px] `,
+        `flex w-full items-center gap-2 `
+      )}
+    >
       <Combobox
         className="w-full"
         as="div"
-        value={selectedLocation}
-        onChange={setSelectedLocation}
+        value={selectedObject}
+        onChange={setSelectedObject}
       >
         <div className="relative w-full sm:w-auto flex items-center">
           <Combobox.Input
             type="search"
-            placeholder="Lagerplats.."
+            placeholder={clsx(
+              property == "inventoryLocation" ? `Lagerplats..` : `Modell..`
+            )}
             className="w-full flex items-center rounded-md border-0 bg-white py-3.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             onChange={(event) => setQuery(event.target.value)}
-            displayValue={(location: InventoryLocationDocument) =>
-              location?.name
-            }
+            displayValue={(model: VehicleDocument) => model?.name}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
             <ChevronUpDownIcon
@@ -71,14 +123,14 @@ const SearchBarKombo = () => {
             />
           </Combobox.Button>
 
-          {!filteredLocation
+          {!filteredList
             ? null
-            : filteredLocation.length > 0 && (
+            : filteredList.length > 0 && (
                 <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                  {filteredLocation.map((location, i) => (
+                  {filteredList.map((object, i) => (
                     <Combobox.Option
                       key={i}
-                      value={location}
+                      value={object}
                       className={({ active }) =>
                         classNames(
                           "relative cursor-default select-none py-2 pl-8 pr-4",
@@ -94,7 +146,7 @@ const SearchBarKombo = () => {
                               selected && "font-semibold"
                             )}
                           >
-                            {location.name}
+                            {object.name}
                           </span>
 
                           {selected && (
@@ -118,13 +170,13 @@ const SearchBarKombo = () => {
               )}
         </div>
       </Combobox>
-      {selectedLocation ? (
+      {selectedObject ? (
         <IconX
           xlinkTitle="Rensa sökfält"
           aria-label="Rensa sökfält"
           className="cursor-pointer hover:text-red-600"
           onClick={() => {
-            setSelectedLocation(null);
+            setSelectedObject(null);
           }}
           width={16}
           height={16}

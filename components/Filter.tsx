@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import RadioButtons from "./buttons/RadioButtons";
-import SearchBarKombo from "./searchbars/SearchBarKombo";
-import SearchBarKomboModels from "./searchbars/SearchBarKomboModels";
 import { articleContext } from "./context/ArticleProvider";
 import SearchBar from "./searchbars/SearchBar";
+import SearchBarKombo from "./searchbars/SearchBarKombo";
 
 const Filter = () => {
   const { setCurrentArticles, articles } = useContext(articleContext);
+
   return (
     <>
       <div className="w-full flex sm:justify-end">
@@ -20,12 +20,12 @@ const Filter = () => {
         />
         <div className="text-xs py-2 md:py-0 md:px-2 hidden sm:flex whitespace-nowrap justify-center  items-center"></div>
         <div className="flex ">
-          <SearchBarKomboModels />
+          <SearchBarKombo property={"vehicleModels"} />
           <div className="text-xs  hidden sm:flex  px-2 whitespace-nowrap justify-center  items-center">
             och / eller
           </div>
           <div className=" px-2 sm:hidden" />
-          <SearchBarKombo />
+          <SearchBarKombo property={"inventoryLocation"} />
         </div>
       </div>
     </>
