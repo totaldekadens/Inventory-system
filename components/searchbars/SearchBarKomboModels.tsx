@@ -1,8 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
-import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
-import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import { articleContext } from "../context/ArticleProvider";
 import { IconX } from "@tabler/icons-react";
 import { VehicleDocument } from "@/models/VehicleModel";

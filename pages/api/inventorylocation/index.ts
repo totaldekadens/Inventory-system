@@ -76,11 +76,11 @@ export default async function handler(
 
         if (
           inventoryLocationTaken.length > 0 &&
-          inventoryLocationTaken[0].name != req.body.name
+          inventoryLocationTaken[0]._id != req.body._id
         ) {
           return res.status(403).send({
             success: false,
-            data: "Location name already exist",
+            data: "Lagerplatsen existerar redan",
           });
         }
 

@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import { FC, PropsWithChildren, useState } from "react";
 
 interface vehicleContextData {
-  vehicles: VehicleDocument[] | null;
-  setVehicles: React.Dispatch<React.SetStateAction<VehicleDocument[] | null>>;
+  vehicles: VehicleDocument[] | [];
+  setVehicles: React.Dispatch<React.SetStateAction<VehicleDocument[] | []>>;
 }
 
 export const vehicleContext = React.createContext<vehicleContextData>({
@@ -13,7 +13,7 @@ export const vehicleContext = React.createContext<vehicleContextData>({
 });
 
 const VehicleProvider: FC<PropsWithChildren> = (props) => {
-  const [vehicles, setVehicles] = useState<VehicleDocument[] | null>([]);
+  const [vehicles, setVehicles] = useState<VehicleDocument[] | []>([]);
 
   return (
     <vehicleContext.Provider value={{ vehicles, setVehicles }}>

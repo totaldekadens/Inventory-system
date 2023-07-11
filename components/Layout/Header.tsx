@@ -4,9 +4,13 @@ import Image from "next/image";
 import { IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import NewArticle from "../NewArticle";
+import HandleLocations from "../handleLocations/HandleLocations";
+import HandleVehicleModels from "../handleVehicleModels/HandleVehicleModels";
 
 const Header = () => {
   const [createArticle, setCreateArticle] = useState(false);
+  const [handleLocations, setHandleLocations] = useState(false);
+  const [handleVehicleModels, setHandleVehicleModels] = useState(false);
   return (
     <header className=" top-0 z-10 bg-white right-0 left-0 h-42 flex items-center justify-between py-6 sm:py-12 px-8 sm:px-12 lg:px-16">
       <Link
@@ -22,9 +26,18 @@ const Header = () => {
         />
       </Link>
       <div className="flex gap-2 items-center">
-        <Link href={"#"} className=" mr-10 hidden md:flex ">
+        <div
+          onClick={() => setHandleVehicleModels(true)}
+          className=" mr-10 hidden md:flex cursor-pointer "
+        >
+          Hantera modeller
+        </div>
+        <div
+          onClick={() => setHandleLocations(true)}
+          className=" mr-10 hidden md:flex cursor-pointer "
+        >
           Hantera lagerplatser
-        </Link>
+        </div>
         <div
           onClick={() => {
             setCreateArticle(true);
@@ -37,6 +50,12 @@ const Header = () => {
       </div>
       {createArticle ? (
         <NewArticle setCreateArticle={setCreateArticle} />
+      ) : null}
+      {handleLocations ? (
+        <HandleLocations setHandleLocations={setHandleLocations} />
+      ) : null}
+      {handleVehicleModels ? (
+        <HandleVehicleModels setHandleVehicleModels={setHandleVehicleModels} />
       ) : null}
     </header>
   );

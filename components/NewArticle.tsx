@@ -126,7 +126,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
           // Updates list
           const response = await fetch("/api/article/");
           const result = await response.json();
-          console.log(result);
+
           if (result.success) {
             setCurrentArticles(result.data);
           }
