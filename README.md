@@ -27,10 +27,10 @@ He´s demands:
       * Update ✅
       * Delete ✅
   * Frontend:
-      * Create 
-      * Read 
-      * Update 
-      * Delete 
+      * Create ✅
+      * Read ✅
+      * Update ✅
+      * Delete ✅
 * Add, remove and modify an inventory location
   * Backend:
       * Create ✅
@@ -86,9 +86,14 @@ He´s demands:
 ![c2](https://github.com/totaldekadens/Inventory-system/assets/90898648/ffac582e-eb04-43a5-ad9f-52f0a6cdfffc)
 
 #### Handle inventory locations
+![location](https://github.com/totaldekadens/Inventory-system/assets/90898648/5bf9cdae-b538-42fb-a0d6-2e4059097bee)
+![locationedit](https://github.com/totaldekadens/Inventory-system/assets/90898648/32cdd6f7-22b7-4773-869c-8cf0cb2b07b5)
+![locationsearch](https://github.com/totaldekadens/Inventory-system/assets/90898648/53664ffb-4c8b-4315-83db-618e27cc9fa2)
 
-<img width="1365" alt="location" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/ef073dfa-e796-4fc0-b877-2e5b378eebbb">
-<img width="1367" alt="locationedit" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/43db6288-0b2f-4ee0-b648-234848d9658f">
+
+#### Handle Vehicle models
+![models](https://github.com/totaldekadens/Inventory-system/assets/90898648/13d9b67b-fa4a-495d-a279-58c8a7bb91d2)
+
 
 
 ### Mobile
@@ -130,4 +135,5 @@ He´s demands:
 <img width="306" alt="locationmobil" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/671e3783-242d-419f-bad0-bbf8a503e714">
 
 
-
+#### Handle Vehicle models
+![modelsmobile](https://github.com/totaldekadens/Inventory-system/assets/90898648/901c38c7-6663-455f-9567-f2aeeaddfe08)
