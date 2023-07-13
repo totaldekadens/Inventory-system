@@ -1,11 +1,4 @@
-import { useContext, useState } from "react";
-import { IconX } from "@tabler/icons-react";
-import {
-  PopulatedArticleDocument,
-  articleContext,
-} from "./context/ArticleProvider";
-import QtyControls from "./buttons/QtyControls";
-import ArticleView from "./article/articleView/ArticleView";
+import { useState } from "react";
 import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
@@ -20,7 +13,7 @@ const Th = ({ header, className, empty }: ThProps) => (
   <th
     scope="col"
     className={clsx(
-      `py-3.5 text-[10px] lg:text-xs font-semibold text-gray-900 whitespace-nowrap  `,
+      `py-3.5  text-xs text-left font-semibold text-gray-900 whitespace-nowrap  `,
       className
     )}
   >
@@ -35,22 +28,20 @@ interface Props {
 const TableHistory = ({ history }: Props) => {
   const [open, setOpen] = useState(false);
 
-  console.log(history);
-
   return (
-    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
+    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-2 ">
       <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 ">
-        <table className="min-w-full  ">
+        <table className="min-w-full">
           {/* Headers */}
           <thead>
             <tr>
-              <Th header="Art. no" className="text-left px-3" />
-              <Th header="Detaljer" className="text-left px-3" />
-              <Th header="Skick" className="text-left px-4" />
-              <Th header="Antal" className="text-left px-3 " />
-              <Th header="Anledning" className="  text-left px-3" />
-              <Th header="Pris / enhet" className="px-3  text-left" />
-              <Th header="Kommentar" className="relative text-left " />
+              <Th header="Art. no" className=" px-3" />
+              <Th header="Detaljer" className="px-3" />
+              <Th header="Antal" className=" px-3 " />
+              <Th header="Anledning" className="px-3" />
+              <Th header="Pris / enhet" className="px-3" />
+              <Th header="Skick" className=" px-4" />
+              <Th header="Kommentar" className="relative" />
               <Th header="Datum" className="relative flex" />
             </tr>
           </thead>
@@ -70,7 +61,7 @@ const TableHistory = ({ history }: Props) => {
                 return (
                   <tr key={i} className="">
                     {/* Art. no */}
-                    <td className="whitespace-nowrap px-3 py-1 text-[10px] lg:text-xs  text-gray-500">
+                    <td className="whitespace-nowrap px-3 py-1  text-xs  text-gray-500">
                       <div
                         className="text-gray-900 h-full "
                         onClick={() => {
@@ -81,17 +72,17 @@ const TableHistory = ({ history }: Props) => {
                       </div>
                     </td>
                     {/* Detaljer */}
-                    <td className="whitespace-nowrap py-1 px-3 text-[10px] lg:text-xs   ">
-                      <div className="flex">
+                    <td className="whitespace-nowrap py-1 px-3  text-xs   ">
+                      <div className="flex items-center ">
                         {/* Image */}
                         <div
-                          className=" h-6 w-6 lg:h-8 lg:w-8 flex-shrink-0 cursor-pointer"
+                          className=" h-8 w-8 flex-shrink-0 flex items-center cursor-pointer"
                           onClick={() => {
                             setOpen(true);
                           }}
                         >
                           <img
-                            className=" h-6 w-6 lg:h-8 lg:w-8   rounded-sm object-cover"
+                            className=" h-8 w-8  rounded-sm object-cover"
                             src={path}
                             alt="Bild på artikel"
                           />
@@ -101,7 +92,7 @@ const TableHistory = ({ history }: Props) => {
                             {/* Title */}
                             <div className="relative h-5">
                               <div
-                                className="text-[10px] lg:text-xs  whitespace-nowrap text-gray-900 cursor-pointer  " // absolute truncate
+                                className=" text-xs  whitespace-nowrap text-gray-900 cursor-pointer  " // absolute truncate
                                 onClick={() => {
                                   setOpen(true);
                                 }}
@@ -113,7 +104,7 @@ const TableHistory = ({ history }: Props) => {
                             {/* Supplier part no */}
 
                             <div
-                              className=" text-gray-500 text-[10px] lg:text-xs  flex flex-wrap cursor-pointer"
+                              className=" text-gray-500  text-xs  flex flex-wrap cursor-pointer"
                               onClick={() => {
                                 setOpen(true);
                               }}
@@ -124,35 +115,36 @@ const TableHistory = ({ history }: Props) => {
                         </div>
                       </div>
                     </td>
-                    {/* Skick */}
-                    <td className="whitespace-nowrap  px-4 py-1 text-[10px] lg:text-xs  text-gray-500">
-                      <div className="text-gray-900 h-full ">
-                        {article.article.condition}
-                      </div>
-                    </td>
                     {/* Antal */}
-                    <td className="whitespace-nowrap px-3   py-1 text-[10px] lg:text-xs  text-gray-500 flex-wrap">
+                    <td className="whitespace-nowrap px-3   py-1  text-xs  text-gray-500 flex-wrap">
                       <div>
                         {article.direction}
                         {article.qty}
                       </div>
                     </td>
                     {/* Anledning */}
-                    <td className="whitespace-nowrap   px-3 py-1 text-[10px] lg:text-xs  text-gray-500">
+                    <td className="whitespace-nowrap   px-3 py-1  text-xs  text-gray-500">
                       <div className="text-gray-900 h-full ">
                         {article.cause}
                       </div>
                     </td>
                     {/* Pris/enhet */}
-                    <td className="whitespace-nowrap   px-3 py-1 text-[10px] lg:text-xs  text-gray-500">
+                    <td className="whitespace-nowrap   px-3 py-1  text-xs  text-gray-500">
                       <div>
                         {article.pricePerUnit
                           ? article.pricePerUnit + " kr"
                           : ""}{" "}
                       </div>
                     </td>
+                    {/* Skick */}
+                    <td className="whitespace-nowrap  px-4 py-1  text-xs  text-gray-500">
+                      <div className="text-gray-900 h-full ">
+                        {article.article.condition}
+                      </div>
+                    </td>
+
                     {/* Kommentar */}
-                    <td className=" py-1 px-3 text-[10px] lg:text-xs  flex max-w-[180px] min-w-[180px] text-gray-500 flex-wrap">
+                    <td className=" py-1 px-3  text-xs items-center h-full flex max-w-[180px] min-w-[180px] text-gray-500 flex-wrap">
                       <Spoiler
                         styles={{ control: { color: "#264133" } }}
                         color="#264133"
@@ -161,11 +153,13 @@ const TableHistory = ({ history }: Props) => {
                         showLabel={`Visa hela kommentaren`}
                         hideLabel="Dölj"
                       >
-                        <div className="flex">{article.comment}</div>
+                        <div className="flex items-center h-full">
+                          {article.comment}
+                        </div>
                       </Spoiler>
                     </td>
                     {/* Datum */}
-                    <td className="relative whitespace-nowrap text-left text-[10px] lg:text-xs pr-3 ">
+                    <td className="relative whitespace-nowrap text-left  text-xs pr-3 ">
                       <div>{article.createdDate}</div>
                     </td>
                   </tr>

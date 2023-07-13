@@ -1,7 +1,7 @@
 import mongoose, { Types } from "mongoose";
 const { Schema } = mongoose;
 
-const ArticleSchema = new Schema<ArticleDocument>({
+export const ArticleSchema = new Schema<ArticleDocument>({
   artno: { type: Number, required: true },
   supplierArtno: { type: String },
   vehicleModels: [
