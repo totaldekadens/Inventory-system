@@ -42,6 +42,7 @@ export default async function handler(
             .json({ success: false, data: "Bad request, check body" });
         }
 
+        console.log(req.body);
         let newTransactionHistory: TransactionHistoryDocument =
           new TransactionHistory(req.body);
 

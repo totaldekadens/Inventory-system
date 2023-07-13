@@ -37,6 +37,20 @@ body {
   border: 1px solid var(--primary);
 }
 
+input[type="search"] {
+  border-radius: 6px;
+  border-color: rgb(209 213 219);
+  font-size: "12px";
+}
+
+input {
+  font-size: "12px";
+}
+
+[type="search"]:focus {
+  font-size: "12px";
+}
+
 .heroImage {
   animation: shake 3.5s;
   animation-iteration-count: initial;
