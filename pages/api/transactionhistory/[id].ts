@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import TransactionHistory, {
   TransactionHistoryDocument,
 } from "@/models/TransactionHistoryModel";
+import InventoryLocation from "@/models/InventoryLocationModel";
 import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -20,11 +21,10 @@ export default async function handler(
     case "GET":
       // Gets all transactions history from specific article
       try {
-        const getSpecificTransactionHistory =
-          await TransactionHistory.aggregate([
-            { $unwind: "$article" },
-            { $match: { "article.artno": Number(id) } },
-          ]);
+        let getSpecificTransactionHistory = await TransactionHistory.aggregate([
+          { $unwind: "$article" },
+          { $match: { "article.artno": Number(id) } },
+        ]);
 
         if (!getSpecificTransactionHistory) {
           return res.status(403).send({

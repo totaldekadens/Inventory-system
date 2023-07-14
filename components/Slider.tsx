@@ -1,16 +1,14 @@
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
-import { PopulatedArticleDocument } from "./context/ArticleProvider";
 import Image from "next/image";
-import { RefObject, useEffect, useRef, useState } from "react";
 
 interface Props {
-  article: PopulatedArticleDocument;
+  images: string[];
 }
-const Slider = ({ article }: Props) => {
+const Slider = ({ images }: Props) => {
   return (
     <Splide aria-label="My Favorite Images">
-      {article.images.map((image, i) => {
+      {images.map((image, i) => {
         const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${image}`;
         return (
           <SplideSlide

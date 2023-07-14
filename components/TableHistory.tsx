@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
+import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
+import ArticleViewHistory from "./article/articleView/ArticleViewHistory";
 
 interface ThProps {
   header: string;
@@ -27,6 +29,11 @@ interface Props {
 
 const TableHistory = ({ history }: Props) => {
   const [open, setOpen] = useState(false);
+  const [currentArticle, setCurrentArticle] =
+    useState<TransactionHistoryDocument>();
+  useEffect(() => {
+    useRemoveBackgroundScroll(open);
+  }, [open]);
 
   return (
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-2 ">
@@ -90,6 +97,7 @@ const TableHistory = ({ history }: Props) => {
                                 className=" text-xs  whitespace-nowrap text-gray-900 cursor-pointer  " // absolute truncate
                                 onClick={() => {
                                   setOpen(true);
+                                  setCurrentArticle(article);
                                 }}
                               >
                                 {article.article.title}
@@ -102,6 +110,7 @@ const TableHistory = ({ history }: Props) => {
                               className=" text-gray-500  text-xs  flex flex-wrap cursor-pointer"
                               onClick={() => {
                                 setOpen(true);
+                                setCurrentArticle(article);
                               }}
                             >
                               {article.article.supplierArtno}
@@ -164,6 +173,9 @@ const TableHistory = ({ history }: Props) => {
           </tbody>
         </table>
       </div>
+      {open && currentArticle ? (
+        <ArticleViewHistory setOpen={setOpen} object={currentArticle} />
+      ) : null}
     </div>
   );
 };

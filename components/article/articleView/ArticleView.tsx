@@ -22,6 +22,7 @@ const ArticleView = ({ article, setOpen }: Props) => {
           "/api/transactionhistory/" + article.artno
         );
         const result = await response.json();
+        console.log(result.data);
         if (result.success) {
           // Sort keys from Ö - A
           const descendingHistory: TransactionHistoryDocument[] =
@@ -52,7 +53,7 @@ const ArticleView = ({ article, setOpen }: Props) => {
         <div className="mx-auto max-w-3xl px-4 sm:px-6  lg:max-w-8xl lg:px-8 pt-6 sm:pt-0 flex flex-col lg:flex-row">
           {/* Image slider */}
           <div className="w-full ">
-            <Slider article={article} />
+            <Slider images={article.images} />
           </div>
           {/* Sidebar */}
           <ArticleSidebar article={article} className={s.sidebar} />
