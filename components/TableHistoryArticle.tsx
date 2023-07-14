@@ -10,15 +10,25 @@ interface ThProps {
 }
 
 const Th = ({ header, className, empty }: ThProps) => (
-  <th
-    scope="col"
+  <div
     className={clsx(
-      `py-3.5  text-sm px-3 text-left font-semibold text-gray-900 whitespace-nowrap  `,
+      `py-3.5  text-sm  text-left flex flex-1  font-semibold text-gray-900 whitespace-nowrap  `,
       className
     )}
   >
     {empty ? <span className="sr-only">{header}</span> : header}
-  </th>
+  </div>
+);
+
+const TableItem = ({ header, className }: ThProps) => (
+  <div
+    className={clsx(
+      `whitespace-nowrap text-left py-1 text-sm  flex flex-1 `,
+      className
+    )}
+  >
+    {header}
+  </div>
 );
 
 interface Props {
@@ -33,65 +43,75 @@ const TableHistoryArticle = ({ history }: Props) => {
           <Accordion
             title="Transaktionshistorik"
             content={
-              <table className="min-w-full ">
+              <div
+                className="min-w-full  w-full overflow-x-auto flex"
+                style={{ flexFlow: "column" }}
+              >
                 {/* Headers */}
-                <thead>
-                  <tr>
-                    <Th header="Datum" />
-                    <Th header="Antal" />
-                    <Th header="Anledning" />
-                    <Th header="Pris / enhet" />
-                    <Th header="Skick" />
-                    <Th header="Kommentar" />
-                  </tr>
-                </thead>
+                <div className="w-full flex" style={{ flexFlow: "row" }}>
+                  <Th header="Datum" className="min-w-[160px]" />
+                  <Th header="Antal" className="min-w-[70px]" />
+                  <Th header="Anledning" className="min-w-[190px]" />
+                  <Th header="Pris / enhet" className="min-w-[110px]" />
+                  <Th header="Skick" className="min-w-[190px]" />
+                  <Th header="Kommentar" className="min-w-[190px]" />
+                </div>
 
                 {/* Content */}
-                <tbody className="divide-y divide-gray-200 h-[200px] max-h-[200px] overflow-y-auto bg-[#FCFCFC] relative">
+                <div
+                  className=" max-h-[200px] overflow-y-auto bg-[#FCFCFC] relative "
+                  style={{ flexFlow: "row" }}
+                >
                   {history.length < 1 ? (
-                    <tr className="bg-transparent p-3 h-11 flex  ">
-                      <td>
+                    <div className="bg-transparent p-3 h-11 flex  ">
+                      <div>
                         <p className="">Sökningen gav ingen träff</p>
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   ) : (
                     history.map((article, i) => {
+                      const lastIndex = history.length - 1;
                       return (
-                        <tr key={i} className="">
+                        <div
+                          key={i}
+                          style={{ flexFlow: "row" }}
+                          className={clsx(
+                            lastIndex == i ? `border-b-0` : `border-b`,
+                            ` border border-x-0 border-t-0 flex border-gray-200 `
+                          )}
+                        >
                           {/* Datum */}
-                          <td className="relative whitespace-nowrap text-left px-3 text-sm pr-3 ">
-                            <div>{article.createdDate}</div>
-                          </td>
+                          <TableItem
+                            header={article.createdDate}
+                            className="min-w-[160px]"
+                          />
                           {/* Antal */}
-                          <td className="whitespace-nowrap px-3   py-1  text-sm  text-gray-500 flex-wrap">
-                            <div>
-                              {article.direction}
-                              {article.qty}
-                            </div>
-                          </td>
+                          <TableItem
+                            className="text-gray-500 min-w-[70px]"
+                            header={`${article.direction}${article.qty}`}
+                          />
                           {/* Anledning */}
-                          <td className="whitespace-nowrap   px-3 py-1  text-sm  text-gray-500">
-                            <div className="text-gray-900 h-full ">
-                              {article.cause}
-                            </div>
-                          </td>
+                          <TableItem
+                            className="min-w-[190px]"
+                            header={article.cause ? article.cause : ""}
+                          />
                           {/* Pris/enhet */}
-                          <td className="whitespace-nowrap   px-3 py-1  text-sm  text-gray-500">
-                            <div>
-                              {article.pricePerUnit
+                          <TableItem
+                            className="text-gray-500 min-w-[110px]"
+                            header={
+                              article.pricePerUnit
                                 ? article.pricePerUnit + " kr"
-                                : ""}{" "}
-                            </div>
-                          </td>
+                                : ""
+                            }
+                          />
                           {/* Skick */}
-                          <td className="whitespace-nowrap  px-4 py-1  text-sm  text-gray-500">
-                            <div className="text-gray-900 h-full ">
-                              {article.article.condition}
-                            </div>
-                          </td>
+                          <TableItem
+                            className="min-w-[190px]"
+                            header={article.article.condition}
+                          />
 
                           {/* Kommentar */}
-                          <td className=" py-1 px-3  text-sm items-center h-full flex max-w-[180px] min-w-[180px] text-gray-500 flex-wrap">
+                          <div className="text-sm h-full flex flex-1 min-w-[190px] text-gray-500 flex-wrap">
                             <Spoiler
                               styles={{ control: { color: "#264133" } }}
                               color="#264133"
@@ -104,13 +124,13 @@ const TableHistoryArticle = ({ history }: Props) => {
                                 {article.comment}
                               </div>
                             </Spoiler>
-                          </td>
-                        </tr>
+                          </div>
+                        </div>
                       );
                     })
                   )}
-                </tbody>
-              </table>
+                </div>
+              </div>
             }
           />
         </div>

@@ -13,11 +13,11 @@ interface Props {
 
 const ArticleView = ({ article, setOpen }: Props) => {
   const [history, setHistory] = useState([]);
+  // Fetches transaction history for this specifik article
   useEffect(() => {
     const getHistory = async () => {
       const response = await fetch("/api/transactionhistory/" + article.artno);
       const result = await response.json();
-      console.log(result);
       if (result.success) {
         setHistory(result.data);
       }
