@@ -103,6 +103,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
           images: imageList,
           inventoryLocation: selectedLocation?._id as unknown as Types.ObjectId,
         };
+
         // Upload images to Cloudinary
         await UploadToImagesToServer(fileList);
 
@@ -194,7 +195,6 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 value={values.title}
                 onChange={handleChange}
                 type="text"
-                // required
                 autoComplete="Titel"
                 className={inputClass}
                 placeholder="Titel*"
@@ -230,8 +230,8 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 type="number"
                 autoComplete="qty"
                 value={values.qty}
+                min={0}
                 onChange={handleChange}
-                //required
                 className={inputClass}
                 placeholder="Antal*"
               />
@@ -247,7 +247,6 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 autoComplete="condition"
                 value={values.condition}
                 onChange={handleChange}
-                //required
                 className={inputClass}
                 placeholder="Beskriv skicket på artikeln*"
               />
@@ -272,6 +271,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   id="purchaseValue"
                   name="purchaseValue"
                   type="number"
+                  min={0}
                   autoComplete="purchaseValue"
                   value={values.purchaseValue}
                   onChange={handleChange}
@@ -307,6 +307,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                     id="price"
                     name="price"
                     type="number"
+                    min={0}
                     autoComplete="price"
                     value={values.price}
                     onChange={handleChange}

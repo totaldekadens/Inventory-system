@@ -9,6 +9,7 @@ import ArticleView from "./article/articleView/ArticleView";
 import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
+import { todayDate } from "@/lib/setDate";
 
 interface ThProps {
   header: string;
@@ -193,14 +194,46 @@ const Table = () => {
                             const test = confirm("Är du säker?");
                             // Todo: Update this one later
                             if (test) {
-                              await fetch(`api/article/${article._id}`, {
-                                method: "DELETE",
-                              });
+                              try {
+                                const createTransactionHistory = {
+                                  direction: "-",
+                                  cause: "Artikel permanent borttagen",
+                                  qty: article.qty,
+                                  article,
+                                  comment: "",
+                                  createdDate: todayDate,
+                                };
 
-                              const response = await fetch("/api/article/");
-                              const result = await response.json();
-                              if (result.success) {
-                                setCurrentArticles(result.data);
+                                const request = {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify(
+                                    createTransactionHistory
+                                  ),
+                                };
+
+                                const responseTransaction = await fetch(
+                                  "/api/transactionhistory",
+                                  request
+                                );
+                                const resultTransaction =
+                                  await responseTransaction.json();
+
+                                if (resultTransaction.success) {
+                                  await fetch(`api/article/${article._id}`, {
+                                    method: "DELETE",
+                                  });
+
+                                  const response = await fetch("/api/article/");
+                                  const result = await response.json();
+                                  if (result.success) {
+                                    setCurrentArticles(result.data);
+                                  }
+                                }
+                              } catch (err) {
+                                console.error(err);
                               }
                             }
                           }}

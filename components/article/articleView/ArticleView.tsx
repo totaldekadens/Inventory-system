@@ -1,10 +1,11 @@
 import s from "./ArticleView.module.css";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IconX } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "@/components/context/ArticleProvider";
 import ArticleSidebar from "../articleSidebar/ArticleSidebar";
 import Slider from "@/components/Slider";
 import TableHistoryArticle from "@/components/TableHistoryArticle";
+import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -12,14 +13,25 @@ interface Props {
 }
 
 const ArticleView = ({ article, setOpen }: Props) => {
-  const [history, setHistory] = useState([]);
-  // Fetches transaction history for this specifik article
+  const [history, setHistory] = useState<TransactionHistoryDocument[]>([]);
+  // Fetches transaction history for this specific article
   useEffect(() => {
     const getHistory = async () => {
-      const response = await fetch("/api/transactionhistory/" + article.artno);
-      const result = await response.json();
-      if (result.success) {
-        setHistory(result.data);
+      try {
+        const response = await fetch(
+          "/api/transactionhistory/" + article.artno
+        );
+        const result = await response.json();
+        if (result.success) {
+          // Sort keys from Ö - A
+          const descendingHistory: TransactionHistoryDocument[] =
+            result.data.sort((a: any, b: any) =>
+              a.createdDate < b.createdDate ? 1 : -1
+            );
+          setHistory(descendingHistory);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
     getHistory();
@@ -39,8 +51,10 @@ const ArticleView = ({ article, setOpen }: Props) => {
         </div>
         <div className="mx-auto max-w-3xl px-4 sm:px-6  lg:max-w-8xl lg:px-8 pt-6 sm:pt-0 flex flex-col lg:flex-row">
           <div className="w-full ">
+            {/* Image slider */}
             <Slider article={article} />
           </div>
+          {/* Sidebar */}
           <ArticleSidebar article={article} className={s.sidebar} />
         </div>
         {/* Transaction history */}

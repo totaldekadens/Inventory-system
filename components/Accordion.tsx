@@ -27,18 +27,18 @@ const Accordion = ({ title, content }: Props) => {
   return (
     <div className="flex flex-col">
       <button
-        className="py-6 box-border appearance-none cursor-pointer focus:outline-none flex items-center justify-between"
+        className="pb-6 box-border appearance-none cursor-pointer focus:outline-none flex items-center "
         onClick={toggleAccordion}
       >
-        <p className="inline-block text-footnote light font-medium  text-gray-900 mt-4 lg:mt-4">
+        <p className="inline-block text-footnote light font-medium  text-gray-900 mt-2 lg:mt-4">
           {title}
         </p>
-        <IconChevronUp className={`${rotate} inline-block`} />
+        <IconChevronUp className={`${rotate} inline-block ml-3 mt-2 lg:mt-4`} />
       </button>
       <div
         ref={contentSpace}
         style={{ maxHeight: `${height}` }}
-        className="overflow-auto transition-max-height duration-700 ease-in-out"
+        className=" transition-max-height duration-700 ease-in-out" //overflow-auto
       >
         <div className="pb-10">{content}</div>
       </div>

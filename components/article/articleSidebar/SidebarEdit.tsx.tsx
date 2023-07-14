@@ -135,7 +135,11 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           };
 
           const response = await fetch("/api/transactionhistory", request);
-          await response.json();
+          const result = await response.json();
+          if (!result.success) {
+            setError("Problem vid transaktion. Ingen är uppdaterat");
+            return;
+          }
         }
 
         const updateArticle = {

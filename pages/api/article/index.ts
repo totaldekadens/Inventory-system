@@ -2,10 +2,9 @@ import dbConnect from "@/lib/dbConnect";
 import { todayDate } from "@/lib/setDate";
 import Article, { ArticleDocument } from "@/models/ArticleModel";
 import { NextApiRequest, NextApiResponse } from "next";
-import InventoryLocation, {
-  InventoryLocationDocument,
-} from "@/models/InventoryLocationModel";
-import Vehicle, { VehicleDocument } from "@/models/VehicleModel";
+import InventoryLocation from "@/models/InventoryLocationModel";
+import Vehicle from "@/models/VehicleModel";
+import TransactionHistory from "@/models/TransactionHistoryModel";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -67,6 +66,32 @@ export default async function handler(
 
         const article = await Article.create(newArticle);
 
+        if (!article) {
+          return res.status(400).json({
+            success: false,
+            data: "Något gick fel, kunde inte skapa artikel. Kolla ditt underlag",
+          });
+        }
+
+        const createTransactionHistory = {
+          direction: "+",
+          cause: "Artikel skapad",
+          qty: article.qty,
+          article,
+          comment: "",
+          createdDate: todayDate,
+        };
+
+        const transactionHistory = await TransactionHistory.create(
+          createTransactionHistory
+        );
+
+        if (!transactionHistory) {
+          return res.status(400).json({
+            success: false,
+            data: "Något gick fel. Artikeln är skapad, men ingen transaktionshistorik skapades",
+          });
+        }
         res.status(201).json({ success: true, data: article._id });
       } catch (error) {
         res.json({ success: false, data: error });

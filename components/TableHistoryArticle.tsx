@@ -23,7 +23,7 @@ const Th = ({ header, className, empty }: ThProps) => (
 const TableItem = ({ header, className }: ThProps) => (
   <div
     className={clsx(
-      `whitespace-nowrap text-left py-1 text-sm  flex flex-1 `,
+      `whitespace-nowrap text-left py-2 text-sm  flex flex-1 `,
       className
     )}
   >
@@ -59,13 +59,13 @@ const TableHistoryArticle = ({ history }: Props) => {
 
                 {/* Content */}
                 <div
-                  className=" max-h-[200px] overflow-y-auto bg-[#FCFCFC] relative "
+                  className=" max-h-[300px] overflow-y-auto overflow-x-auto  bg-[#FCFCFC] relative "
                   style={{ flexFlow: "row" }}
                 >
                   {history.length < 1 ? (
                     <div className="bg-transparent p-3 h-11 flex  ">
                       <div>
-                        <p className="">Sökningen gav ingen träff</p>
+                        <p className="">Finns ingen historik</p>
                       </div>
                     </div>
                   ) : (
@@ -83,7 +83,7 @@ const TableHistoryArticle = ({ history }: Props) => {
                           {/* Datum */}
                           <TableItem
                             header={article.createdDate}
-                            className="min-w-[160px]"
+                            className="min-w-[160px] pl-2"
                           />
                           {/* Antal */}
                           <TableItem
@@ -111,16 +111,20 @@ const TableHistoryArticle = ({ history }: Props) => {
                           />
 
                           {/* Kommentar */}
-                          <div className="text-sm h-full flex flex-1 min-w-[190px] text-gray-500 flex-wrap">
+                          <div className="text-sm h-full flex items-center flex-1 min-w-[190px] text-gray-500 flex-wrap">
                             <Spoiler
-                              styles={{ control: { color: "#264133" } }}
+                              styles={{
+                                control: {
+                                  color: "#264133",
+                                },
+                              }}
                               color="#264133"
                               key={i}
-                              maxHeight={20}
+                              maxHeight={33}
                               showLabel={`...`}
                               hideLabel="Dölj"
                             >
-                              <div className="flex items-center h-full">
+                              <div className="flex items-center h-full mt-2">
                                 {article.comment}
                               </div>
                             </Spoiler>
