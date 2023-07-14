@@ -1,4 +1,3 @@
-export const todayDate = new Date()
-  .toISOString()
-  .slice(0, 16)
-  .replace("T", " ");
+import dayjs from "dayjs";
+
+export const todayDate = dayjs().format("YYYY-MM-DD HH:mm");

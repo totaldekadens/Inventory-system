@@ -31,6 +31,7 @@
     "cloudinary-react": "^1.8.1",
     "clsx": "^1.2.1",
     "crypto": "^1.0.1",
+    "dayjs": "^1.11.9",
     "eslint": "8.44.0",
     "formik": "^2.4.2",
     "mongoose": "^7.3.1",

@@ -28,7 +28,7 @@ export default function Index({
   vehicleModels,
 }: Props) {
   const { setCurrentArticles, setArticles } = useContext(articleContext);
-  const { vehicles, setVehicles } = useContext(vehicleContext);
+  const { setVehicles } = useContext(vehicleContext);
   const { setInventoryLocations } = useContext(inventoryLocationContext);
 
   useEffect(() => {
