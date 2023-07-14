@@ -124,7 +124,7 @@ const TableHistoryArticle = ({ history }: Props) => {
                               showLabel={`...`}
                               hideLabel="Dölj"
                             >
-                              <div className="flex items-center h-full mt-2">
+                              <div className="flex items-center h-full mt-3">
                                 {article.comment}
                               </div>
                             </Spoiler>

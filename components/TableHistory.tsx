@@ -15,12 +15,18 @@ const Th = ({ header, className, empty }: ThProps) => (
   <th
     scope="col"
     className={clsx(
-      `py-3.5  text-xs text-left font-semibold text-gray-900 whitespace-nowrap  `,
+      `py-3.5 px-3 text-xs text-left font-semibold text-gray-900 whitespace-nowrap  `,
       className
     )}
   >
     {empty ? <span className="sr-only">{header}</span> : header}
   </th>
+);
+
+const TableItem = ({ header, className }: ThProps) => (
+  <td className={clsx(`whitespace-nowrap px-3 py-1  text-xs`, className)}>
+    {header}
+  </td>
 );
 
 interface Props {
@@ -42,14 +48,14 @@ const TableHistory = ({ history }: Props) => {
           {/* Headers */}
           <thead>
             <tr>
-              <Th header="Art. no" className=" px-3" />
-              <Th header="Detaljer" className="px-3" />
-              <Th header="Antal" className=" px-3 " />
-              <Th header="Anledning" className="px-3" />
-              <Th header="Pris / enhet" className="px-3" />
-              <Th header="Skick" className=" px-4" />
-              <Th header="Kommentar" className="relative" />
-              <Th header="Datum" className="relative flex" />
+              <Th header="Art. no" />
+              <Th header="Detaljer" />
+              <Th header="Antal" />
+              <Th header="Anledning" />
+              <Th header="Pris / enhet" />
+              <Th header="Skick" />
+              <Th header="Kommentar" />
+              <Th header="Datum" />
             </tr>
           </thead>
 
@@ -68,11 +74,7 @@ const TableHistory = ({ history }: Props) => {
                 return (
                   <tr key={i} className="">
                     {/* Art. no */}
-                    <td className="whitespace-nowrap px-3 py-1  text-xs  text-gray-500">
-                      <div className="text-gray-900 h-full ">
-                        {article.article.artno}
-                      </div>
-                    </td>
+                    <TableItem header={article.article.artno.toString()} />
                     {/* Detaljer */}
                     <td className="whitespace-nowrap py-1 px-3  text-xs   ">
                       <div className="flex items-center ">
@@ -94,7 +96,7 @@ const TableHistory = ({ history }: Props) => {
                             {/* Title */}
                             <div className="relative h-5">
                               <div
-                                className=" text-xs  whitespace-nowrap text-gray-900 cursor-pointer  " // absolute truncate
+                                className=" text-xs  whitespace-nowrap text-gray-900 cursor-pointer"
                                 onClick={() => {
                                   setOpen(true);
                                   setCurrentArticle(article);
@@ -105,7 +107,6 @@ const TableHistory = ({ history }: Props) => {
                             </div>
 
                             {/* Supplier part no */}
-
                             <div
                               className=" text-gray-500  text-xs  flex flex-wrap cursor-pointer"
                               onClick={() => {
@@ -120,52 +121,38 @@ const TableHistory = ({ history }: Props) => {
                       </div>
                     </td>
                     {/* Antal */}
-                    <td className="whitespace-nowrap px-3   py-1  text-xs  text-gray-500 flex-wrap">
-                      <div>
-                        {article.direction}
-                        {article.qty}
-                      </div>
-                    </td>
+                    <TableItem
+                      className="text-gray-500"
+                      header={article.direction + article.qty}
+                    />
                     {/* Anledning */}
-                    <td className="whitespace-nowrap   px-3 py-1  text-xs  text-gray-500">
-                      <div className="text-gray-900 h-full ">
-                        {article.cause}
-                      </div>
-                    </td>
+                    <TableItem header={article.cause ? article.cause : ""} />
                     {/* Pris/enhet */}
-                    <td className="whitespace-nowrap   px-3 py-1  text-xs  text-gray-500">
-                      <div>
-                        {article.pricePerUnit
-                          ? article.pricePerUnit + " kr"
-                          : ""}{" "}
-                      </div>
-                    </td>
+                    <TableItem
+                      className="text-gray-500"
+                      header={
+                        article.pricePerUnit ? article.pricePerUnit + " kr" : ""
+                      }
+                    />
                     {/* Skick */}
-                    <td className="whitespace-nowrap  px-4 py-1  text-xs  text-gray-500">
-                      <div className="text-gray-900 h-full ">
-                        {article.article.condition}
-                      </div>
-                    </td>
-
+                    <TableItem header={article.article.condition} />
                     {/* Kommentar */}
-                    <td className=" py-1 px-3  text-xs items-center h-full flex max-w-[180px] min-w-[180px] text-gray-500 flex-wrap">
+                    <td className=" py-1 px-3  text-xs  items-center h-full flex min-w-[180px] text-gray-500 flex-wrap">
                       <Spoiler
                         styles={{ control: { color: "#264133" } }}
                         color="#264133"
                         key={i}
-                        maxHeight={18}
-                        showLabel={`Visa hela kommentaren`}
+                        maxHeight={30}
+                        showLabel={`...`}
                         hideLabel="Dölj"
                       >
-                        <div className="flex items-center h-full">
+                        <div className="flex items-center h-full mt-3">
                           {article.comment}
                         </div>
                       </Spoiler>
                     </td>
                     {/* Datum */}
-                    <td className="relative whitespace-nowrap text-left  text-xs pr-3 ">
-                      <div>{article.createdDate}</div>
-                    </td>
+                    <TableItem header={article.createdDate} />
                   </tr>
                 );
               })
