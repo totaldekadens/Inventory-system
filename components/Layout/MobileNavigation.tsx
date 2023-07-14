@@ -62,9 +62,9 @@ function MobileNavigation({
         className="group flex items-center rounded-full px-2 py-2 text-sm font-medium text-zinc-800   backdrop-blur"
       >
         <div className="space-y-2">
-          <span className="bg-gray-800 block h-0.5 w-8 animate-pulse"></span>
-          <span className="bg-gray-800 block h-0.5 w-4 animate-pulse"></span>
-          <span className="bg-gray-800 block h-0.5 w-2 animate-pulse"></span>
+          <span className="bg-gray-800 block h-0.5 w-8 "></span>
+          <span className="bg-gray-800 block h-0.5 w-4 "></span>
+          <span className="bg-gray-800 block h-0.5 w-2 "></span>
         </div>
       </Popover.Button>
       <Transition.Root>

@@ -24,7 +24,7 @@ const Hero = () => {
   }, [handleVehiceModels]);
 
   return (
-    <div className="flex relative items-center w-full justify-center h-[590px]  sm:h-[400px]  lg:h-[550px] xl:h-[510px]  mb-10 ">
+    <div className="flex relative items-center w-full justify-center h-[570px]  sm:h-[400px]  lg:h-[550px] xl:h-[510px]  mb-10 ">
       <div className="min-w-[250px] pt-14  sm:pt-20 lg:pt-32 h-full items-center flex flex-col flex-1 md:flex-0 ">
         <p className="text-3xl 2xl:text-5xl mb-10 ">
           {`Välkommen tillbaka${
@@ -41,7 +41,7 @@ const Hero = () => {
           <button
             onClick={() => setCreateArticle(true)}
             type="button"
-            className=" sm:mt-0 sm:flex-none rounded-md flex items-center bg-[#264133] px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="  sm:mt-0 sm:flex-none rounded-md flex items-center bg-[#264133] py-4 px-5 md:py-3 md:px-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Lägg till artikel <IconPlus width={20} height={20} />
           </button>
@@ -49,14 +49,14 @@ const Hero = () => {
           <button
             onClick={() => setHandleLocations(true)}
             type="button"
-            className=" rounded-md sm:mt-0 sm:flex-none flex items-center bg-[#264133] px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className=" hidden md:flex rounded-md sm:mt-0 sm:flex-none  items-center bg-[#264133] p-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Hantera lagerplatser
           </button>
           <button
             onClick={() => setHandleVehicleModels(true)}
             type="button"
-            className=" rounded-md sm:mt-0 sm:flex-none flex items-center bg-[#264133] px-3 py-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="hidden md:flex rounded-md sm:mt-0 sm:flex-none  items-center bg-[#264133] p-3 text-center text-base gap-3 font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Hantera modeller
           </button>
