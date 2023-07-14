@@ -1,7 +1,7 @@
 import Hero from "./Hero";
 import Stats from "./Stats";
 import Filter from "./Filter";
-import Table from "./Table";
+import Table from "./tables/Table";
 
 const Overview = () => {
   return (

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
-import ArticleViewHistory from "./article/articleView/ArticleViewHistory";
+import ArticleViewHistory from "../article/articleView/ArticleViewHistory";
 
 interface ThProps {
   header: string;
@@ -42,7 +42,7 @@ const TableHistory = ({ history }: Props) => {
   }, [open]);
 
   return (
-    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-2 ">
+    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-12 ">
       <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 ">
         <table className="min-w-full">
           {/* Headers */}
@@ -60,7 +60,7 @@ const TableHistory = ({ history }: Props) => {
           </thead>
 
           {/* Content */}
-          <tbody className="divide-y divide-gray-200 bg-[#FCFCFC] relative">
+          <tbody className="divide-y divide-gray-200 bg-[#FCFCFC] relative ">
             {history.length < 1 ? (
               <tr className="bg-transparent p-3 h-11 flex  ">
                 <td>

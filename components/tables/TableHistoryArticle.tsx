@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
-import Accordion from "./Accordion";
+import Accordion from "../Accordion";
 
 interface ThProps {
   header: string;

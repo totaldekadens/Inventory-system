@@ -4,8 +4,8 @@ import { IconX } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "@/components/context/ArticleProvider";
 import ArticleSidebar from "../articleSidebar/ArticleSidebar";
 import Slider from "@/components/Slider";
-import TableHistoryArticle from "@/components/TableHistoryArticle";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
+import TableHistoryArticle from "@/components/tables/TableHistoryArticle";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -22,7 +22,6 @@ const ArticleView = ({ article, setOpen }: Props) => {
           "/api/transactionhistory/" + article.artno
         );
         const result = await response.json();
-        console.log(result.data);
         if (result.success) {
           // Sort keys from Ö - A
           const descendingHistory: TransactionHistoryDocument[] =

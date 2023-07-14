@@ -3,9 +3,9 @@ import { IconX } from "@tabler/icons-react";
 import {
   PopulatedArticleDocument,
   articleContext,
-} from "./context/ArticleProvider";
-import QtyControls from "./buttons/QtyControls";
-import ArticleView from "./article/articleView/ArticleView";
+} from "../context/ArticleProvider";
+import QtyControls from "../buttons/QtyControls";
+import ArticleView from "../article/articleView/ArticleView";
 import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
