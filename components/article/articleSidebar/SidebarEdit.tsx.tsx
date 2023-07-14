@@ -4,7 +4,13 @@ import {
   articleContext,
 } from "../../context/ArticleProvider";
 import ForSaleRadioButton from "@/components/buttons/ForSaleRadioButton";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 import { useFormik } from "formik";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
@@ -79,6 +85,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       scrapComment,
     }) => {
       try {
+        // Todo: Make this part shorter.
+
         if (selectedModels.length < 1) {
           setError("Välj minst en fordonsmodell");
           return;
@@ -193,11 +201,12 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       }
     },
   });
-  const inputClass =
-    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-1.5 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto";
 
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
+
+  const inputClass =
+    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-1.5 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto";
 
   return (
     <aside
@@ -207,6 +216,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       <form onSubmit={handleSubmit} className="">
         <div className="flex justify-between w-full mb-4">
           <div className="w-full flex flex-col gap-3">
+            {/* Title */}
             <div className="mt-5 sm:mt-0">
               <label>Titel</label>
               <input
@@ -221,6 +231,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                 placeholder="Titel*"
               />
             </div>
+            {/* SupplierNo */}
             <div>
               <label>Lev.art. no</label>
               <input
@@ -234,6 +245,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                 placeholder="Leverantörens artikelnummer"
               />
             </div>
+            {/* Condition */}
             <div>
               <label>Skick</label>
               <input
@@ -248,6 +260,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                 placeholder="Beskriv skicket på artikeln*"
               />
             </div>
+
+            {/* Quantity */}
             <div>
               <label>Antal</label>
               <div className="relative">
@@ -269,6 +283,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                   </div>
                 </div>
               </div>
+
+              {/* Special with quantity if it changes */}
               {article.qty != values.qty ? (
                 <div className="text-xs rounded-md p-2  m-3 border">
                   <div className="font-medium mb-2">
@@ -350,6 +366,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                 </div>
               ) : null}
             </div>
+
+            {/* Description */}
             <div>
               <label>Beskrivning</label>
               <textarea
@@ -364,6 +382,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                 placeholder="Beskrivning"
               />
             </div>
+            {/* Inventory location */}
             <div>
               <label>Lagerplats</label>
               <SelectLocation
@@ -372,6 +391,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                 selectedLocation={selectedLocation}
               />
             </div>
+            {/* Models */}
             <div>
               <label>Fordonsmodeller</label>
               <SelectModels
@@ -381,6 +401,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             </div>
           </div>
         </div>
+        {/* Purchase price */}
         <label>Inköpspris</label>
         <div className="relative mb-4">
           <input
@@ -430,6 +451,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             </div>
           </div>
         ) : null}
+
+        {/* Upload images */}
         <UploadForm
           setImageList={setImageList}
           setValue={setFileList}

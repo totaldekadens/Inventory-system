@@ -1,6 +1,6 @@
 import { IconEdit } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "../../context/ArticleProvider";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import clsx from "clsx";
 
 interface ItemInfoProps {
