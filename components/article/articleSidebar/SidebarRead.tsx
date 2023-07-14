@@ -1,6 +1,27 @@
 import { IconEdit } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "../../context/ArticleProvider";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import clsx from "clsx";
+
+interface ItemInfoProps {
+  name: string;
+  value: string | number;
+  className?: string;
+}
+
+const ItemInfo = ({ name, value }: ItemInfoProps) => (
+  <div>
+    <div className=" font-medium text-gray-900 mt-4 lg:mt-8  ">{name}</div>
+    <div className="text-gray-900/80">{value}</div>
+  </div>
+);
+
+const ItemInfoSmall = ({ name, value, className }: ItemInfoProps) => (
+  <div className={clsx(`grid grid-cols-2`, className)}>
+    <p className=" tracking-tight text-gray-900/80">{name}</p>
+    <p> {value} </p>
+  </div>
+);
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -17,34 +38,17 @@ const SidebarRead = ({ article, className, setEdit }: Props) => {
             {article.supplierArtno}
           </p>
         </div>
-
         <IconEdit onClick={() => setEdit(true)} className="cursor-pointer" />
       </div>
       <div className="flex justify-between flex-wrap">
-        <div>
-          <div className=" font-medium text-gray-900 mt-4 lg:mt-8  ">Skick</div>
-          <div className="text-gray-900/80">{article.condition}</div>
-        </div>
-        <div>
-          <div className=" font-medium text-gray-900 mt-4 lg:mt-8  ">Plats</div>
-          <div className="text-gray-900/80">
-            {article.inventoryLocation.name}
-          </div>
-        </div>
-        <div>
-          <div className=" font-medium text-gray-900 mt-4 lg:mt-8">Antal</div>
-          <div className="text-gray-900/80">{article.qty} st</div>
-        </div>
+        <ItemInfo name="Skick" value={article.condition} />
+        <ItemInfo name="Plats" value={article.inventoryLocation.name} />
+        <ItemInfo name="Antal" value={article.qty} />
       </div>
-
-      <div>
-        <div className=" font-medium text-gray-900 mt-4 lg:mt-8">
-          Beskrivning
-        </div>
-        <div className="text-gray-900/80">
-          {article.description ? article.description : "Ingen beskrivning"}
-        </div>
-      </div>
+      <ItemInfo
+        name="Beskrivning"
+        value={article.description ? article.description : "Ingen beskrivning"}
+      />
 
       <div className="mt-4 lg:row-span-3 lg:mt-8">
         <div className="w-full flex justify-between">
@@ -52,44 +56,39 @@ const SidebarRead = ({ article, className, setEdit }: Props) => {
             Mer information
           </div>
         </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">Art. no:</p>
-          <p>{article.artno}</p>
-        </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">Lev. art. no: </p>
-          <p> {article.supplierArtno ? article.supplierArtno : "-"}</p>
-        </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">Fordonsmodell: </p>
-          {article.vehicleModels?.map((model, i) => (
-            <p key={i} className=" ">
-              {model.name}
-              {article.vehicleModels && article.vehicleModels.length - 1 == i
-                ? ""
-                : ", "}
-            </p>
-          ))}
-        </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">Försäljningspris:</p>
-          <p>{article.price ? article.price + " kr" : "-"}</p>
-        </div>
-        <div className=" grid grid-cols-2">
-          <p className=" tracking-tight text-gray-900/80">Inköpspris: </p>
-          <p> {article.purchaseValue ? article.purchaseValue + " kr" : "-"} </p>
-        </div>
-
+        <ItemInfoSmall name="Art.no" value={article.artno} />
+        <ItemInfoSmall
+          name="Lev. art. no: "
+          value={article.supplierArtno ? article.supplierArtno : "-"}
+        />
         <div className=" grid grid-cols-2">
           <p className=" tracking-tight text-gray-900/80">
-            Senast uppdaterad:{" "}
+            {article.vehicleModels?.length > 1
+              ? "Fordonsmodeller: "
+              : "Fordonsmodell: "}
           </p>
-          <p>
-            {" "}
-            {article.lastUpdated ? article.lastUpdated : article.createdDate}
-          </p>
+          <div>
+            {article.vehicleModels?.map((model, i) => (
+              <p key={i} className=" ">
+                {model.name}
+              </p>
+            ))}
+          </div>
         </div>
-
+        <ItemInfoSmall
+          name="Försäljningspris:"
+          value={article.price ? article.price + " kr" : "-"}
+        />
+        <ItemInfoSmall
+          name="Inköpspris:"
+          value={article.purchaseValue ? article.purchaseValue + " kr" : "-"}
+        />
+        <ItemInfoSmall
+          name="Senast uppdaterad:"
+          value={
+            article.lastUpdated ? article.lastUpdated : article.createdDate
+          }
+        />
         {/* For sale */}
         <div>
           <div className=" font-medium text-gray-900 mt-4 lg:mt-8">Säljas?</div>
