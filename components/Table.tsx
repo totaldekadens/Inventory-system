@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IconX } from "@tabler/icons-react";
 import {
   PopulatedArticleDocument,
@@ -8,6 +8,8 @@ import QtyControls from "./buttons/QtyControls";
 import ArticleView from "./article/articleView/ArticleView";
 import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
+import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
+import { todayDate } from "@/lib/setDate";
 
 interface ThProps {
   header: string;
@@ -29,6 +31,10 @@ const Table = () => {
   const [open, setOpen] = useState(false);
   const [currentArticle, setCurrentArticle] =
     useState<PopulatedArticleDocument>();
+
+  useEffect(() => {
+    useRemoveBackgroundScroll(open);
+  }, [open]);
 
   return (
     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
@@ -115,7 +121,10 @@ const Table = () => {
                                 hideLabel="Dölj"
                               >
                                 {article.vehicleModels?.map((model, i) => (
-                                  <div className="text-gray-500 h-full ">
+                                  <div
+                                    key={i}
+                                    className="text-gray-500 h-full "
+                                  >
                                     {model.name}
                                   </div>
                                 ))}
@@ -152,7 +161,7 @@ const Table = () => {
                         hideLabel="Dölj"
                       >
                         {article.vehicleModels?.map((model, i) => (
-                          <div className="text-gray-900 h-full ">
+                          <div key={i} className="text-gray-900 h-full ">
                             {model.name}
                           </div>
                         ))}
@@ -185,14 +194,46 @@ const Table = () => {
                             const test = confirm("Är du säker?");
                             // Todo: Update this one later
                             if (test) {
-                              await fetch(`api/article/${article._id}`, {
-                                method: "DELETE",
-                              });
+                              try {
+                                const createTransactionHistory = {
+                                  direction: "-",
+                                  cause: "Artikel permanent borttagen",
+                                  qty: article.qty,
+                                  article,
+                                  comment: "",
+                                  createdDate: todayDate,
+                                };
 
-                              const response = await fetch("/api/article/");
-                              const result = await response.json();
-                              if (result.success) {
-                                setCurrentArticles(result.data);
+                                const request = {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify(
+                                    createTransactionHistory
+                                  ),
+                                };
+
+                                const responseTransaction = await fetch(
+                                  "/api/transactionhistory",
+                                  request
+                                );
+                                const resultTransaction =
+                                  await responseTransaction.json();
+
+                                if (resultTransaction.success) {
+                                  await fetch(`api/article/${article._id}`, {
+                                    method: "DELETE",
+                                  });
+
+                                  const response = await fetch("/api/article/");
+                                  const result = await response.json();
+                                  if (result.success) {
+                                    setCurrentArticles(result.data);
+                                  }
+                                }
+                              } catch (err) {
+                                console.error(err);
                               }
                             }
                           }}

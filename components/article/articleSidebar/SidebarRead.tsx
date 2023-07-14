@@ -1,6 +1,7 @@
 import { IconEdit } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "../../context/ArticleProvider";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import TableHistoryArticle from "@/components/TableHistoryArticle";
 
 interface Props {
   article: PopulatedArticleDocument;

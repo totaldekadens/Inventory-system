@@ -2,15 +2,26 @@ import Link from "next/link";
 import LogoutButton from "../buttons/LogoutButton";
 import Image from "next/image";
 import { IconPlus } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewArticle from "../NewArticle";
 import HandleLocations from "../handleLocations/HandleLocations";
 import HandleVehicleModels from "../handleVehicleModels/HandleVehicleModels";
+import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
 
 const Header = () => {
   const [createArticle, setCreateArticle] = useState(false);
   const [handleLocations, setHandleLocations] = useState(false);
   const [handleVehicleModels, setHandleVehicleModels] = useState(false);
+
+  useEffect(() => {
+    useRemoveBackgroundScroll(createArticle);
+  }, [createArticle]);
+  useEffect(() => {
+    useRemoveBackgroundScroll(handleLocations);
+  }, [handleLocations]);
+  useEffect(() => {
+    useRemoveBackgroundScroll(handleVehicleModels);
+  }, [handleVehicleModels]);
   return (
     <header className=" top-0 z-10 bg-white right-0 left-0 h-42 flex items-center justify-between py-6 sm:py-12 px-8 sm:px-12 lg:px-16">
       <Link

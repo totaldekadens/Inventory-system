@@ -11,6 +11,7 @@ import Button from "./buttons/Button";
 import SelectModels from "./searchbars/SelectModels";
 import { Types } from "mongoose";
 import { IconX } from "@tabler/icons-react";
+import clsx from "clsx";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -103,6 +104,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
           images: imageList,
           inventoryLocation: selectedLocation?._id as unknown as Types.ObjectId,
         };
+
         // Upload images to Cloudinary
         await UploadToImagesToServer(fileList);
 
@@ -194,7 +196,6 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 value={values.title}
                 onChange={handleChange}
                 type="text"
-                // required
                 autoComplete="Titel"
                 className={inputClass}
                 placeholder="Titel*"
@@ -230,9 +231,9 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 type="number"
                 autoComplete="qty"
                 value={values.qty}
+                min={0}
                 onChange={handleChange}
-                //required
-                className={inputClass}
+                className={clsx(`pr-8`, inputClass)}
                 placeholder="Antal*"
               />
               {errors.qty && touched.qty ? (
@@ -247,7 +248,6 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 autoComplete="condition"
                 value={values.condition}
                 onChange={handleChange}
-                //required
                 className={inputClass}
                 placeholder="Beskriv skicket på artikeln*"
               />
@@ -272,10 +272,11 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   id="purchaseValue"
                   name="purchaseValue"
                   type="number"
+                  min={0}
                   autoComplete="purchaseValue"
                   value={values.purchaseValue}
                   onChange={handleChange}
-                  className={inputClass}
+                  className={clsx(`pr-8`, inputClass)}
                   placeholder="Inköpspris"
                 />
                 <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
@@ -307,10 +308,11 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                     id="price"
                     name="price"
                     type="number"
+                    min={0}
                     autoComplete="price"
                     value={values.price}
                     onChange={handleChange}
-                    className={inputClass}
+                    className={clsx(`pr-8`, inputClass)}
                     placeholder="Till vilket pris?"
                   />
                   <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">

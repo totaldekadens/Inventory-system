@@ -12,8 +12,10 @@ import SelectLocation from "@/components/searchbars/SelectLocation";
 import UploadForm from "@/components/uploadForm";
 import Button from "@/components/buttons/Button";
 import SelectModels from "@/components/searchbars/SelectModels";
-import { Types } from "mongoose";
 import { ErrorMessage, schema } from "@/components/NewArticle";
+import SelectSimple from "@/components/searchbars/SelectSimple";
+import { todayDate } from "@/lib/setDate";
+import clsx from "clsx";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -24,6 +26,10 @@ interface Props {
 
 const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
   const [forSale, setForSale] = useState(article.forSale);
+  const [selectedScrapCause, setSelectedScrapCause] = useState<{
+    id: string;
+    label: string;
+  }>({ id: "1", label: "Använd vid reparation" });
   const { setCurrentArticles } = useContext(articleContext);
 
   const [selectedLocation, setSelectedLocation] =
@@ -50,7 +56,11 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       purchaseValue: article.purchaseValue,
       price: article.price,
       comment: article.comment,
+      sellPrice: "",
+      scrapComment: "",
     },
+
+    enableReinitialize: true,
 
     // Pass the Yup schema to validate the form
     validationSchema: schema,
@@ -65,6 +75,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       purchaseValue,
       price,
       comment,
+      sellPrice,
+      scrapComment,
     }) => {
       try {
         if (selectedModels.length < 1) {
@@ -75,6 +87,60 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
         if (!selectedLocation) {
           setError("Välj en lagerplats");
           return;
+        }
+
+        if (qty != article.qty) {
+          if (qty < article.qty) {
+            if (selectedScrapCause.id == "5" && !sellPrice) {
+              setError("Fyll i pris per enhet du sålde artiklarna för");
+              return;
+            }
+          }
+
+          const createTransactionHistory = {
+            direction: qty < article.qty ? "-" : "+",
+            cause: qty < article.qty ? selectedScrapCause.label : "",
+            pricePerUnit: Number(sellPrice),
+            qty:
+              article.qty > qty
+                ? Math.abs(values.qty - article.qty)
+                : values.qty - article.qty,
+
+            article: {
+              _id: article._id,
+              artno: article.artno,
+              supplierArtno,
+              vehicleModels: selectedModels,
+              title,
+              description,
+              qty,
+              condition,
+              purchaseValue,
+              forSale,
+              price,
+              comment,
+              images: imageList.length > 0 ? imageList : article.images,
+              inventoryLocation: selectedLocation?._id,
+              createdDate: article.createdDate,
+            },
+            comment: scrapComment,
+            createdDate: todayDate,
+          };
+
+          const request = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(createTransactionHistory),
+          };
+
+          const response = await fetch("/api/transactionhistory", request);
+          const result = await response.json();
+          if (!result.success) {
+            setError("Problem vid transaktion. Ingen är uppdaterat");
+            return;
+          }
         }
 
         const updateArticle = {
@@ -110,7 +176,6 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
 
         if (result.success) {
           alert("Artikeln är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
-          formik.resetForm();
           setImageList([]);
           setFileList([]);
 
@@ -133,6 +198,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
 
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
+
   return (
     <aside
       className="flex flex-col col-span-1 md:px-6 mx-auto max-w-8xl py-6 w-full h-full"
@@ -189,11 +255,12 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                   id="qty"
                   name="qty"
                   type="number"
+                  min={0}
                   autoComplete="qty"
                   value={values.qty}
                   onChange={handleChange}
                   required
-                  className={inputClass}
+                  className={clsx(`pr-8`, inputClass)}
                   placeholder="Antal*"
                 />
                 <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
@@ -202,6 +269,86 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                   </div>
                 </div>
               </div>
+              {article.qty != values.qty ? (
+                <div className="text-xs rounded-md p-2  m-3 border">
+                  <div className="font-medium mb-2">
+                    Överblick ändring av antal
+                  </div>
+                  {values.qty > article.qty ? (
+                    <div>
+                      <div>
+                        Du vill öka antalet med: {values.qty - article.qty}{" "}
+                        {values.qty - article.qty > 1 ? "artiklar" : "artikel"}
+                      </div>
+                      <div>
+                        Från tidigare antal: {article.qty} st till: {values.qty}{" "}
+                        st
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div>
+                        Du vill minska antalet med:{" "}
+                        {Math.abs(values.qty - article.qty)}{" "}
+                        {Math.abs(values.qty - article.qty) > 1
+                          ? "artiklar"
+                          : "artikel"}
+                      </div>
+                      <div>
+                        Från tidigare antal: {article.qty} st till: {values.qty}{" "}
+                        st
+                      </div>
+                      <div>
+                        <div className="font-medium mt-3 mb-1 ">
+                          Anledning till uttag?
+                        </div>
+                        <SelectSimple
+                          selected={selectedScrapCause}
+                          setSelected={setSelectedScrapCause}
+                        />
+                        {selectedScrapCause.id == "5" ? (
+                          <div>
+                            <div className="relative mb-1 mt-2">
+                              <input
+                                id="sellPrice"
+                                name="sellPrice"
+                                min={0}
+                                type="number"
+                                autoComplete="sellPrice"
+                                value={values.sellPrice}
+                                onChange={handleChange}
+                                className={clsx(`pr-8`, inputClass)}
+                                placeholder="Pris per enhet?"
+                              />
+                              <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                                <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
+                                  Kr
+                                </div>
+                              </div>
+                            </div>
+                            <div className="w-full text-right mb-4">
+                              Sålt för totalt:{" "}
+                              {Number(values.sellPrice) *
+                                Math.abs(values.qty - article.qty)}{" "}
+                              kr
+                            </div>
+                          </div>
+                        ) : null}
+                        <input
+                          id="scrapComment"
+                          name="scrapComment"
+                          type="text"
+                          autoComplete="scrapComment"
+                          value={values.scrapComment}
+                          onChange={handleChange}
+                          className={inputClass}
+                          placeholder="Kommentar"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : null}
             </div>
             <div>
               <label>Beskrivning</label>
@@ -239,11 +386,12 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           <input
             id="purchaseValue"
             name="purchaseValue"
+            min={0}
             type="number"
             autoComplete="purchaseValue"
             value={values.purchaseValue}
             onChange={handleChange}
-            className={inputClass}
+            className={clsx(`pr-8`, inputClass)}
             placeholder="Inköpspris"
           />
           <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
@@ -266,6 +414,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
               <input
                 id="price"
                 name="price"
+                min={0}
                 type="number"
                 autoComplete="price"
                 value={values.price}

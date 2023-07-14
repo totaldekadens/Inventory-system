@@ -4,5 +4,5 @@ export { default } from "next-auth/middleware";
 
 // If no one is logged in and tries to enter URLS below, you will be redirected to /signin
 export const config = {
-  matcher: ["/", "/admin/:path*", "/api/admin/:path*"], // Fix the paths later
+  matcher: ["/", "/admin/:path*", "/api/admin/:path*", "/history"], // Fix the paths later
 };

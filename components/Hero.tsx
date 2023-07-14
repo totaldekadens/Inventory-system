@@ -1,16 +1,28 @@
 import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewArticle from "./NewArticle";
 import { clsx } from "@mantine/core";
 import HandleLocations from "./handleLocations/HandleLocations";
 import HandleVehicleModels from "./handleVehicleModels/HandleVehicleModels";
+import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
 const Hero = () => {
   const { data: session } = useSession();
   const [createArticle, setCreateArticle] = useState(false);
   const [handleLocations, setHandleLocations] = useState(false);
   const [handleVehiceModels, setHandleVehicleModels] = useState(false);
+
+  useEffect(() => {
+    useRemoveBackgroundScroll(createArticle);
+  }, [createArticle]);
+  useEffect(() => {
+    useRemoveBackgroundScroll(handleLocations);
+  }, [handleLocations]);
+  useEffect(() => {
+    useRemoveBackgroundScroll(handleVehiceModels);
+  }, [handleVehiceModels]);
+
   return (
     <div className="flex relative items-center w-full justify-center h-[590px]  sm:h-[400px]  lg:h-[550px] xl:h-[510px]  mb-10 ">
       <div className="min-w-[250px] pt-14  sm:pt-20 lg:pt-32 h-full items-center flex flex-col flex-1 md:flex-0 ">
