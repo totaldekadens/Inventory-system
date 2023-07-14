@@ -50,18 +50,17 @@ export default async function handler(
 
         let newArticle: ArticleDocument = new Article(req.body);
 
-        let createUniqueArtno: number;
+        const getHeightestArtNo = await TransactionHistory.aggregate([
+          {
+            $unwind: "$article",
+          },
+          { $sort: { "article.artno": -1 } },
+          { $limit: 1 },
+        ]);
 
-        const getAllArticles: ArticleDocument[] | null = await Article.find({});
+        const newArticleNumber = Number(getHeightestArtNo[0].article.artno) + 1;
 
-        if (getAllArticles.length == 0) {
-          createUniqueArtno = 1;
-        } else {
-          getAllArticles.sort((a, b) => (a.artno < b.artno ? 1 : -1));
-          createUniqueArtno = Number(getAllArticles[0].artno) + 1;
-        }
-
-        newArticle.artno = createUniqueArtno;
+        newArticle.artno = newArticleNumber;
         newArticle.createdDate = todayDate;
 
         const article = await Article.create(newArticle);
