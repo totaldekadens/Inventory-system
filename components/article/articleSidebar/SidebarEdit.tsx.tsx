@@ -15,6 +15,7 @@ import SelectModels from "@/components/searchbars/SelectModels";
 import { ErrorMessage, schema } from "@/components/NewArticle";
 import SelectSimple from "@/components/searchbars/SelectSimple";
 import { todayDate } from "@/lib/setDate";
+import clsx from "clsx";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -259,7 +260,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                   value={values.qty}
                   onChange={handleChange}
                   required
-                  className={inputClass}
+                  className={clsx(`pr-8`, inputClass)}
                   placeholder="Antal*"
                 />
                 <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
@@ -316,7 +317,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                                 autoComplete="sellPrice"
                                 value={values.sellPrice}
                                 onChange={handleChange}
-                                className={inputClass}
+                                className={clsx(`pr-8`, inputClass)}
                                 placeholder="Pris per enhet?"
                               />
                               <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
@@ -390,7 +391,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             autoComplete="purchaseValue"
             value={values.purchaseValue}
             onChange={handleChange}
-            className={inputClass}
+            className={clsx(`pr-8`, inputClass)}
             placeholder="Inköpspris"
           />
           <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">

@@ -50,8 +50,8 @@ const ArticleView = ({ article, setOpen }: Props) => {
           />
         </div>
         <div className="mx-auto max-w-3xl px-4 sm:px-6  lg:max-w-8xl lg:px-8 pt-6 sm:pt-0 flex flex-col lg:flex-row">
+          {/* Image slider */}
           <div className="w-full ">
-            {/* Image slider */}
             <Slider article={article} />
           </div>
           {/* Sidebar */}
