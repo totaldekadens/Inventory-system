@@ -11,6 +11,7 @@ import Button from "./buttons/Button";
 import SelectModels from "./searchbars/SelectModels";
 import { Types } from "mongoose";
 import { IconX } from "@tabler/icons-react";
+import clsx from "clsx";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -232,7 +233,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 value={values.qty}
                 min={0}
                 onChange={handleChange}
-                className={inputClass}
+                className={clsx(`pr-8`, inputClass)}
                 placeholder="Antal*"
               />
               {errors.qty && touched.qty ? (
@@ -275,7 +276,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   autoComplete="purchaseValue"
                   value={values.purchaseValue}
                   onChange={handleChange}
-                  className={inputClass}
+                  className={clsx(`pr-8`, inputClass)}
                   placeholder="Inköpspris"
                 />
                 <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
@@ -311,7 +312,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                     autoComplete="price"
                     value={values.price}
                     onChange={handleChange}
-                    className={inputClass}
+                    className={clsx(`pr-8`, inputClass)}
                     placeholder="Till vilket pris?"
                   />
                   <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
