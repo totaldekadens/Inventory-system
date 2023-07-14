@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IconX } from "@tabler/icons-react";
 import {
   PopulatedArticleDocument,
@@ -8,6 +8,7 @@ import QtyControls from "./buttons/QtyControls";
 import ArticleView from "./article/articleView/ArticleView";
 import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
+import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
 
 interface ThProps {
   header: string;
@@ -29,6 +30,10 @@ const Table = () => {
   const [open, setOpen] = useState(false);
   const [currentArticle, setCurrentArticle] =
     useState<PopulatedArticleDocument>();
+
+  useEffect(() => {
+    useRemoveBackgroundScroll(open);
+  }, [open]);
 
   return (
     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
