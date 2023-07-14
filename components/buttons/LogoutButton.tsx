@@ -7,7 +7,7 @@ const LogoutButton = (props: any) => {
     <>
       {session ? (
         <div
-          className="pointer-events-auto flex h-10 w-10 cursor-pointer items-center justify-end"
+          className="hidden lg:flex pointer-events-auto  h-10 w-10 cursor-pointer items-center justify-end"
           onClick={() => signOut()}
         >
           <IconLogout {...props} />

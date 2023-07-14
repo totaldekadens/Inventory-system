@@ -7,6 +7,7 @@ import NewArticle from "../NewArticle";
 import HandleLocations from "../handleLocations/HandleLocations";
 import HandleVehicleModels from "../handleVehicleModels/HandleVehicleModels";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
+import MobileNavigation from "./MobileNavigation";
 
 const Header = () => {
   const [createArticle, setCreateArticle] = useState(false);
@@ -39,13 +40,13 @@ const Header = () => {
       <div className="flex gap-2 items-center">
         <div
           onClick={() => setHandleVehicleModels(true)}
-          className=" mr-10 hidden md:flex cursor-pointer "
+          className=" mr-10 hidden lg:flex cursor-pointer "
         >
           Hantera modeller
         </div>
         <div
           onClick={() => setHandleLocations(true)}
-          className=" mr-10 hidden md:flex cursor-pointer "
+          className=" mr-10 hidden lg:flex cursor-pointer "
         >
           Hantera lagerplatser
         </div>
@@ -53,11 +54,18 @@ const Header = () => {
           onClick={() => {
             setCreateArticle(true);
           }}
-          className=" cursor-pointer gap-0 mr-10  hidden md:flex  "
+          className=" cursor-pointer gap-0 mr-10  hidden lg:flex  "
         >
           Lägg till artikel <IconPlus width={14} height={14} strokeWidth={3} />
         </div>
         <LogoutButton />
+        <div className="block lg:hidden">
+          <MobileNavigation
+            setHandleVehicleModels={setHandleVehicleModels}
+            setCreateArticle={setCreateArticle}
+            setHandleLocations={setHandleLocations}
+          />
+        </div>
       </div>
       {createArticle ? (
         <NewArticle setCreateArticle={setCreateArticle} />
