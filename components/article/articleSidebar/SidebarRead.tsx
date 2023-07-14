@@ -1,6 +1,7 @@
 import { IconEdit } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "../../context/ArticleProvider";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import TableHistoryArticle from "@/components/TableHistoryArticle";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -8,14 +9,6 @@ interface Props {
   setEdit: Dispatch<SetStateAction<boolean>>;
 }
 const SidebarRead = ({ article, className, setEdit }: Props) => {
-  useEffect(() => {
-    const getHistory = async () => {
-      const response = await fetch("/api/transactionhistory/" + article.artno);
-      const result = await response.json();
-      console.log(result);
-    };
-    getHistory();
-  });
   return (
     <aside className={className} style={{ maxWidth: "600px" }}>
       <div className="flex justify-between mb-4">

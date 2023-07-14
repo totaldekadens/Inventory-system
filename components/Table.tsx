@@ -115,7 +115,10 @@ const Table = () => {
                                 hideLabel="Dölj"
                               >
                                 {article.vehicleModels?.map((model, i) => (
-                                  <div className="text-gray-500 h-full ">
+                                  <div
+                                    key={i}
+                                    className="text-gray-500 h-full "
+                                  >
                                     {model.name}
                                   </div>
                                 ))}
@@ -152,7 +155,7 @@ const Table = () => {
                         hideLabel="Dölj"
                       >
                         {article.vehicleModels?.map((model, i) => (
-                          <div className="text-gray-900 h-full ">
+                          <div key={i} className="text-gray-900 h-full ">
                             {model.name}
                           </div>
                         ))}

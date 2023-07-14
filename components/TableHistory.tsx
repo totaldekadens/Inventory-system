@@ -62,12 +62,7 @@ const TableHistory = ({ history }: Props) => {
                   <tr key={i} className="">
                     {/* Art. no */}
                     <td className="whitespace-nowrap px-3 py-1  text-xs  text-gray-500">
-                      <div
-                        className="text-gray-900 h-full "
-                        onClick={() => {
-                          setOpen(true);
-                        }}
-                      >
+                      <div className="text-gray-900 h-full ">
                         {article.article.artno}
                       </div>
                     </td>

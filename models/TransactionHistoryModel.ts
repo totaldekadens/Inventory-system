@@ -64,7 +64,8 @@ export interface TransactionHistoryDocument {
     | "Kastad (trasig)"
     | "Använd vid reparation"
     | "Diff"
-    | "Artikel permanent borttagen";
+    | "Artikel permanent borttagen"
+    | "Artikel skapad";
   article: ArticleDocument;
   qty: number;
   pricePerUnit?: number;

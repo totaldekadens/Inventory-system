@@ -59,7 +59,7 @@ const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
                 <NewVehicleModel />
               </div>
             </div>
-
+            {/* Divider line */}
             <div className="w-full my-10 bg-gray-300 rounded-lg h-[2px]" />
 
             <div className="py-2 text-sm  mt-10  font-semibold text-gray-900 text-start max-w-[200px] w-[200px]">
