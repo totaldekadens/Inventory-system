@@ -4,7 +4,6 @@ import {
   articleContext,
 } from "../context/ArticleProvider";
 import { useContext, useState } from "react";
-import SelectSimple from "../searchbars/SelectSimple";
 import ScrapCause from "../ScrapCause";
 
 interface Props {
@@ -13,6 +12,7 @@ interface Props {
 
 const QtyControls = ({ articleObject }: Props) => {
   const [originQty, setOriginQty] = useState(articleObject.qty);
+  const [close, setClose] = useState(false);
   const { currentArticles } = useContext(articleContext);
   const [updatedArticle, setUpdatedArticle] =
     useState<PopulatedArticleDocument>(articleObject);
@@ -26,9 +26,7 @@ const QtyControls = ({ articleObject }: Props) => {
       );
       if (foundIndex >= 0) {
         articlesCopy[foundIndex].qty++;
-
         const updated: any = { ...articlesCopy[foundIndex] };
-        /*   updated.inventoryLocation = updated.inventoryLocation._id; */
         setUpdatedArticle(updated);
       }
     } catch (err) {
@@ -44,9 +42,7 @@ const QtyControls = ({ articleObject }: Props) => {
       if (foundIndex >= 0) {
         if (articlesCopy[foundIndex].qty > 0) {
           articlesCopy[foundIndex].qty--;
-
           const updated: any = { ...articlesCopy[foundIndex] };
-          updated.inventoryLocation = updated.inventoryLocation._id;
           setUpdatedArticle(updated);
         }
       }
@@ -72,12 +68,13 @@ const QtyControls = ({ articleObject }: Props) => {
         />
       </div>
       {/* Special with quantity if it changes */}
-      {articleObject.qty != originQty ? (
+      {articleObject.qty != originQty && !close ? (
         <ScrapCause
           newQty={articleObject.qty}
           oldQty={originQty}
           article={articleObject}
           setUpdatedArticle={setUpdatedArticle}
+          setClose={setClose}
         />
       ) : null}
     </>

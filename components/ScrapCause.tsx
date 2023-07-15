@@ -14,6 +14,7 @@ interface Props {
   oldQty: number;
   article: PopulatedArticleDocument;
   setUpdatedArticle: Dispatch<SetStateAction<PopulatedArticleDocument>>;
+  setClose: Dispatch<SetStateAction<boolean>>;
 }
 
 const schema = Yup.object().shape({
@@ -21,7 +22,13 @@ const schema = Yup.object().shape({
   scrapComment: Yup.string(),
 });
 
-const ScrapCause = ({ newQty, oldQty, article, setUpdatedArticle }: Props) => {
+const ScrapCause = ({
+  newQty,
+  oldQty,
+  article,
+  setUpdatedArticle,
+  setClose,
+}: Props) => {
   const [error, setError] = useState<string>("");
   const { setCurrentArticles } = useContext(articleContext);
   const [selectedScrapCause, setSelectedScrapCause] = useState<{
@@ -62,13 +69,13 @@ const ScrapCause = ({ newQty, oldQty, article, setUpdatedArticle }: Props) => {
             }
           }
 
-          console.log(updated);
+          console.log(article);
           const createTransactionHistory = {
             direction: newQty < oldQty ? "-" : "+",
             cause: newQty < oldQty ? selectedScrapCause.label : "",
             pricePerUnit: Number(sellPrice),
             qty: oldQty > newQty ? Math.abs(newQty - oldQty) : newQty - oldQty,
-            article: updated,
+            article: article,
             comment: scrapComment,
             createdDate: todayDate,
           };
@@ -81,12 +88,12 @@ const ScrapCause = ({ newQty, oldQty, article, setUpdatedArticle }: Props) => {
             body: JSON.stringify(createTransactionHistory),
           };
 
-          /*   const response = await fetch("/api/transactionhistory", request);
+          const response = await fetch("/api/transactionhistory", request);
           const result = await response.json();
           if (!result.success) {
             setError("Problem vid transaktion. Ingen är uppdaterat");
             return;
-          } */
+          }
         }
 
         const updateArticle = { ...updated, lastUpdated: todayDate };
@@ -106,6 +113,7 @@ const ScrapCause = ({ newQty, oldQty, article, setUpdatedArticle }: Props) => {
         if (result.success) {
           alert("Artikeln är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
 
+          setClose(true);
           // Updates list
           const response = await fetch("/api/article/");
           const result = await response.json();
