@@ -53,10 +53,10 @@ const NewArticle = ({ setCreateArticle }: Props) => {
       supplierArtno: "",
       title: "",
       description: "",
-      qty: "",
+      qty: 0,
       condition: "",
-      purchaseValue: "",
-      price: "",
+      purchaseValue: 0,
+      price: 0,
       comment: "",
     },
 
@@ -146,6 +146,19 @@ const NewArticle = ({ setCreateArticle }: Props) => {
 
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
+
+  // Sets negative numbers to positive // Todo: Replace values.price, values.qty and values.purchaseValue below
+  const newQty = values.qty < 0 ? Math.abs(values.qty) : values.qty;
+  const newPrice = values?.price
+    ? values?.price < 0
+      ? Math.abs(values.price)
+      : values.price
+    : values.price;
+  const newPurchaseValue = values?.purchaseValue
+    ? values?.purchaseValue < 0
+      ? Math.abs(values.purchaseValue)
+      : values.purchaseValue
+    : values.purchaseValue;
 
   return (
     <div className="pt-10 sm:pt-0 z-20 fixed inset-0 bg-black/20 flex justify-center ">

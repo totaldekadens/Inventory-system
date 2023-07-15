@@ -15,7 +15,6 @@ import {
 } from "@/components/context/ArticleProvider";
 import { inventoryLocationContext } from "@/components/context/InventoryLocationProvider";
 import { vehicleContext } from "@/components/context/VehicleProvider";
-import Arrow from "@/components/Arrow";
 
 interface Props {
   articles: PopulatedArticleDocument[];

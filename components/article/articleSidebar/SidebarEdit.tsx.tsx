@@ -88,8 +88,6 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       try {
         // Todo: Make this part shorter.
 
-        //console.log(qty);
-
         let newQty =
           id == "1"
             ? qty
@@ -98,10 +96,6 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             : id == "3"
             ? article.qty - qty
             : qty;
-
-        console.log(newQty);
-        console.log(article.qty);
-        console.log(qty);
 
         if (newQty < 0) {
           setError("Du kan inte ta bort mer än vad som finns tillgängligt");
