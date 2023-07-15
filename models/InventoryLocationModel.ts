@@ -7,7 +7,7 @@ const InventoryLocationSchema = new Schema<InventoryLocationDocument>({
 });
 
 export interface InventoryLocationDocument {
-  _id?: Types.ObjectId;
+  _id: Types.ObjectId;
   name: string;
   description?: string;
 }
