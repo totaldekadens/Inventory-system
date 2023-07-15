@@ -21,6 +21,7 @@ import { ErrorMessage, schema } from "@/components/NewArticle";
 import SelectSimple from "@/components/searchbars/SelectSimple";
 import { todayDate } from "@/lib/setDate";
 import clsx from "clsx";
+import RadioButtonsQuantity from "@/components/buttons/RadioButtonsQuantity";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -30,6 +31,7 @@ interface Props {
 }
 
 const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
+  const [id, setId] = useState("1");
   const [forSale, setForSale] = useState(article.forSale);
   const [selectedScrapCause, setSelectedScrapCause] = useState<{
     id: string;
@@ -61,7 +63,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       purchaseValue: article.purchaseValue,
       price: article.price,
       comment: article.comment,
-      sellPrice: "",
+      sellPrice: article.price,
       scrapComment: "",
     },
 
@@ -86,6 +88,26 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
       try {
         // Todo: Make this part shorter.
 
+        //console.log(qty);
+
+        let newQty =
+          id == "1"
+            ? qty
+            : id == "2"
+            ? article.qty + qty
+            : id == "3"
+            ? article.qty - qty
+            : qty;
+
+        console.log(newQty);
+        console.log(article.qty);
+        console.log(qty);
+
+        if (newQty < 0) {
+          setError("Du kan inte ta bort mer än vad som finns tillgängligt");
+          return;
+        }
+
         if (selectedModels.length < 1) {
           setError("Välj minst en fordonsmodell");
           return;
@@ -96,8 +118,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           return;
         }
 
-        if (qty != article.qty) {
-          if (qty < article.qty) {
+        if (newQty != article.qty) {
+          if (newQty < article.qty) {
             if (selectedScrapCause.id == "5" && !sellPrice) {
               setError("Fyll i pris per enhet du sålde artiklarna för");
               return;
@@ -105,13 +127,13 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           }
 
           const createTransactionHistory = {
-            direction: qty < article.qty ? "-" : "+",
-            cause: qty < article.qty ? selectedScrapCause.label : "",
+            direction: newQty < article.qty ? "-" : "+",
+            cause: newQty < article.qty ? selectedScrapCause.label : "",
             pricePerUnit: Number(sellPrice),
             qty:
-              article.qty > qty
-                ? Math.abs(values.qty - article.qty)
-                : values.qty - article.qty,
+              article.qty > newQty
+                ? Math.abs(newQty - article.qty)
+                : newQty - article.qty,
 
             article: {
               _id: article._id,
@@ -120,7 +142,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
               vehicleModels: selectedModels,
               title,
               description,
-              qty,
+              qty: newQty,
               condition,
               purchaseValue,
               forSale,
@@ -157,7 +179,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           vehicleModels: selectedModels,
           title,
           description,
-          qty,
+          qty: newQty,
           condition,
           purchaseValue,
           forSale,
@@ -203,6 +225,25 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
 
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
+
+  // Sets negative numbers to positive
+  const newQty = values.qty < 0 ? Math.abs(values.qty) : values.qty;
+  const newPrice = values?.price
+    ? values?.price < 0
+      ? Math.abs(values.price)
+      : values.price
+    : values.price;
+  const newPurchaseValue = values?.purchaseValue
+    ? values?.purchaseValue < 0
+      ? Math.abs(values.purchaseValue)
+      : values.purchaseValue
+    : values.purchaseValue;
+
+  const newSellPrice = values?.sellPrice
+    ? values?.sellPrice < 0
+      ? Math.abs(values.sellPrice)
+      : values.sellPrice
+    : values.sellPrice;
 
   const inputClass =
     "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-1.5 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto";
@@ -263,6 +304,10 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             {/* Quantity */}
             <div>
               <label>Antal</label>
+              <p className="mt-3 text-right w-full">
+                Tillgängligt antal: {article.qty} st
+              </p>
+              <RadioButtonsQuantity id={id} setId={setId} />
               <div className="relative">
                 <input
                   id="qty"
@@ -270,7 +315,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                   type="number"
                   min={0}
                   autoComplete="qty"
-                  value={values.qty}
+                  value={newQty}
                   onChange={handleChange}
                   required
                   className={clsx(`pr-8`, inputClass)}
@@ -284,34 +329,33 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
               </div>
 
               {/* Special with quantity if it changes */}
-              {article.qty != values.qty ? (
-                <div className="text-xs rounded-md p-2  m-3 border">
+              {article.qty != newQty && id == "1" ? (
+                <div className="text-sm rounded-md p-2  m-3 border">
                   <div className="font-medium mb-2">
                     Överblick ändring av antal
                   </div>
-                  {values.qty > article.qty ? (
+
+                  {newQty > article.qty ? (
                     <div>
                       <div>
-                        Du vill öka antalet med: {values.qty - article.qty}{" "}
-                        {values.qty - article.qty > 1 ? "artiklar" : "artikel"}
+                        Du vill öka antalet med: {newQty - article.qty}{" "}
+                        {newQty - article.qty > 1 ? "artiklar" : "artikel"}
                       </div>
                       <div>
-                        Från tidigare antal: {article.qty} st till: {values.qty}{" "}
-                        st
+                        Från tidigare antal: {article.qty} st till: {newQty} st
                       </div>
                     </div>
                   ) : (
                     <div>
                       <div>
                         Du vill minska antalet med:{" "}
-                        {Math.abs(values.qty - article.qty)}{" "}
-                        {Math.abs(values.qty - article.qty) > 1
+                        {Math.abs(newQty - article.qty)}{" "}
+                        {Math.abs(newQty - article.qty) > 1
                           ? "artiklar"
                           : "artikel"}
                       </div>
                       <div>
-                        Från tidigare antal: {article.qty} st till: {values.qty}{" "}
-                        st
+                        Från tidigare antal: {article.qty} st till: {newQty} st
                       </div>
                       <div>
                         <div className="font-medium mt-3 mb-1 ">
@@ -330,21 +374,21 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                                 min={0}
                                 type="number"
                                 autoComplete="sellPrice"
-                                value={values.sellPrice}
+                                value={newSellPrice}
                                 onChange={handleChange}
-                                className={clsx(`pr-8`, inputClass)}
+                                className={clsx(`pr-20`, inputClass)}
                                 placeholder="Pris per enhet?"
                               />
                               <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                                <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
-                                  Kr
+                                <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
+                                  Kr / enhet
                                 </div>
                               </div>
                             </div>
                             <div className="w-full text-right mb-4">
                               Sålt för totalt:{" "}
                               {Number(values.sellPrice) *
-                                Math.abs(values.qty - article.qty)}{" "}
+                                Math.abs(newQty - article.qty)}{" "}
                               kr
                             </div>
                           </div>
@@ -363,7 +407,103 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                     </div>
                   )}
                 </div>
-              ) : null}
+              ) : (
+                <>
+                  {id == "2" && newQty > 0 ? (
+                    /* Här lägger vi till antal */
+                    <div className="text-sm rounded-md p-2  m-3 border">
+                      <div className="font-medium mb-2">
+                        Överblick ändring av antal
+                      </div>
+                      <div>
+                        <div>
+                          Du vill öka antalet med: {newQty}{" "}
+                          {newQty > 1 ? "artiklar" : "artikel"}
+                        </div>
+                        <div>
+                          Från tidigare antal: {article.qty} st till:{" "}
+                          {newQty + article.qty} st
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {id == "3" && newQty > 0 ? (
+                        /* Här tar vi bort antal */
+                        <div className="text-sm rounded-md p-2  m-3 border">
+                          <div className="font-medium mb-2">
+                            Överblick ändring av antal
+                          </div>
+                          <div>
+                            <div>
+                              Du vill minska antalet med: {newQty}
+                              {newQty > 1 ? " artiklar" : " artikel"}
+                            </div>
+                            <div>
+                              Från tidigare antal: {article.qty} st till:{" "}
+                              {article.qty - newQty} st
+                            </div>
+                            {article.qty - newQty < 0 ? (
+                              <ErrorMessage
+                                message={
+                                  "Du kan inte ta ut mer än vad du har tillgängligt"
+                                }
+                              />
+                            ) : null}
+                            <div>
+                              <div className="font-medium mt-3 mb-1 ">
+                                Anledning till uttag?
+                              </div>
+                              <SelectSimple
+                                selected={selectedScrapCause}
+                                setSelected={setSelectedScrapCause}
+                              />
+                              {selectedScrapCause.id == "5" ? (
+                                <div>
+                                  <div className="relative mb-1 mt-2">
+                                    <input
+                                      id="sellPrice"
+                                      name="sellPrice"
+                                      min={0}
+                                      type="number"
+                                      autoComplete="sellPrice"
+                                      value={newSellPrice}
+                                      onChange={handleChange}
+                                      className={clsx(`pr-20`, inputClass)}
+                                      placeholder="Pris per enhet?"
+                                    />
+                                    <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                                      <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
+                                        Kr / enhet
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="w-full text-right mb-4">
+                                    Sålt för totalt:{" "}
+                                    {Number(values.sellPrice) *
+                                      Math.abs(newQty - article.qty)}{" "}
+                                    kr
+                                  </div>
+                                </div>
+                              ) : null}
+                              <input
+                                id="scrapComment"
+                                name="scrapComment"
+                                type="text"
+                                autoComplete="scrapComment"
+                                value={values.scrapComment}
+                                onChange={handleChange}
+                                className={inputClass}
+                                placeholder="Kommentar"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ) : null}
+                    </>
+                  )}
+                </>
+              )}
             </div>
 
             {/* Description */}
@@ -409,7 +549,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             min={0}
             type="number"
             autoComplete="purchaseValue"
-            value={values.purchaseValue}
+            value={newPurchaseValue}
             onChange={handleChange}
             className={clsx(`pr-8`, inputClass)}
             placeholder="Inköpspris"
@@ -437,7 +577,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                 min={0}
                 type="number"
                 autoComplete="price"
-                value={values.price}
+                value={newPrice}
                 onChange={handleChange}
                 className={inputClass}
                 placeholder="Till vilket pris?"

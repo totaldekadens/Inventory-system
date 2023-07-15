@@ -5,7 +5,7 @@ import {
 } from "@/components/context/ArticleProvider";
 import { Spoiler } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 
 interface Props {
   article: PopulatedArticleDocument;

@@ -3,12 +3,14 @@ import {
   PopulatedArticleDocument,
   articleContext,
 } from "../context/ArticleProvider";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ScrapCause from "../ScrapCause";
 
 interface Props {
   articleObject: PopulatedArticleDocument;
 }
+
+// Todo: There are som small bugs. Go back and fix later.
 
 const QtyControls = ({ articleObject }: Props) => {
   const [originQty, setOriginQty] = useState(articleObject.qty);
@@ -21,6 +23,7 @@ const QtyControls = ({ articleObject }: Props) => {
 
   const addQty = async (article: PopulatedArticleDocument) => {
     try {
+      setClose(false);
       let foundIndex = articlesCopy.findIndex(
         (artCopy) => artCopy._id === article._id
       );
@@ -36,6 +39,7 @@ const QtyControls = ({ articleObject }: Props) => {
 
   const deleteQty = async (article: PopulatedArticleDocument) => {
     try {
+      setClose(false);
       let foundIndex = articlesCopy.findIndex(
         (artCopy) => artCopy._id === article._id
       );
@@ -52,14 +56,14 @@ const QtyControls = ({ articleObject }: Props) => {
   };
 
   return (
-    <>
+    <div className="relative flex items-center gap-2 justify-center">
       <div
         onClick={() => deleteQty(articleObject)}
         className="rounded-full cursor-pointer p-1 flex items-center justify-center border "
       >
         <IconMinus width={16} height={16} />{" "}
       </div>
-      {updatedArticle?.qty ? updatedArticle?.qty : articleObject.qty} st{" "}
+      {articleObject.qty} st{" "}
       <div className="rounded-full cursor-pointer p-1 flex items-center justify-center border">
         <IconPlus
           onClick={() => addQty(articleObject)}
@@ -77,7 +81,7 @@ const QtyControls = ({ articleObject }: Props) => {
           setClose={setClose}
         />
       ) : null}
-    </>
+    </div>
   );
 };
 

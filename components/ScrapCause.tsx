@@ -9,6 +9,7 @@ import {
 import { todayDate } from "@/lib/setDate";
 import clsx from "clsx";
 import Button from "./buttons/Button";
+import { IconArrowBearLeft } from "@tabler/icons-react";
 interface Props {
   newQty: number;
   oldQty: number;
@@ -38,8 +39,6 @@ const ScrapCause = ({
 
   const resetQty = () => {
     article.qty = oldQty;
-
-    console.log(article);
     setUpdatedArticle(article);
   };
 
@@ -57,8 +56,6 @@ const ScrapCause = ({
     // Handle form submission
     onSubmit: async ({ sellPrice, scrapComment }) => {
       try {
-        console.log("Submittad!");
-
         const updated: any = { ...article };
         updated.inventoryLocation = updated.inventoryLocation._id;
         if (newQty != oldQty) {
@@ -69,7 +66,6 @@ const ScrapCause = ({
             }
           }
 
-          console.log(article);
           const createTransactionHistory = {
             direction: newQty < oldQty ? "-" : "+",
             cause: newQty < oldQty ? selectedScrapCause.label : "",
@@ -98,7 +94,6 @@ const ScrapCause = ({
 
         const updateArticle = { ...updated, lastUpdated: todayDate };
 
-        console.log(updateArticle);
         const request = {
           method: "PUT",
           headers: {
@@ -119,6 +114,7 @@ const ScrapCause = ({
           const result = await response.json();
           if (result.success) {
             setCurrentArticles(result.data);
+            setUpdatedArticle(article);
           }
         } else {
           setError("Något gick fel!");
@@ -136,9 +132,19 @@ const ScrapCause = ({
     "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-1.5 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto";
   return (
     <>
+      <img
+        src="/arrow.png"
+        alt="picture of an arrow pointing at quantity"
+        className="absolute -top-12 left-20 text-gray-400 opacity-50 w-6 h-6 arrow hidden md:block"
+      />
+      <img
+        src="/arrow2.png"
+        alt="picture of an arrow pointing at quantity"
+        className="absolute top-3 left-24 text-gray-400 opacity-50 w-6 h-6 arrow md:hidden"
+      />
       <form
         onSubmit={handleSubmit}
-        className="text-xs rounded-md p-2  m-3 border"
+        className="text-sm rounded-md p-4  border absolute top-11 md:-top-20 left-0 md:left-28 bg-white z-50 shadow-lg"
       >
         <div className="font-medium mb-2">Överblick ändring av antal</div>
         {newQty > oldQty ? (
@@ -183,7 +189,7 @@ const ScrapCause = ({
                       placeholder={"Såld för?"}
                     />
                     <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                      <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
+                      <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
                         Kr / enhet
                       </div>
                     </div>
