@@ -1,4 +1,3 @@
-import { IconEdit } from "@tabler/icons-react";
 import {
   PopulatedArticleDocument,
   articleContext,

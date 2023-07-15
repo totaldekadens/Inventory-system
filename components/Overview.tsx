@@ -1,7 +1,7 @@
 import Hero from "./Hero";
 import Stats from "./Stats";
 import Filter from "./Filter";
-import Table from "./tables/Table";
+import TableOverview from "./tables/tableOverview/TableOverview";
 
 const Overview = () => {
   return (
@@ -13,7 +13,7 @@ const Overview = () => {
         {/* Searchbars and filter */}
         <Filter />
         {/* Table of all filtered articles */}
-        <Table />
+        <TableOverview />
         {/* Stats of articles and inventory locations */}
         <Stats />
       </div>
