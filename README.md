@@ -3,7 +3,14 @@
 
 Creating a system where my husband easily can keep track of his inventory of various spare parts, among other things. 
 
-He´s demands: 
+## He´s demands: 
+
+### Todo:
+
+* Landing page for visitors to see spare parts available for sale
+* New design - Check it out here: https://github.com/totaldekadens/Inventory-System---Design
+
+### Done
 
 * Different articles must be able to be in the same inventory location ✅
 * Shall be able to modify, add and remove articles ✅
@@ -42,10 +49,8 @@ He´s demands:
       * Read ✅
       * Update ✅
       * Delete ✅
-  
-* Fix scrap cause and make it possible to see the history of each article
 * Able to filter out "On sale"-articles ✅
-* Landing page for visitors to see spare parts available for sale
+* Fix scrap cause and make it possible to see the history of each article ✅  (Picture´s coming soon)  
 
 
 ## Sneak peak
