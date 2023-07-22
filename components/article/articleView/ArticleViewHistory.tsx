@@ -134,16 +134,6 @@ const ArticleViewHistory = ({ object, setOpen }: Props) => {
                 </p>
               </div>
 
-              <div className=" grid grid-cols-2 mt-4">
-                <p className=" tracking-tight text-gray-900/80">
-                  Tänkt försäljningspris:
-                </p>
-                <p>
-                  {object.article.price
-                    ? object.article.price + " kr / enhet"
-                    : "-"}
-                </p>
-              </div>
               {object.cause == "Såld" && object.pricePerUnit ? (
                 <>
                   <div className=" grid grid-cols-2">

@@ -58,6 +58,7 @@ const ScrapCause = ({
       try {
         const updated: any = { ...article };
         updated.inventoryLocation = updated.inventoryLocation._id;
+
         if (newQty != oldQty) {
           if (newQty < oldQty) {
             if (selectedScrapCause.id == "5" && !sellPrice) {
@@ -66,6 +67,36 @@ const ScrapCause = ({
             }
           }
 
+          // Updates the article
+          const updateArticle = { ...updated, lastUpdated: todayDate };
+
+          const request2 = {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updateArticle),
+          };
+
+          const response2 = await fetch("/api/article", request2);
+          const result2 = await response2.json();
+
+          if (result2.success) {
+            alert("Artikeln är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
+
+            setClose(true);
+            // Updates article list
+            const response = await fetch("/api/article/");
+            const result = await response.json();
+            if (result.success) {
+              setCurrentArticles(result.data);
+              setUpdatedArticle(article);
+            }
+          } else {
+            setError("Något gick fel!");
+          }
+
+          // Create Transaction history
           const createTransactionHistory = {
             direction: newQty < oldQty ? "-" : "+",
             cause: newQty < oldQty ? selectedScrapCause.label : "",
@@ -90,34 +121,8 @@ const ScrapCause = ({
             setError("Problem vid transaktion. Ingen är uppdaterat");
             return;
           }
-        }
-
-        const updateArticle = { ...updated, lastUpdated: todayDate };
-
-        const request = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateArticle),
-        };
-
-        const response = await fetch("/api/article", request);
-        const result = await response.json();
-
-        if (result.success) {
-          alert("Artikeln är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
-
-          setClose(true);
-          // Updates list
-          const response = await fetch("/api/article/");
-          const result = await response.json();
-          if (result.success) {
-            setCurrentArticles(result.data);
-            setUpdatedArticle(article);
-          }
         } else {
-          setError("Något gick fel!");
+          setClose(true);
         }
       } catch (err) {
         console.error(err);
