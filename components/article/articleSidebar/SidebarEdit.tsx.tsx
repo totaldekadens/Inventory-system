@@ -22,6 +22,7 @@ import SelectSimple from "@/components/searchbars/SelectSimple";
 import { todayDate } from "@/lib/setDate";
 import clsx from "clsx";
 import RadioButtonsQuantity from "@/components/buttons/RadioButtonsQuantity";
+import { Types } from "mongoose";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -112,6 +113,16 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           return;
         }
 
+        if (
+          newQty > 0 &&
+          selectedLocation._id ==
+            ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
+        ) {
+          setError(
+            "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats "
+          );
+          return;
+        }
         if (newQty != article.qty) {
           if (newQty < article.qty) {
             if (selectedScrapCause.id == "5" && !sellPrice) {
@@ -180,7 +191,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           price,
           comment,
           images: imageList.length > 0 ? imageList : article.images,
-          inventoryLocation: selectedLocation?._id,
+          inventoryLocation:
+            newQty == 0 ? "64a95847dec1488ee60d10cd" : selectedLocation?._id,
         };
 
         // Upload images to Cloudinary
@@ -203,6 +215,16 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           setFileList([]);
           article.qty = newQty;
           setId("1");
+
+          // If new quantity = 0 the article will be moved to a virtual location
+          newQty == 0
+            ? setSelectedLocation({
+                description: "Virtuell plats",
+                name: "00",
+                _id: "64a95847dec1488ee60d10cd" as unknown as Types.ObjectId,
+              })
+            : null;
+
           // Updates list
           const response = await fetch("/api/article/");
           const result = await response.json();

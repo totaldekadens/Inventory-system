@@ -100,6 +100,12 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
           <input
             id="name"
             name="name"
+            disabled={
+              location._id ==
+              ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
+                ? true
+                : false
+            }
             value={values.name}
             onChange={handleChange}
             type="text"
@@ -119,6 +125,12 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
           <input
             id="description"
             name="description"
+            disabled={
+              location._id ==
+              ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
+                ? true
+                : false
+            }
             value={values.description}
             onChange={handleChange}
             type="text"
@@ -180,12 +192,7 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
                   }}
                 />
               ) : location._id ==
-                ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId) ? (
-                <HoverInfo
-                  text={"Du kan inte radera denna plats"}
-                  width={330}
-                />
-              ) : (
+                ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId) ? null : (
                 <HoverInfo
                   text={"Vill du radera? Platsen måste vara tom först."}
                   width={330}

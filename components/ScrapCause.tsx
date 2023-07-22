@@ -10,6 +10,9 @@ import { todayDate } from "@/lib/setDate";
 import clsx from "clsx";
 import Button from "./buttons/Button";
 import { IconArrowBearLeft } from "@tabler/icons-react";
+import SelectLocation from "./searchbars/SelectLocation";
+import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
+import { Types } from "mongoose";
 interface Props {
   newQty: number;
   oldQty: number;
@@ -30,6 +33,8 @@ const ScrapCause = ({
   setUpdatedArticle,
   setClose,
 }: Props) => {
+  const [selectedLocation, setSelectedLocation] =
+    useState<InventoryLocationDocument | null>(article.inventoryLocation);
   const [error, setError] = useState<string>("");
   const { setCurrentArticles } = useContext(articleContext);
   const [selectedScrapCause, setSelectedScrapCause] = useState<{
@@ -56,10 +61,34 @@ const ScrapCause = ({
     // Handle form submission
     onSubmit: async ({ sellPrice, scrapComment }) => {
       try {
-        const updated: any = { ...article };
-        updated.inventoryLocation = updated.inventoryLocation._id;
-
         if (newQty != oldQty) {
+          if (oldQty == 0 && !selectedLocation) {
+            alert("Välj en lagerplats"); // Check why setError doesnt work
+            return;
+          }
+
+          if (
+            newQty > 0 &&
+            selectedLocation?._id ==
+              ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
+          ) {
+            alert(
+              "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats " // Check why setError doesnt work
+            );
+            return;
+          }
+
+          const updated: any = { ...article };
+
+          if (oldQty == 0) {
+            updated.inventoryLocation = selectedLocation?._id;
+          } else if (newQty == 0) {
+            updated.inventoryLocation =
+              "64a95847dec1488ee60d10cd" as unknown as Types.ObjectId;
+          } else {
+            updated.inventoryLocation = updated.inventoryLocation._id;
+          }
+
           if (newQty < oldQty) {
             if (selectedScrapCause.id == "5" && !sellPrice) {
               setError("Fyll i pris per enhet du sålde artiklarna för");
@@ -152,7 +181,7 @@ const ScrapCause = ({
         className="text-sm rounded-md p-4  border absolute top-11 md:-top-20 left-0 md:left-28 bg-white z-50 shadow-lg"
       >
         <div className="font-medium mb-2">Överblick ändring av antal</div>
-        {newQty > oldQty ? (
+        {newQty > oldQty && oldQty != 0 ? (
           <div>
             <div>
               Du vill öka antalet med: {newQty - oldQty}{" "}
@@ -161,6 +190,25 @@ const ScrapCause = ({
             <div>
               Från tidigare antal: {oldQty} st till: {newQty} st
             </div>
+          </div>
+        ) : oldQty == 0 && newQty > oldQty ? (
+          <div>
+            <div>
+              Du vill öka antalet med: {newQty - oldQty}{" "}
+              {newQty - oldQty > 1 ? "artiklar" : "artikel"}
+            </div>
+            <div className="mb-4">
+              Från tidigare antal: {oldQty} st till: {newQty} st
+            </div>
+            <div>
+              <label className="mb-2">Välj ny lagerplats</label>
+              <SelectLocation
+                placeholder="Välj ny lagerplats"
+                setSelectedLocation={setSelectedLocation}
+                selectedLocation={selectedLocation}
+              />
+            </div>
+            {error ? <ErrorMessage message={error} /> : null}
           </div>
         ) : (
           <div>

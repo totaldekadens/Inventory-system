@@ -65,12 +65,16 @@ const QtyControls = ({ articleObject }: Props) => {
 
   return (
     <div className="relative flex items-center gap-2 justify-center">
-      <div
-        onClick={() => deleteQty(articleObject)}
-        className="rounded-full cursor-pointer p-1 flex items-center justify-center border "
-      >
-        <IconMinus width={16} height={16} />{" "}
-      </div>
+      {articleObject.qty != 0 ? (
+        <div
+          onClick={() => deleteQty(articleObject)}
+          className="rounded-full cursor-pointer p-1 flex items-center justify-center border "
+        >
+          <IconMinus width={16} height={16} />{" "}
+        </div>
+      ) : (
+        <div className=" p-1 w-[26px] h-[26px] "></div>
+      )}
       {articleObject.qty} st{" "}
       <div className="rounded-full cursor-pointer p-1 flex items-center justify-center border">
         <IconPlus
