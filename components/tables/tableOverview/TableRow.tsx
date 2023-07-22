@@ -18,7 +18,7 @@ interface Props {
 const TableRow = ({ article, setOpen, setCurrentArticle }: Props) => {
   const { currentArticles, setCurrentArticles } = useContext(articleContext);
 
-  const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${article.images[0]}`;
+  const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/w_200/q_60/v1688383484/inventory/${article.images[0]}`;
 
   return (
     <tr className="">

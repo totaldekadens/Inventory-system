@@ -9,7 +9,7 @@ const Slider = ({ images }: Props) => {
   return (
     <Splide aria-label="My Favorite Images">
       {images.map((image, i) => {
-        const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/v1688383484/inventory/${image}`;
+        const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/w_600/q_60/v1688383484/inventory/${image}`;
         return (
           <SplideSlide
             key={i}
@@ -22,7 +22,7 @@ const Slider = ({ images }: Props) => {
               width={600}
               height={600}
               priority={i === 0}
-              quality="85"
+              quality="60"
               className="object-contain h-full max-h-full"
             />
           </SplideSlide>
