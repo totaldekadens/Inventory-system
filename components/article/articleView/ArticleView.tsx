@@ -37,7 +37,7 @@ const ArticleView = ({ article, setOpen }: Props) => {
     getHistory();
   }, []);
   return (
-    <div className="pt-10 sm:pt-16  z-20 fixed inset-0 bg-black/20 ">
+    <div className="pt-10 sm:pt-16  z-50 fixed inset-0 bg-black/20 ">
       <div className="pt-10 sm:pt-16 pb-10 sm:pb-16 shadow-lg rounded-lg absolute inset-0 m-0 sm:m-10 md:m-20 bg-white overflow-y-auto">
         <div className=" absolute top-4 right-0 w-8  h-10 mx-4">
           <IconX
