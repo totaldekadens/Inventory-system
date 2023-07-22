@@ -201,7 +201,8 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           alert("Artikeln är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
           setImageList([]);
           setFileList([]);
-
+          article.qty = newQty;
+          setId("1");
           // Updates list
           const response = await fetch("/api/article/");
           const result = await response.json();
