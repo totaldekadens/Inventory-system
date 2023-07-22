@@ -1,4 +1,4 @@
-import { HoverCard, Button, Text, Group } from "@mantine/core";
+import { HoverCard, Text, Group } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 interface Props {

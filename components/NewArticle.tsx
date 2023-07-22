@@ -53,10 +53,10 @@ const NewArticle = ({ setCreateArticle }: Props) => {
       supplierArtno: "",
       title: "",
       description: "",
-      qty: 0,
+      qty: "",
       condition: "",
-      purchaseValue: 0,
-      price: 0,
+      purchaseValue: "",
+      price: "",
       comment: "",
     },
 
@@ -147,16 +147,17 @@ const NewArticle = ({ setCreateArticle }: Props) => {
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
 
-  // Sets negative numbers to positive // Todo: Replace values.price, values.qty and values.purchaseValue below
-  const newQty = values.qty < 0 ? Math.abs(values.qty) : values.qty;
+  // Sets negative numbers to positive
+  const newQty =
+    Number(values.qty) < 0 ? Math.abs(Number(values.qty)) : values.qty;
   const newPrice = values?.price
-    ? values?.price < 0
-      ? Math.abs(values.price)
+    ? Number(values?.price) < 0
+      ? Math.abs(Number(values.price))
       : values.price
     : values.price;
   const newPurchaseValue = values?.purchaseValue
-    ? values?.purchaseValue < 0
-      ? Math.abs(values.purchaseValue)
+    ? Number(values?.purchaseValue) < 0
+      ? Math.abs(Number(values.purchaseValue))
       : values.purchaseValue
     : values.purchaseValue;
 
@@ -238,22 +239,30 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   {errors.description}
                 </div>
               ) : null}
-              <input
-                id="qty"
-                name="qty"
-                type="number"
-                autoComplete="qty"
-                value={values.qty}
-                min={0}
-                onChange={handleChange}
-                className={clsx(`pr-8`, inputClass)}
-                placeholder="Antal*"
-              />
-              {errors.qty && touched.qty ? (
-                <div className="text-red-600 pl-3 -mt-3 text-xs">
-                  {errors.qty}
+
+              <div className="relative">
+                <input
+                  id="qty"
+                  name="qty"
+                  type="number"
+                  min={0}
+                  autoComplete="qty"
+                  value={newQty}
+                  onChange={handleChange}
+                  className={clsx(`pr-8`, inputClass)}
+                  placeholder="Antal"
+                />
+                <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                  <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
+                    st
+                  </div>
                 </div>
-              ) : null}
+                {errors.qty && touched.qty ? (
+                  <div className="text-red-600 pl-3 -mt-3 text-xs">
+                    {errors.qty}
+                  </div>
+                ) : null}
+              </div>
               <input
                 id="condition"
                 name="condition"
@@ -287,7 +296,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   type="number"
                   min={0}
                   autoComplete="purchaseValue"
-                  value={values.purchaseValue}
+                  value={newPurchaseValue}
                   onChange={handleChange}
                   className={clsx(`pr-8`, inputClass)}
                   placeholder="Inköpspris"
@@ -323,7 +332,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                     type="number"
                     min={0}
                     autoComplete="price"
-                    value={values.price}
+                    value={newPrice}
                     onChange={handleChange}
                     className={clsx(`pr-8`, inputClass)}
                     placeholder="Till vilket pris?"
