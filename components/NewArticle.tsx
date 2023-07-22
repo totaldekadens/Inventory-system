@@ -90,6 +90,17 @@ const NewArticle = ({ setCreateArticle }: Props) => {
           return;
         }
 
+        if (
+          Number(qty) > 0 &&
+          selectedLocation?._id ==
+            ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
+        ) {
+          setError(
+            "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats "
+          );
+          return;
+        }
+
         const newArticle = {
           supplierArtno,
           vehicleModels: selectedModels as unknown as Types.ObjectId[],
