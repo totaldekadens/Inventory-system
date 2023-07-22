@@ -14,7 +14,7 @@ interface Props {
 
 const QtyControls = ({ articleObject }: Props) => {
   const [originQty, setOriginQty] = useState(articleObject.qty);
-  const [close, setClose] = useState(false);
+  const [close, setClose] = useState(true);
   const { currentArticles } = useContext(articleContext);
   const [updatedArticle, setUpdatedArticle] =
     useState<PopulatedArticleDocument>(articleObject);
@@ -31,6 +31,10 @@ const QtyControls = ({ articleObject }: Props) => {
         articlesCopy[foundIndex].qty++;
         const updated: any = { ...articlesCopy[foundIndex] };
         setUpdatedArticle(updated);
+        // test
+        if (articleObject.qty == originQty) {
+          setClose(true);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -48,6 +52,10 @@ const QtyControls = ({ articleObject }: Props) => {
           articlesCopy[foundIndex].qty--;
           const updated: any = { ...articlesCopy[foundIndex] };
           setUpdatedArticle(updated);
+          // test
+          if (articleObject.qty == originQty) {
+            setClose(true);
+          }
         }
       }
     } catch (err) {
@@ -72,7 +80,7 @@ const QtyControls = ({ articleObject }: Props) => {
         />
       </div>
       {/* Special with quantity if it changes */}
-      {articleObject.qty != originQty && !close ? (
+      {!close ? (
         <ScrapCause
           newQty={articleObject.qty}
           oldQty={originQty}

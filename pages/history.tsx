@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Header from "@/components/test/Header";
+import Header from "@/components/layout/Header";
 import { GetServerSideProps } from "next";
 import dbConnect from "@/lib/dbConnect";
 import TransactionHistory, {
