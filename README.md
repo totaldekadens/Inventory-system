@@ -76,6 +76,10 @@ Creating a system where my husband easily can keep track of his inventory of var
 
 ![r1](https://github.com/totaldekadens/Inventory-system/assets/90898648/cf7ea298-8203-4217-84d3-255485f0bb7c)
 
+With history (OBS, another article displayed, sorry)
+
+<img width="1388" alt="transactions_article" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/ce22cdec-07e6-41f2-a2ab-6df8fd811cdb">
+
 
 
 #### Article view - Edit
@@ -99,6 +103,9 @@ Creating a system where my husband easily can keep track of his inventory of var
 #### Handle Vehicle models
 ![models](https://github.com/totaldekadens/Inventory-system/assets/90898648/13d9b67b-fa4a-495d-a279-58c8a7bb91d2)
 
+#### Transaction History
+
+<img width="1383" alt="transactions" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/3e308a54-af0b-41c3-96e4-8b24cd5bf3df">
 
 
 ### Mobile
@@ -114,6 +121,19 @@ Creating a system where my husband easily can keep track of his inventory of var
 ![md2](https://github.com/totaldekadens/Inventory-system/assets/90898648/fc76a1c5-054b-4e46-87eb-ac2c04e72d60)
 ![md3](https://github.com/totaldekadens/Inventory-system/assets/90898648/06d721e6-9258-426f-bd7e-29a9d9c59b8c)
 
+Increase quantity
+
+<img width="302" alt="mobile_overview_increaseqty" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/ecea6b64-f109-4075-b9f5-58d96f2f9196">
+
+Increase quantity from 0
+
+<img width="301" alt="mobile_overview_increaseqtyfrom0" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/6f870b5d-053d-4ea0-9baf-0e3842815450">
+
+Decrease quantity
+
+<img width="302" alt="mobile_overview_decreaseqty" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/5c82bd2f-42a4-4700-a577-e205d6060caa">
+
+
 
 #### Article view - Read
 
@@ -128,6 +148,18 @@ Creating a system where my husband easily can keep track of his inventory of var
 ![me1](https://github.com/totaldekadens/Inventory-system/assets/90898648/57dea1d6-475e-40a1-85dc-be70f584b725)
 ![me2](https://github.com/totaldekadens/Inventory-system/assets/90898648/10b852c0-f276-498b-be7c-69d472a08035)
 ![me3](https://github.com/totaldekadens/Inventory-system/assets/90898648/33a2f286-f26b-4f39-8f79-9eb7505fcfcc)
+
+Increase quantity
+
+<img width="301" alt="edit_increase" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/bd586ab7-b363-432b-8157-df4bd5ab50b9">
+
+Decrease quantity
+
+<img width="301" alt="edit_reparation" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/da25c25e-903f-4a70-84ba-08b888f8ea8e">
+
+Decrease quantity - sold
+
+<img width="300" alt="edit_sold" src="https://github.com/totaldekadens/Inventory-system/assets/90898648/71a2c722-393f-47d7-bd2d-b7a4ca195cc9">
 
 
 #### Create article
