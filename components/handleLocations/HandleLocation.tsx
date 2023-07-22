@@ -6,6 +6,7 @@ import { IconPigMoney, IconRefresh, IconX } from "@tabler/icons-react";
 import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import { articleContext } from "../context/ArticleProvider";
 import HoverInfo from "../HoverInfo";
+import { Types } from "mongoose";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -155,7 +156,9 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
             </>
           ) : (
             <>
-              {!hasArticles ? (
+              {!hasArticles &&
+              location._id !=
+                ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId) ? (
                 <IconX
                   height={24}
                   width={24}
@@ -175,6 +178,12 @@ const HandleLocation = ({ location }: HandleLocationProps) => {
                       }
                     }
                   }}
+                />
+              ) : location._id ==
+                ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId) ? (
+                <HoverInfo
+                  text={"Du kan inte radera denna plats"}
+                  width={330}
                 />
               ) : (
                 <HoverInfo
