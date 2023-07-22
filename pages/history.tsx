@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Header from "@/components/Layout/Header";
+import Header from "@/components/test/Header";
 import { GetServerSideProps } from "next";
 import dbConnect from "@/lib/dbConnect";
 import TransactionHistory, {
@@ -8,8 +8,7 @@ import TransactionHistory, {
 import { useState } from "react";
 import SearchBar from "@/components/searchbars/SearchBarTransactionHistory";
 import TableHistory from "@/components/tables/TableHistory";
-import Article, { ArticleDocument } from "@/models/ArticleModel";
-import Overview from "@/components/Overview";
+import Article from "@/models/ArticleModel";
 import InventoryLocation, {
   InventoryLocationDocument,
 } from "@/models/InventoryLocationModel";
@@ -39,7 +38,7 @@ export default function Index({
   const { vehicles, setVehicles } = useContext(vehicleContext);
   const { setInventoryLocations } = useContext(inventoryLocationContext);
 
-  const [currentArticle, setCurrentArtice] =
+  const [currentArticle, setCurrentArticle] =
     useState<TransactionHistoryDocument[]>(history);
 
   useEffect(() => {
@@ -61,7 +60,7 @@ export default function Index({
             <div className="w-full text-3xl mb-14 ">Transaktionshistorik</div>
             {/* Searchbars and filter */}
             <SearchBar
-              setFilteredObjectList={setCurrentArtice}
+              setFilteredObjectList={setCurrentArticle}
               listOfObjects={currentArticle}
               history={history}
             />

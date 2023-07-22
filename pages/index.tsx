@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Header from "@/components/Layout/Header";
+import Header from "@/components/test/Header";
 import { GetServerSideProps } from "next";
 import Article from "@/models/ArticleModel";
 import dbConnect from "@/lib/dbConnect";
