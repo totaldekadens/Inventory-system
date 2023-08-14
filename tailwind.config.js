@@ -6,6 +6,15 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    colors: {
+      danger: "#FF7A7A",
+      custom: {
+        50: "#FFFFFF",
+        100: "#EFEFEF",
+        200: "#747474",
+        300: "#303030",
+      },
+    },
     extend: {
       maxWidth: {
         "8xl": "1920px",
@@ -19,6 +28,10 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "bg-desktop": "url('/dbg.svg')",
         "bg-mobile": "url('/mbg.svg')",
+      },
+      dropShadow: {
+        "3xl": "7px 7px 2px rgba(0, 0, 0, 0.3)",
+        "4xl": "10px 10px 2px rgba(0, 0, 0, 0.3)",
       },
     },
   },

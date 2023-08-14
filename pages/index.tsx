@@ -45,7 +45,7 @@ export default function Index({
       </Head>
       <Header />
       <main className="flex min-h-full items-center justify-center px-2  sm:px-6 lg:px-8 w-full ">
-        {/*  <Overview /> */}
+        <Overview />
       </main>
     </>
   );
