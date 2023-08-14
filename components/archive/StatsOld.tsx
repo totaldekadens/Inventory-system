@@ -4,8 +4,8 @@ import {
   IconServer2,
 } from "@tabler/icons-react";
 import { useContext, useEffect, useState } from "react";
-import { inventoryLocationContext } from "./context/InventoryLocationProvider";
-import { articleContext } from "./context/ArticleProvider";
+import { inventoryLocationContext } from "../context/InventoryLocationProvider";
+import { articleContext } from "../context/ArticleProvider";
 
 const Stats = () => {
   const { inventoryLocations } = useContext(inventoryLocationContext);
@@ -27,40 +27,29 @@ const Stats = () => {
   );
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-2 text-custom-50">
+    <div className="flex flex-col sm:flex-row items-center gap-6 mt-20">
       {currentArticles.length > 0 ? (
         <>
-          <div className="flex-1 w-full sm:w-auto   justify-center flex items-center flex-col p-7 gap-4">
-            <IconPackages
-              width={60}
-              height={60}
-              strokeWidth={1}
-              className="text-custom-50"
-            />{" "}
-            <p className="whitespace-nowrap">Du har lagt in totalt:</p>
+          <div className="flex-1 w-full sm:w-auto text-gray-800  justify-center flex items-center flex-col p-7 gap-4">
+            <IconPackages width={38} height={38} className="text-[#264133]" />{" "}
+            <p>Du har lagt in totalt:</p>
             <p className="font-semibold text-xl ">{totalQty} produkter</p>
           </div>
-          <div className="flex-1 w-full sm:w-auto  mt-48  justify-center flex items-center flex-col p-7 gap-4">
-            <IconServer2
-              strokeWidth={1}
-              width={60}
-              height={60}
-              className="text-custom-50"
-            />
-            <p className="whitespace-nowrap">Du har totalt:</p>
+          <div className="flex-1 w-full sm:w-auto  text-gray-800   justify-center flex items-center flex-col p-7 gap-4">
+            <IconServer2 width={38} height={38} className="text-[#264133]" />
+            <p>Du har totalt:</p>
 
-            <p className="font-semibold text-xl whitespace-nowrap">
+            <p className="font-semibold text-xl ">
               {inventoryLocations?.length} st lagerplatser
             </p>
           </div>
-          <div className="flex-1 w-full sm:w-auto justify-center flex items-center flex-col p-7 gap-4">
+          <div className="flex-1 w-full sm:w-auto  text-gray-800  justify-center flex items-center flex-col p-7 gap-4">
             <IconCurrencyKroneSwedish
-              strokeWidth={1}
-              width={60}
-              height={60}
-              className="text-custom-50"
+              width={38}
+              height={38}
+              className="text-[#264133]"
             />
-            <p className="whitespace-nowrap">Ditt totala försäljningsvärde:</p>
+            <p>Du har ett försäljningsvärde på totalt:</p>
 
             <p className="font-semibold text-xl ">{getTotalSales} kr</p>
           </div>

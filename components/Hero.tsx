@@ -5,6 +5,8 @@ import NewArticle from "./NewArticle";
 import HandleLocations from "./handleLocations/HandleLocations";
 import HandleVehicleModels from "./handleVehicleModels/HandleVehicleModels";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
+import Navigation from "./Navigation";
+import Stats from "./Stats";
 
 const Hero = () => {
   const { data: session } = useSession();
@@ -47,7 +49,12 @@ const Hero = () => {
       alt: "bild på ikon",
       setState: null,
     },
-    { title: "Konto", src: "/user.svg", alt: "bild på ikon", setState: null },
+    {
+      title: "Konto",
+      src: "/user.svg",
+      alt: "bild på ikon",
+      setState: null,
+    },
     {
       title: "Statistik",
       src: "/pie-chart.svg",
@@ -65,34 +72,15 @@ const Hero = () => {
         <div className="mt-12">
           <button
             onClick={() => setCreateArticle(true)}
-            className="sm:mt-0 sm:flex-none rounded-md flex text-3xl items-center bg-custom-50 py-7 px-8 text-center gap-3 font-normal text-white drop-shadow-3xl border border-custom-50 hover:border-custom-100 hover:drop-shadow-4xl transition-all duration-200"
+            className="sm:mt-0 sm:flex-none rounded-md flex text-3xl items-center bg-custom-50 py-7 px-8 text-center gap-3 font-normal text-custom-300 drop-shadow-3xl border border-custom-50 hover:border-custom-100 hover:drop-shadow-4xl transition-all duration-200"
           >
             Lägg till artikel{" "}
-            <Image src="/plus.svg" alt="plus-icon" width={20} height={20} />
+            <Image src="/plus.svg" alt="plus-icon" width={28} height={28} />
           </button>
         </div>
+        <Stats />
       </div>
-      {/* Icons */}
-
-      <div className="flex justify-center lg:justify-start">
-        <div className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-6 w-[300px] sm:w-[400px] md:w-full lg:w-[485px] justify-center max-w-xl">
-          {list.map((icon) => (
-            <div
-              onClick={() => {
-                icon.setState ? icon.setState(true) : null;
-              }}
-              className="shadow-sm p-8 rounded-lg gap-2 flex flex-col items-center max-w-[190px] lg:max-w-[220px]  min-w-[150px] lg:px-10  justify-center bg-custom-50 hover:shadow-2xl transition-all duration-200 cursor-pointer border border-custom-50 hover:border-custom-200"
-            >
-              <img
-                src={icon.src}
-                alt={icon.alt}
-                className="lg:w-16 lg:h-16 xl:w-18 xl:h-18 2xl:w-20 2xl:h-20"
-              />
-              <p>{icon.title}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <Navigation list={list} />
       {createArticle ? (
         <NewArticle setCreateArticle={setCreateArticle} />
       ) : null}

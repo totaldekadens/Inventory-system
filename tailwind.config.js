@@ -6,16 +6,16 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    colors: {
-      danger: "#FF7A7A",
-      custom: {
-        50: "#FFFFFF",
-        100: "#EFEFEF",
-        200: "#747474",
-        300: "#303030",
-      },
-    },
     extend: {
+      colors: {
+        danger: "#FF7A7A",
+        custom: {
+          50: "#FFFFFF",
+          100: "#EFEFEF",
+          200: "#747474",
+          300: "#303030",
+        },
+      },
       maxWidth: {
         "8xl": "1920px",
       },
