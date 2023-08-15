@@ -27,46 +27,66 @@ const Stats = () => {
   );
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-2 text-custom-50">
-      {currentArticles.length > 0 ? (
-        <>
-          <div className="flex-1 w-full sm:w-auto   justify-center flex items-center flex-col p-7 gap-4">
-            <IconPackages
-              width={60}
-              height={60}
-              strokeWidth={1}
-              className="text-custom-50"
-            />{" "}
-            <p className="whitespace-nowrap">Du har lagt in totalt:</p>
-            <p className="font-semibold text-xl ">{totalQty} produkter</p>
-          </div>
-          <div className="flex-1 w-full sm:w-auto  mt-48  justify-center flex items-center flex-col p-7 gap-4">
-            <IconServer2
-              strokeWidth={1}
-              width={60}
-              height={60}
-              className="text-custom-50"
-            />
-            <p className="whitespace-nowrap">Du har totalt:</p>
+    <>
+      <div className="flex flex-col  items-center w-full text-custom-50 mt-10  sm:gap-0 relative">
+        {currentArticles.length > 0 ? (
+          <div className="w-full flex flex-col gap-8">
+            <div className="flex justify-between flex-col gap-8 sm:gap-0 sm:flex-row w-full">
+              <div
+                style={{ mixBlendMode: "difference", color: "white" }}
+                className="  justify-center flex items-center flex-col p-0 gap-2 "
+              >
+                <IconPackages
+                  width={60}
+                  height={60}
+                  strokeWidth={1}
+                  className="text-custom-50 drop-shadow-text"
+                />{" "}
+                <p className="whitespace-nowrap drop-shadow-text">
+                  Du har lagt in totalt:
+                </p>
+                <p className="font-semibold text-lg drop-shadow-text">
+                  {totalQty} produkter
+                </p>
+              </div>
+              <div className="justify-center flex items-center flex-col p-0 gap-2">
+                <IconCurrencyKroneSwedish
+                  strokeWidth={1}
+                  width={60}
+                  height={60}
+                  className="text-custom-50 drop-shadow-text"
+                />
+                <p className="whitespace-nowrap drop-shadow-text">
+                  Ditt totala försäljningsvärde:
+                </p>
 
-            <p className="font-semibold text-xl whitespace-nowrap">
-              {inventoryLocations?.length} st lagerplatser
-            </p>
-          </div>
-          <div className="flex-1 w-full sm:w-auto justify-center flex items-center flex-col p-7 gap-4">
-            <IconCurrencyKroneSwedish
-              strokeWidth={1}
-              width={60}
-              height={60}
-              className="text-custom-50"
-            />
-            <p className="whitespace-nowrap">Ditt totala försäljningsvärde:</p>
+                <p className="font-semibold text-lg drop-shadow-text ">
+                  {getTotalSales} kr
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-center w-full md:absolute md:-bottom-32">
+              <div className="flex-1 w-full sm:w-auto justify-center flex items-center flex-col p-0 gap-2">
+                <IconServer2
+                  strokeWidth={1}
+                  width={60}
+                  height={60}
+                  className="text-custom-50 drop-shadow-text"
+                />
+                <p className="whitespace-nowrap drop-shadow-text">
+                  Du har totalt:
+                </p>
 
-            <p className="font-semibold text-xl ">{getTotalSales} kr</p>
+                <p className="font-semibold text-lg whitespace-nowrap drop-shadow-text">
+                  {inventoryLocations?.length} st lagerplatser
+                </p>
+              </div>
+            </div>
           </div>
-        </>
-      ) : null}
-    </div>
+        ) : null}
+      </div>
+      <style></style>
+    </>
   );
 };
 
