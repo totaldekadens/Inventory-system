@@ -6,8 +6,6 @@ import TransactionHistory, {
   TransactionHistoryDocument,
 } from "@/models/TransactionHistoryModel";
 import { useState } from "react";
-import SearchBar from "@/components/searchbars/SearchBarTransactionHistory";
-import TableHistory from "@/components/tables/TableHistory";
 import Article from "@/models/ArticleModel";
 import InventoryLocation, {
   InventoryLocationDocument,
@@ -20,6 +18,7 @@ import {
 } from "@/components/context/ArticleProvider";
 import { inventoryLocationContext } from "@/components/context/InventoryLocationProvider";
 import { vehicleContext } from "@/components/context/VehicleProvider";
+import Active from "@/components/Active";
 
 interface Props {
   history: TransactionHistoryDocument[];
@@ -55,17 +54,14 @@ export default function Index({
       </Head>
       <Header />
       <main className="flex min-h-full items-center justify-center px-2  sm:px-6 lg:px-8 w-full ">
-        <div className="px-2 sm:px-6 lg:px-8 mt-10 md:mt-10 sm:mt-8 w-full pb-20 max-w-8xl">
-          <div className="flow-root">
-            <div className="w-full text-3xl mb-14 ">Transaktionshistorik</div>
-            {/* Searchbars and filter */}
-            <SearchBar
-              setFilteredObjectList={setCurrentArticle}
-              listOfObjects={currentArticle}
-              history={history}
-            />
-            <TableHistory history={currentArticle} />
-          </div>
+        <div className="px-2 sm:px-6 lg:px-8 mt-10 md:mt-10 sm:mt-8 w-full max-w-8xl">
+          <Active
+            history={{
+              setFilteredObjectList: setCurrentArticle,
+              listOfObjects: currentArticle,
+              history: history,
+            }}
+          />
         </div>
       </main>
     </>
