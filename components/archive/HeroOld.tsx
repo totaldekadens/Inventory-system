@@ -2,10 +2,10 @@ import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import NewArticle from "../NewArticle";
+import NewArticle from "../article/NewArticleDesktop";
 import { clsx } from "@mantine/core";
 import HandleLocations from "../handleLocations/HandleLocations";
-import HandleVehicleModels from "../handleVehicleModels/HandleVehicleModels";
+import HandleVehicleModels from "./handleVehicleModelsOld/HandleVehicleModels";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
 const Hero = () => {
   const { data: session } = useSession();
