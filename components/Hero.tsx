@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import NewArticle from "./NewArticle";
+import NewArticleDesktop from "./article/NewArticleDesktop";
 import HandleLocations from "./handleLocations/HandleLocations";
-import HandleVehicleModels from "./handleVehicleModels/HandleVehicleModels";
+import HandleVehicleModels from "./archive/handleVehicleModelsOld/HandleVehicleModels";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
-import Navigation from "./Navigation";
+import Navigation from "./layout/navigation/Navigation";
 import Stats from "./Stats";
 
 const Hero = () => {
@@ -64,25 +64,30 @@ const Hero = () => {
   ];
 
   return (
-    <div className="flex justify-between pt-4 lg:pt-8 xl:pt-8 2xl:pt-32 h-full gap-10 flex-col lg:flex-row">
-      <div className="min-w-[250px]  flex flex-col text-custom-300 flex-1 items-center lg:items-start ">
-        <p className="text-3xl sm:text-5xl lg:text-5xl xl:text-6xl mb-10">
+    <div className="flex sm:justify-between  lg:pt-2 2xl:pt-32 h-full gap-4 sm:gap-10 flex-col md:flex-row">
+      <div className="min-w-[250px] hidden sm:flex flex-col text-custom-300 flex-1 items-center md:items-start ">
+        <p className="text-3xl sm:text-5xl lg:text-5xl xl:text-6xl mb-10 sm:mb-1 xl:mb-3">
           Välkommen tillbaka!
         </p>
-        <div className="mt-12">
+        <div className="sm:mt-12">
           <button
             onClick={() => setCreateArticle(true)}
-            className="sm:mt-0 sm:flex-none rounded-md flex text-3xl items-center bg-custom-50 py-7 px-8 text-center gap-3 font-normal text-custom-300 drop-shadow-3xl border border-custom-50 hover:border-custom-100 hover:drop-shadow-4xl transition-all duration-200"
+            className="sm:mt-0 sm:flex-none rounded-md flex text-xl sm:text-3xl items-center bg-custom-50 py-7 px-8 text-center gap-3 font-normal text-custom-300 drop-shadow-3xl border border-custom-50 hover:border-custom-100 hover:drop-shadow-4xl transition-all duration-200"
           >
             Lägg till artikel{" "}
             <Image src="/plus.svg" alt="plus-icon" width={28} height={28} />
           </button>
         </div>
+        <div className="w-full hidden md:block mt-10 pr-10">
+          <Stats />
+        </div>
+      </div>
+      <Navigation list={list} setCreateArticle={setCreateArticle} />
+      <div className="w-full md:hidden mt-10">
         <Stats />
       </div>
-      <Navigation list={list} />
       {createArticle ? (
-        <NewArticle setCreateArticle={setCreateArticle} />
+        <NewArticleDesktop setCreateArticle={setCreateArticle} />
       ) : null}
       {handleLocations ? (
         <HandleLocations setHandleLocations={setHandleLocations} />

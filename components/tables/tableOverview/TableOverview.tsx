@@ -1,4 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   PopulatedArticleDocument,
   articleContext,
@@ -7,6 +13,7 @@ import ArticleView from "../../article/articleView/ArticleView";
 import clsx from "clsx";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
 import TableRow from "./TableRow";
+import { IconX } from "@tabler/icons-react";
 
 interface ThProps {
   header: string;
@@ -23,15 +30,22 @@ const Th = ({ header, className, empty }: ThProps) => (
   </th>
 );
 
-const TableOverview = () => {
+interface Props {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  setCurrentArticle: Dispatch<
+    SetStateAction<PopulatedArticleDocument | undefined>
+  >;
+}
+
+const TableOverview = ({ setOpen, setCurrentArticle }: Props) => {
   const { currentArticles } = useContext(articleContext);
-  const [open, setOpen] = useState(false);
+  /*   const [open, setOpen] = useState(false);
   const [currentArticle, setCurrentArticle] =
     useState<PopulatedArticleDocument>();
 
   useEffect(() => {
     useRemoveBackgroundScroll(open);
-  }, [open]);
+  }, [open]); */
 
   return (
     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
@@ -81,9 +95,9 @@ const TableOverview = () => {
             )}
           </tbody>
         </table>
-        {open && currentArticle ? (
+        {/*    {open && currentArticle ? (
           <ArticleView setOpen={setOpen} article={currentArticle} />
-        ) : null}
+        ) : null} */}
       </div>
     </div>
   );
