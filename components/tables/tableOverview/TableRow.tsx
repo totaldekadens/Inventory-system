@@ -23,18 +23,18 @@ const TableRow = ({ article, setOpen, setCurrentArticle }: Props) => {
   return (
     <tr className="">
       {/* Artikel */}
-      <td className="md:whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-3 ">
+      <td className="md:whitespace-nowrap py-2 pl-4 pr-3 text-sm sm:pl-3 ">
         <div className="flex">
           {/* Image */}
           <div
-            className="h-24 w-24 flex-shrink-0 cursor-pointer"
+            className="h-20 w-20 flex-shrink-0 cursor-pointer"
             onClick={() => {
               setOpen(true);
               setCurrentArticle(article);
             }}
           >
             <img
-              className="h-24 w-24 rounded-sm object-cover"
+              className="h-20 w-20 rounded-sm object-cover"
               src={path}
               alt="Bild på artikel"
             />
@@ -91,7 +91,7 @@ const TableRow = ({ article, setOpen, setCurrentArticle }: Props) => {
         </div>
       </td>
       {/* Modell */}
-      <td className="whitespace-nowrap hidden lg:table-cell py-5 text-sm text-gray-500 flex-wrap">
+      <td className="whitespace-nowrap hidden lg:table-cell py-2 text-sm text-gray-500 flex-wrap">
         <Spoiler
           styles={{ control: { color: "#264133" } }}
           color="#264133"
@@ -107,23 +107,23 @@ const TableRow = ({ article, setOpen, setCurrentArticle }: Props) => {
         </Spoiler>
       </td>
       {/* Skick */}
-      <td className="whitespace-nowrap hidden lg:table-cell  px-3 py-5 text-sm text-gray-500">
+      <td className="whitespace-nowrap hidden lg:table-cell  px-3 py-2  text-sm text-gray-500">
         <div className="text-gray-900 h-full ">{article.condition}</div>
       </td>
       {/* Antal - tab and desktop */}
-      <td className="whitespace-nowrap hidden md:table-cell px-3 py-5 text-sm text-gray-500">
+      <td className="whitespace-nowrap hidden md:table-cell px-3 py-2  text-sm text-gray-500">
         <div className="mt-3 w-full gap-2 items-center  text-gray-800  flex flex-wrap">
           <QtyControls articleObject={article} />
         </div>
       </td>
       {/* Lagerplats */}
-      <td className="whitespace-nowrap pl-3 py-5 text-sm  text-gray-500">
+      <td className="whitespace-nowrap pl-3 py-2  text-sm  text-gray-500">
         <div className="flex items-end md:items-center h-24">
           {article.inventoryLocation.name}
         </div>
       </td>
       {/* Edit/Remove - Icons */}
-      <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 ">
+      <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 ">
         <div className="flex h-24 flex-col md:flex-row items-center justify-end md:justify-center">
           <IconX
             className="text-red-600 hover:text-red-900 cursor-pointer"

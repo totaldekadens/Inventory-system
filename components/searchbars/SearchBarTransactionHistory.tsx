@@ -77,14 +77,14 @@ const SearchBar = ({
   }, [query2]);
 
   return (
-    <div className="w-full flex gap-2">
+    <div className="w-full flex gap-2 mt-10">
       <div className="w-full">
         <input
           type="search"
           name="search"
           id="search"
           className={clsx(
-            `py-3.5 placeholder:text-gray-500 block w-full rounded-md border-0  text-gray-900 ring-1  ring-inset ring-gray-300  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 md:h-auto`
+            `py-1.5 placeholder:text-gray-500 block w-full rounded-md border-0  text-gray-900 ring-1  ring-inset ring-gray-300  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 md:h-auto`
           )}
           placeholder="Sök.."
           onChange={(event) => setQuery(event.currentTarget.value)}
@@ -96,7 +96,7 @@ const SearchBar = ({
           name="search"
           id="search"
           className={clsx(
-            `py-3.5 placeholder:text-gray-500 block w-full rounded-md border-0  text-gray-900 ring-1  ring-inset ring-gray-300  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 md:h-auto`
+            `py-1.5 placeholder:text-gray-500 block w-full rounded-md border-0  text-gray-900 ring-1  ring-inset ring-gray-300  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 md:h-auto`
           )}
           placeholder="Art. no.."
           onChange={(event) => setQuery2(event.currentTarget.value)}

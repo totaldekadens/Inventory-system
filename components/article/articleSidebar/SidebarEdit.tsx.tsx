@@ -17,7 +17,7 @@ import SelectLocation from "@/components/searchbars/SelectLocation";
 import UploadForm from "@/components/uploadForm";
 import Button from "@/components/buttons/Button";
 import SelectModels from "@/components/searchbars/SelectModels";
-import { ErrorMessage, schema } from "@/components/NewArticle";
+import { ErrorMessage, schema } from "@/components/article/NewArticleDesktop";
 import SelectSimple from "@/components/searchbars/SelectSimple";
 import { todayDate } from "@/lib/setDate";
 import clsx from "clsx";

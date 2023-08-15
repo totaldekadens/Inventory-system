@@ -5,13 +5,14 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body
-        className="bg-bg-mobile sm:bg-bg-desktop"
+        className="bg-bg-mobile sm:bg-bg-desktop "
         style={{
           display: "fixed",
           inset: 0,
-          minHeight: "100vh",
+          height: "100vh",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
+          backgroundAttachment: "fixed",
         }}
       >
         <Main />
