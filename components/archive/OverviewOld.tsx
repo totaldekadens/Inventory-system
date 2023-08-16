@@ -13,7 +13,7 @@ const Overview = () => {
         {/* Searchbars and filter */}
         <Filter />
         {/* Table of all filtered articles */}
-        <TableOverview />
+        {/*  <TableOverview /> */}
         {/* Stats of articles and inventory locations */}
         <Stats />
       </div>
