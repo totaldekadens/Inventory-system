@@ -10,7 +10,7 @@ Creating a system where my husband easily can keep track of his inventory of var
 * Landing page for visitors to see spare parts available for sale
 * New design - Check it out here: https://github.com/totaldekadens/Inventory-System---Design
 * Add new field - Manufacturer
-
+  * Drop down 
 ### Done
 
 * Different articles must be able to be in the same inventory location ✅
