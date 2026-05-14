@@ -5,9 +5,14 @@ import Image from "next/image";
 interface Props {
   images: string[];
 }
+
+const splideOptions = {
+  arrows: false,
+};
+
 const Slider = ({ images }: Props) => {
   return (
-    <Splide aria-label="My Favorite Images">
+    <Splide options={splideOptions} aria-label="My Favorite Images">
       {images.map((image, i) => {
         const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/w_600/q_60/v1688383484/inventory/${image}`;
         return (
