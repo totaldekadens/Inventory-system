@@ -13,7 +13,7 @@ import {
 
 const formatCurrency = (value: number) => `${value.toLocaleString("sv-SE")} kr`;
 
-const getArticleStats = (articles: PopulatedArticleDocument[] | []) => {
+const getArticleStats = (articles: PopulatedArticleDocument[]) => {
   return articles.reduce(
     (stats, article) => {
       const qty = Number(article.qty) || 0;
