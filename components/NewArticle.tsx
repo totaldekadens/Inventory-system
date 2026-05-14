@@ -96,7 +96,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
             ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
         ) {
           setError(
-            "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats "
+            "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats ",
           );
           return;
         }
@@ -263,7 +263,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   className={clsx(`pr-8`, inputClass)}
                   placeholder="Antal"
                 />
-                <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                <div className="z-10 absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
                   <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
                     st
                   </div>
@@ -309,12 +309,12 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   autoComplete="purchaseValue"
                   value={newPurchaseValue}
                   onChange={handleChange}
-                  className={clsx(`pr-8`, inputClass)}
+                  className={clsx(`pr-[120px]`, inputClass)}
                   placeholder="Inköpspris"
                 />
-                <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                <div className="z-10 absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
                   <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
-                    Kr
+                    kr/st (inkl. moms)
                   </div>
                 </div>
                 {errors.purchaseValue && touched.purchaseValue ? (
@@ -345,12 +345,12 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                     autoComplete="price"
                     value={newPrice}
                     onChange={handleChange}
-                    className={clsx(`pr-8`, inputClass)}
+                    className={clsx(`pr-[120px]`, inputClass)}
                     placeholder="Till vilket pris?"
                   />
-                  <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                  <div className="z-10 absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
                     <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
-                      Kr
+                      kr/st (inkl. moms)
                     </div>
                   </div>
                 </div>

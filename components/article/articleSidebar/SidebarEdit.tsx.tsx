@@ -44,11 +44,11 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
     useState<InventoryLocationDocument | null>(article.inventoryLocation);
 
   const initialSelectedModels = article.vehicleModels.map((model, i) =>
-    model._id ? model._id.toString() : `${i}`
+    model._id ? model._id.toString() : `${i}`,
   );
 
   const [selectedModels, setSelectedModels] = useState<string[]>(
-    initialSelectedModels
+    initialSelectedModels,
   );
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
@@ -93,10 +93,10 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           id == "1"
             ? qty
             : id == "2"
-            ? article.qty + qty
-            : id == "3"
-            ? article.qty - qty
-            : qty;
+              ? article.qty + qty
+              : id == "3"
+                ? article.qty - qty
+                : qty;
 
         if (newQty < 0) {
           setError("Du kan inte ta bort mer än vad som finns tillgängligt");
@@ -119,7 +119,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
         ) {
           setError(
-            "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats "
+            "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats ",
           );
           return;
         }
@@ -568,12 +568,12 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             autoComplete="purchaseValue"
             value={newPurchaseValue}
             onChange={handleChange}
-            className={clsx(`pr-8`, inputClass)}
+            className={clsx(`pr-[120px]`, inputClass)}
             placeholder="Inköpspris"
           />
-          <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+          <div className="z-10 absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
             <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
-              Kr
+              kr/st (inkl. moms)
             </div>
           </div>
         </div>
