@@ -77,11 +77,15 @@ const SidebarRead = ({ article, className, setEdit }: Props) => {
         </div>
         <ItemInfoSmall
           name="Försäljningspris:"
-          value={article.price ? article.price + " kr" : "-"}
+          value={article.price ? article.price + " kr/st (inkl. moms)" : "-"}
         />
         <ItemInfoSmall
           name="Inköpspris:"
-          value={article.purchaseValue ? article.purchaseValue + " kr" : "-"}
+          value={
+            article.purchaseValue
+              ? article.purchaseValue + " kr/st (inkl. moms)"
+              : "-"
+          }
         />
         <ItemInfoSmall
           name="Senast uppdaterad:"
