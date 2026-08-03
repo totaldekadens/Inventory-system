@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { IconX } from "@tabler/icons-react";
 import HandleVehicleModel from "./HandleVehicleModel";
 import NewVehicleModel from "./NewVehicleModel";
@@ -16,13 +10,19 @@ interface Props {
 }
 
 const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
-  const { vehicles, setVehicles } = useContext(vehicleContext);
-  const [filteredVehicles, setFilteredVehicles] = useState(vehicles);
+  const { vehicles } = useContext(vehicleContext);
 
-  // If InventoryLocations change, update filteredLocatons
-  useEffect(() => {
-    setFilteredVehicles(vehicles);
-  }, [vehicles]);
+  const [query, setQuery] = useState("");
+
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const filteredVehicles = vehicles.filter((vehicle) => {
+    if (!normalizedQuery) {
+      return true;
+    }
+
+    return vehicle.name?.toLowerCase().includes(normalizedQuery);
+  });
 
   return (
     <div className="pt-10 sm:pt-0 z-20 fixed inset-0 bg-black/20 flex justify-center ">
@@ -68,10 +68,7 @@ const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
             {/* Search inventory location */}
             <div className=" mt-3 ">
               <div className="divide-gray-200 relative bg-[#f4f4f4] divide-y">
-                <SearchBar
-                  setFilteredObjectList={setFilteredVehicles}
-                  listOfObjects={vehicles}
-                />
+                <SearchBar query={query} setQuery={setQuery} />
               </div>
             </div>
 
@@ -90,11 +87,9 @@ const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
                 </div>
               </div>
               <div className="divide-y w-full divide-gray-300 relative bg-white">
-                {filteredVehicles.length > 0
-                  ? filteredVehicles.map((model, i) => (
-                      <HandleVehicleModel key={i} model={model} />
-                    ))
-                  : null}
+                {filteredVehicles.map((model, i) => (
+                  <HandleVehicleModel key={i} model={model} />
+                ))}
               </div>
             </div>
           </div>

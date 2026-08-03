@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { IconX } from "@tabler/icons-react";
 import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import HandleLocation from "./HandleLocation";
@@ -17,15 +11,22 @@ interface Props {
 
 const HandleLocations = ({ setHandleLocations }: Props) => {
   const { inventoryLocations, setInventoryLocations } = useContext(
-    inventoryLocationContext
+    inventoryLocationContext,
   );
-  const [filteredLocations, setFilteredLocations] =
-    useState(inventoryLocations);
+  const [query, setQuery] = useState("");
 
-  // If InventoryLocations change, update filteredLocatons
-  useEffect(() => {
-    setFilteredLocations(inventoryLocations);
-  }, [inventoryLocations]);
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const filteredLocations = inventoryLocations.filter((location) => {
+    if (!normalizedQuery) {
+      return true;
+    }
+
+    return (
+      location.name?.toLowerCase().includes(normalizedQuery) ||
+      location.description?.toLowerCase().includes(normalizedQuery)
+    );
+  });
 
   return (
     <div className="pt-10 sm:pt-0 z-20 fixed inset-0 bg-black/20 flex justify-center ">
@@ -73,10 +74,7 @@ const HandleLocations = ({ setHandleLocations }: Props) => {
             {/* Search inventory location */}
             <div className=" mt-3 ">
               <div className="divide-gray-200 relative bg-[#f4f4f4] divide-y">
-                <SearchBar
-                  setFilteredObjectList={setFilteredLocations}
-                  listOfObjects={inventoryLocations}
-                />
+                <SearchBar query={query} setQuery={setQuery} />
               </div>
             </div>
 
