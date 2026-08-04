@@ -4,8 +4,13 @@ import { articleContext } from "./context/ArticleProvider";
 import SearchBar from "./searchbars/SearchBar";
 import SearchBarKombo from "./searchbars/SearchBarKombo";
 import { VehicleDocument } from "@/models/VehicleModel";
-
-type SaleFilter = "all" | "forSale" | "notForSale";
+import SelectSimple from "./searchbars/SelectSimple";
+import {
+  SaleFilter,
+  saleOptions,
+  StockFilter,
+  stockOptions,
+} from "@/lib/config";
 
 const Filter = () => {
   const { setCurrentArticles, articles, currentArticles } =
@@ -21,6 +26,8 @@ const Filter = () => {
   const [selectedInventoryLocation, setSelectedInventoryLocation] = useState<
     any | null
   >(null);
+
+  const [stockFilter, setStockFilter] = useState<StockFilter>("all");
 
   useEffect(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -44,6 +51,11 @@ const Filter = () => {
           (vehicle) => vehicle._id === selectedVehicleModel._id,
         );
 
+      const matchesStockFilter =
+        stockFilter === "all" ||
+        (stockFilter === "inStock" && (article.qty ?? 0) > 0) ||
+        (stockFilter === "outOfStock" && (article.qty ?? 0) <= 0);
+
       const matchesInventoryLocation =
         !selectedInventoryLocation ||
         article.inventoryLocation?._id === selectedInventoryLocation._id;
@@ -52,7 +64,8 @@ const Filter = () => {
         matchesSearch &&
         matchesSaleFilter &&
         matchesVehicleModel &&
-        matchesInventoryLocation
+        matchesInventoryLocation &&
+        matchesStockFilter
       );
     });
 
@@ -64,48 +77,58 @@ const Filter = () => {
     selectedVehicleModel,
     selectedInventoryLocation,
     setCurrentArticles,
+    stockFilter,
   ]);
 
   const amountOfHits = currentArticles.length;
 
   return (
-    <>
-      <div className="flex w-full sm:justify-end">
-        <RadioButtons value={saleFilter} onChange={setSaleFilter} />
-      </div>
+    <div className="mb-8 border-b-2">
+      <div>
+        <div className="w-full text-xl mb-2 font-semibold">Sök</div>
+        <div className="mb-8 flex flex-col justify-between gap-4 sm:gap-0 md:flex-row">
+          <SearchBar query={query} setQuery={setQuery} />
 
-      <div className="mt-4 mb-8 flex flex-col justify-between gap-4 sm:gap-0 md:flex-row">
-        <SearchBar query={query} setQuery={setQuery} />
+          <div className="hidden items-center justify-center whitespace-nowrap py-2 text-xs sm:flex md:px-2 md:py-0" />
 
-        <div className="hidden items-center justify-center whitespace-nowrap py-2 text-xs sm:flex md:px-2 md:py-0" />
+          <div className="flex flex-col sm:flex-row gap-4">
+            <SearchBarKombo
+              property="vehicleModels"
+              selectedObject={selectedVehicleModel}
+              setSelectedObject={setSelectedVehicleModel}
+            />
 
-        <div className="sm:flex">
-          <SearchBarKombo
-            property="vehicleModels"
-            selectedObject={selectedVehicleModel}
-            setSelectedObject={setSelectedVehicleModel}
-          />
-
-          <div className="hidden items-center justify-center whitespace-nowrap px-2 text-xs sm:flex">
-            och
+            <SearchBarKombo
+              property="inventoryLocation"
+              selectedObject={selectedInventoryLocation}
+              setSelectedObject={setSelectedInventoryLocation}
+            />
           </div>
-
-          <div className="px-2 py-2 sm:hidden" />
-
-          <SearchBarKombo
-            property="inventoryLocation"
-            selectedObject={selectedInventoryLocation}
-            setSelectedObject={setSelectedInventoryLocation}
-          />
         </div>
       </div>
+      <div className="w-full text-xl mb-2 font-semibold ">Filtrera</div>
+      <div className="flex w-full gap-4 justify-between flex-wrap mb-4">
+        <RadioButtons
+          value={saleFilter}
+          onChange={setSaleFilter}
+          options={saleOptions}
+          label="Visa:"
+        />
+        <SelectSimple
+          label="Lagerstatus:"
+          value={stockFilter}
+          onChange={setStockFilter}
+          options={stockOptions}
+        />
+      </div>
+
       <div>
-        <div className="-mt-4 mb-3 text-sm">
+        <div className="mt-6 mb-3 text-sm flex justify-end sm:justify-start">
           {amountOfHits > 0 &&
             amountOfHits + (amountOfHits > 1 ? " träffar" : " träff")}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -17,7 +17,7 @@ interface ThProps {
 const Th = ({ header, className, empty }: ThProps) => (
   <th
     scope="col"
-    className={clsx(`py-3.5 text-sm font-semibold text-gray-900 `, className)}
+    className={clsx(`py-3.5 font-semibold text-gray-900 `, className)}
   >
     {empty ? <span className="sr-only">{header}</span> : header}
   </th>

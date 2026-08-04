@@ -57,17 +57,14 @@ const SearchBarKombo = ({
         });
 
   const placeholders = {
-    inventoryLocation: "Sök eller välj lagerplats...",
-    vehicleModels: "Sök eller välj modell...",
+    inventoryLocation: "Lagerplats...",
+    vehicleModels: "Modell...",
   };
 
   return (
     <div
       className={clsx(
-        property == "inventoryLocation"
-          ? ` sm:min-w-[200px] sm:w-[200px]`
-          : `sm:w-[220px] min-w-[220px] `,
-        `flex w-full items-center gap-2 mt-2`,
+        `flex w-full items-center gap-2 mt-2 sm:w-[220px] min-w-[220px]`,
       )}
     >
       <Combobox
@@ -80,7 +77,7 @@ const SearchBarKombo = ({
           <Combobox.Input
             type="text"
             placeholder={placeholder ?? placeholders[property]}
-            className="w-full flex items-center rounded-md border-0 bg-white py-3.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="w-full flex items-center rounded-md border-0 bg-white py-3.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(object: { name?: string } | null) =>
               object?.name ?? ""
@@ -109,7 +106,7 @@ const SearchBarKombo = ({
           {!filteredList
             ? null
             : filteredList.length > 0 && (
-                <Combobox.Options className="absolute left-0 top-full z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <Combobox.Options className="absolute left-0 top-full z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   {filteredList.map((object) => (
                     <Combobox.Option
                       key={object._id}

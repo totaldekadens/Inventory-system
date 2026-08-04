@@ -1,39 +1,33 @@
 import { RadioGroup } from "@headlessui/react";
 
-export type SaleFilter = "all" | "forSale" | "notForSale";
-
 interface Props {
-  value: SaleFilter;
-  onChange: React.Dispatch<React.SetStateAction<SaleFilter>>;
+  value: string;
+  onChange: React.Dispatch<React.SetStateAction<string | any>>;
+  options: {
+    value: string;
+    label: string;
+  }[];
+  label?: string;
 }
-
-const options: {
-  id: SaleFilter;
-  title: string;
-}[] = [
-  { id: "all", title: "Alla" },
-  { id: "forSale", title: "Endast till salu" },
-  { id: "notForSale", title: "Endast för eget bruk" },
-];
 
 function classNames(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-const RadioButtons = ({ value, onChange }: Props) => {
+const RadioButtons = ({ value, onChange, options, label }: Props) => {
   return (
-    <div className="mb-3 flex flex-col justify-center sm:flex-row sm:items-center">
-      <h3 className="mb-2 mr-4 text-sm font-semibold text-gray-900 sm:mb-0">
-        Visa:
-      </h3>
+    <div className="mb-3 flex flex-col">
+      {label && (
+        <span className="whitespace-nowrap text-gray-900">{label}</span>
+      )}
 
-      <RadioGroup value={value} onChange={onChange} className="ml-2">
+      <RadioGroup value={value} onChange={onChange} className="ml-2 mt-2">
         <div className="flex flex-wrap items-center space-x-6 sm:space-x-10">
           {options.map((option) => (
-            <div key={option.id} className="flex items-center">
+            <div key={option.value} className="flex items-center">
               <RadioGroup.Option
-                id={option.id}
-                value={option.id}
+                id={option.value}
+                value={option.value}
                 className={({ active, checked }) =>
                   classNames(
                     active &&
@@ -42,16 +36,16 @@ const RadioButtons = ({ value, onChange }: Props) => {
                     !active &&
                       checked &&
                       "bg-[#4A7660] ring-4 ring-[#4A7660] sm:ring-2",
-                    "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-1.5 ring-2 focus:outline-none",
+                    "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-2 ring-2 focus:outline-none",
                   )
                 }
               />
 
               <label
-                htmlFor={option.id}
-                className="ml-3 block cursor-pointer text-sm leading-6 text-gray-900"
+                htmlFor={option.value}
+                className="ml-3 block cursor-pointer leading-6 text-gray-900"
               >
-                {option.title}
+                {option.label}
               </label>
             </div>
           ))}

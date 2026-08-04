@@ -3,13 +3,7 @@ import {
   articleContext,
 } from "../../context/ArticleProvider";
 import ForSaleRadioButton from "@/components/buttons/ForSaleRadioButton";
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useFormik } from "formik";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
@@ -23,21 +17,18 @@ import clsx from "clsx";
 import RadioButtonsQuantity from "@/components/buttons/RadioButtonsQuantity";
 import { Types } from "mongoose";
 import SearchBarKombo from "@/components/searchbars/SearchBarKombo";
+import { scrapCauses } from "@/lib/config";
 
 interface Props {
   article: PopulatedArticleDocument;
-  className?: string;
-  edit: boolean;
   setEdit: Dispatch<SetStateAction<boolean>>;
 }
 
-const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
+const SidebarEdit = ({ article, setEdit }: Props) => {
   const [id, setId] = useState("1");
   const [forSale, setForSale] = useState(article.forSale);
-  const [selectedScrapCause, setSelectedScrapCause] = useState<{
-    id: string;
-    label: string;
-  }>({ id: "1", label: "Använd vid reparation" });
+  const [selectedScrapCause, setSelectedScrapCause] =
+    useState<string>("repair");
   const { setCurrentArticles } = useContext(articleContext);
 
   const [selectedLocation, setSelectedLocation] =
@@ -125,15 +116,19 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
         }
         if (newQty != article.qty) {
           if (newQty < article.qty) {
-            if (selectedScrapCause.id == "5" && !sellPrice) {
+            if (selectedScrapCause == "sold" && !sellPrice) {
               setError("Fyll i pris per enhet du sålde artiklarna för");
               return;
             }
           }
 
+          const scrapCause = scrapCauses.find(
+            (cause) => cause.value === selectedScrapCause,
+          );
+
           const createTransactionHistory = {
             direction: newQty < article.qty ? "-" : "+",
-            cause: newQty < article.qty ? selectedScrapCause.label : "",
+            cause: newQty < article.qty ? scrapCause?.label : "",
             pricePerUnit: Number(sellPrice),
             qty:
               article.qty > newQty
@@ -379,10 +374,11 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                           Anledning till uttag?
                         </div>
                         <SelectSimple
-                          selected={selectedScrapCause}
-                          setSelected={setSelectedScrapCause}
+                          value={selectedScrapCause}
+                          onChange={setSelectedScrapCause}
+                          options={scrapCauses}
                         />
-                        {selectedScrapCause.id == "5" ? (
+                        {selectedScrapCause == "sold" ? (
                           <div>
                             <div className="relative mb-1 mt-2">
                               <input
@@ -472,10 +468,11 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                                 Anledning till uttag?
                               </div>
                               <SelectSimple
-                                selected={selectedScrapCause}
-                                setSelected={setSelectedScrapCause}
+                                value={selectedScrapCause}
+                                onChange={setSelectedScrapCause}
+                                options={scrapCauses}
                               />
-                              {selectedScrapCause.id == "5" ? (
+                              {selectedScrapCause == "sold" ? (
                                 <div>
                                   <div className="relative mb-1 mt-2">
                                     <input

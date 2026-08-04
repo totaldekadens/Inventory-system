@@ -12,6 +12,7 @@ import Button from "./buttons/Button";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { Types } from "mongoose";
 import SearchBarKombo from "./searchbars/SearchBarKombo";
+import { scrapCauses } from "@/lib/config";
 interface Props {
   newQty: number;
   oldQty: number;
@@ -36,10 +37,8 @@ const ScrapCause = ({
     useState<InventoryLocationDocument | null>(article.inventoryLocation);
   const [error, setError] = useState<string>("");
   const { setCurrentArticles } = useContext(articleContext);
-  const [selectedScrapCause, setSelectedScrapCause] = useState<{
-    id: string;
-    label: string;
-  }>({ id: "1", label: "Använd vid reparation" });
+  const [selectedScrapCause, setSelectedScrapCause] =
+    useState<string>("repair");
 
   const resetQty = () => {
     article.qty = oldQty;
@@ -89,7 +88,7 @@ const ScrapCause = ({
           }
 
           if (newQty < oldQty) {
-            if (selectedScrapCause.id == "5" && !sellPrice) {
+            if (selectedScrapCause == "sold" && !sellPrice) {
               setError("Fyll i pris per enhet du sålde artiklarna för");
               return;
             }
@@ -123,11 +122,13 @@ const ScrapCause = ({
           } else {
             setError("Något gick fel!");
           }
-
+          const scrapCause = scrapCauses.find(
+            (cause) => cause.value === selectedScrapCause,
+          );
           // Create Transaction history
           const createTransactionHistory = {
             direction: newQty < oldQty ? "-" : "+",
-            cause: newQty < oldQty ? selectedScrapCause.label : "",
+            cause: newQty < oldQty ? scrapCause?.label : "",
             pricePerUnit: Number(sellPrice),
             qty: oldQty > newQty ? Math.abs(newQty - oldQty) : newQty - oldQty,
             article: article,
@@ -224,10 +225,11 @@ const ScrapCause = ({
                 Anledning till uttag?
               </div>
               <SelectSimple
-                selected={selectedScrapCause}
-                setSelected={setSelectedScrapCause}
+                value={selectedScrapCause}
+                onChange={setSelectedScrapCause}
+                options={scrapCauses}
               />
-              {selectedScrapCause.id == "5" ? (
+              {selectedScrapCause == "sold" ? (
                 <div>
                   <div className="relative mb-1 mt-2">
                     <input
