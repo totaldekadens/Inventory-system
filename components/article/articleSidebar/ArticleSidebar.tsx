@@ -13,12 +13,7 @@ const ArticleSidebar = ({ article, className }: Props) => {
   return (
     <>
       {edit ? (
-        <SidebarEdit
-          article={article}
-          edit={edit}
-          setEdit={setEdit}
-          className={className}
-        />
+        <SidebarEdit article={article} setEdit={setEdit} />
       ) : (
         <SidebarRead
           article={article}
