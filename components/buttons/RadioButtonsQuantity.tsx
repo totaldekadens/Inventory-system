@@ -1,23 +1,23 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { articleContext } from "../context/ArticleProvider";
 
 interface Props {
-  id: string;
-  setId: Dispatch<SetStateAction<string>>;
+  id: UpdateMode;
+  setId: Dispatch<SetStateAction<UpdateMode>>;
 }
 
+export type UpdateMode = "set" | "add" | "remove";
+
 const RadioButtonsQuantity = ({ id, setId }: Props) => {
-  const forSaleRadio = [
-    { id: "1", title: "Sätt", bool: true },
-    { id: "2", title: "Lägg till", bool: false },
-    { id: "3", title: "Ta bort", bool: false },
+  const forSaleRadio: {
+    id: UpdateMode;
+    title: string;
+    bool: boolean;
+  }[] = [
+    { id: "set", title: "Sätt", bool: true },
+    { id: "add", title: "Lägg till", bool: false },
+    { id: "remove", title: "Ta bort", bool: false },
   ];
 
   function classNames(...classes: any) {
@@ -43,7 +43,7 @@ const RadioButtonsQuantity = ({ id, setId }: Props) => {
                       !active && checked
                         ? "ring-4 sm:ring-2 ring-[#4A7660] bg-[#4A7660]"
                         : "",
-                      "relative -m-0.5 flex ring-2 cursor-pointer items-center justify-center rounded-full p-1.5 focus:outline-none"
+                      "relative -m-0.5 flex ring-2 cursor-pointer items-center justify-center rounded-full p-1.5 focus:outline-none",
                     )
                   }
                 />

@@ -3,7 +3,13 @@ import {
   articleContext,
 } from "../../context/ArticleProvider";
 import ForSaleRadioButton from "@/components/buttons/ForSaleRadioButton";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useFormik } from "formik";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
@@ -14,10 +20,13 @@ import { ErrorMessage, schema } from "@/components/NewArticle";
 import SelectSimple from "@/components/searchbars/SelectSimple";
 import { todayDate } from "@/lib/setDate";
 import clsx from "clsx";
-import RadioButtonsQuantity from "@/components/buttons/RadioButtonsQuantity";
+import RadioButtonsQuantity, {
+  UpdateMode,
+} from "@/components/buttons/RadioButtonsQuantity";
 import { Types } from "mongoose";
 import SearchBarKombo from "@/components/searchbars/SearchBarKombo";
 import { scrapCauses } from "@/lib/config";
+import { strictEqual } from "assert";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -25,7 +34,7 @@ interface Props {
 }
 
 const SidebarEdit = ({ article, setEdit }: Props) => {
-  const [id, setId] = useState("1");
+  const [id, setId] = useState<UpdateMode>("set");
   const [forSale, setForSale] = useState(article.forSale);
   const [selectedScrapCause, setSelectedScrapCause] =
     useState<string>("repair");
@@ -80,15 +89,21 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
       try {
         // Todo: Make this part shorter.
 
-        let newQty =
-          id == "1"
+        const newQty =
+          id == "set"
             ? qty
-            : id == "2"
+            : id == "add"
               ? article.qty + qty
-              : id == "3"
+              : id == "remove"
                 ? article.qty - qty
                 : qty;
 
+        console.log("onSubmit: ", {
+          id,
+          qty,
+          newQty,
+          articleQty: article.qty,
+        });
         if (newQty < 0) {
           setError("Du kan inte ta bort mer än vad som finns tillgängligt");
           return;
@@ -209,7 +224,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
           setImageList([]);
           setFileList([]);
           article.qty = newQty;
-          setId("1");
+          setId("set");
 
           // If new quantity = 0 the article will be moved to a virtual location
           newQty == 0
@@ -236,7 +251,8 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
   });
 
   // Destructure the formik object
-  const { errors, touched, values, handleChange, handleSubmit } = formik;
+  const { errors, touched, values, handleChange, handleSubmit, setFieldValue } =
+    formik;
 
   // Sets negative numbers to positive
   const newQty = values.qty < 0 ? Math.abs(values.qty) : values.qty;
@@ -341,7 +357,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
               </div>
 
               {/* Special with quantity if it changes */}
-              {article.qty != newQty && id == "1" ? (
+              {article.qty != newQty && id == "set" ? (
                 <div className="text-sm rounded-md p-2  m-3 border">
                   <div className="font-medium mb-2">
                     Överblick ändring av antal
@@ -422,7 +438,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
                 </div>
               ) : (
                 <>
-                  {id == "2" && newQty > 0 ? (
+                  {id == "add" && newQty > 0 ? (
                     /* Här lägger vi till antal */
                     <div className="text-sm rounded-md p-2  m-3 border">
                       <div className="font-medium mb-2">
@@ -441,7 +457,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
                     </div>
                   ) : (
                     <>
-                      {id == "3" && newQty > 0 ? (
+                      {id == "remove" && newQty > 0 ? (
                         /* Här tar vi bort antal */
                         <div className="text-sm rounded-md p-2  m-3 border">
                           <div className="font-medium mb-2">
