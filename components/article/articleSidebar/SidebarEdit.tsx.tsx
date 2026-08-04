@@ -576,6 +576,22 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
           </div>
         </div>
 
+        {/* Comment */}
+        <div className="mb-4">
+          <label className="font-bold">Övrig kommentar</label>
+          <input
+            id="comment"
+            name="comment"
+            type="text"
+            autoComplete="comment"
+            value={values.comment}
+            onChange={handleChange}
+            required
+            className={inputClass}
+            placeholder="Fyll i övrig kommentar"
+          />
+        </div>
+
         {/* For sale */}
         <ForSaleRadioButton
           article={article}

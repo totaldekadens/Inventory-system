@@ -38,6 +38,7 @@ const Filter = () => {
         article.artno?.toString().toLowerCase().includes(normalizedQuery) ||
         article.description?.toLowerCase().includes(normalizedQuery) ||
         article.supplierArtno?.toLowerCase().includes(normalizedQuery) ||
+        article.comment?.toLowerCase().includes(normalizedQuery) ||
         article.title?.toLowerCase().includes(normalizedQuery);
 
       const matchesSaleFilter =

@@ -88,11 +88,16 @@ const SidebarRead = ({ article, className, setEdit }: Props) => {
           }
         />
         <ItemInfoSmall
+          name="Övrig kommentar:"
+          value={article.comment ? article.comment : "-"}
+        />
+        <ItemInfoSmall
           name="Senast uppdaterad:"
           value={
             article.lastUpdated ? article.lastUpdated : article.createdDate
           }
         />
+
         {/* For sale */}
         <div>
           <div className=" font-medium text-gray-900 mt-4 lg:mt-8">Säljas?</div>
