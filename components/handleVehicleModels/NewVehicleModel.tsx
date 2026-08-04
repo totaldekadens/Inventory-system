@@ -92,9 +92,9 @@ const NewVehicleModel = () => {
             type="text"
             autoComplete="Namn"
             className={
-              "focus:ring-light-300  ring-1 ring-inset ring-gray-300 bg-transparent relative block h-11 w-full rounded-md border-0 py-1.5   text-gray-900 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto"
+              "focus:ring-light-300  ring-1 ring-inset ring-gray-300 bg-transparent relative block w-full rounded-md border-0 py-3 text-gray-900 placeholder:text-gray-400 focus:z-10  focus:ring-2 focus:ring-inset sm:leading-6 h-auto"
             }
-            placeholder="Namn"
+            placeholder="Fyll i namn"
           />
           {errors.name && touched.name ? (
             <div className="text-red-600 pl-3 ml-[52px] -mt-3 text-xs">
@@ -106,11 +106,14 @@ const NewVehicleModel = () => {
       <div className="gap-3 whitespace-nowrap  ">
         <div className=" flex justify-end pr-3">
           <>
-            <button type="submit">
+            <button
+              type="submit"
+              className="border gap-2 border-gray-300 flex justify-center rounded-md p-3 hover:bg-[#264133] hover:text-white bg-[#264133] sm:bg-white text-white sm:text-[#264133]"
+            >
+              Spara
               <IconPigMoney
                 height={24}
                 width={24}
-                color="green"
                 className="text-xs cursor-pointer"
               />
             </button>

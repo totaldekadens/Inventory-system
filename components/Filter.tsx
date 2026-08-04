@@ -87,7 +87,11 @@ const Filter = () => {
       <div>
         <div className="w-full text-xl mb-2 font-semibold">Sök</div>
         <div className="mb-8 flex flex-col justify-between gap-4 sm:gap-0 md:flex-row">
-          <SearchBar query={query} setQuery={setQuery} />
+          <SearchBar
+            query={query}
+            setQuery={setQuery}
+            placeholder="Sök artikel..."
+          />
 
           <div className="hidden items-center justify-center whitespace-nowrap py-2 text-xs sm:flex md:px-2 md:py-0" />
 

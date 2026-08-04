@@ -3,9 +3,10 @@ import clsx from "clsx";
 interface Props {
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
+  placeholder?: string;
 }
 
-const SearchBar = ({ query, setQuery }: Props) => {
+const SearchBar = ({ query, setQuery, placeholder = "Sök..." }: Props) => {
   return (
     <div className="w-full">
       <input
@@ -17,7 +18,7 @@ const SearchBar = ({ query, setQuery }: Props) => {
           "py-3.5 placeholder:text-gray-500",
           "block w-full rounded-md border-0 text-gray-900 ring-1 ring-inset mt-2 ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6 md:h-auto",
         )}
-        placeholder="Sök artikel..."
+        placeholder={placeholder}
         onChange={(event) => setQuery(event.currentTarget.value)}
       />
     </div>
