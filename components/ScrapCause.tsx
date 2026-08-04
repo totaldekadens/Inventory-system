@@ -9,10 +9,9 @@ import {
 import { todayDate } from "@/lib/setDate";
 import clsx from "clsx";
 import Button from "./buttons/Button";
-import { IconArrowBearLeft } from "@tabler/icons-react";
-import SelectLocation from "./searchbars/SelectLocation";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { Types } from "mongoose";
+import SearchBarKombo from "./searchbars/SearchBarKombo";
 interface Props {
   newQty: number;
   oldQty: number;
@@ -73,7 +72,7 @@ const ScrapCause = ({
               ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
           ) {
             alert(
-              "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats " // Check why setError doesnt work
+              "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats ", // Check why setError doesnt work
             );
             return;
           }
@@ -202,10 +201,11 @@ const ScrapCause = ({
             </div>
             <div>
               <label className="mb-2">Välj ny lagerplats</label>
-              <SelectLocation
+              <SearchBarKombo
+                property="inventoryLocation"
                 placeholder="Välj ny lagerplats"
-                setSelectedLocation={setSelectedLocation}
-                selectedLocation={selectedLocation}
+                selectedObject={selectedLocation}
+                setSelectedObject={setSelectedLocation}
               />
             </div>
             {error ? <ErrorMessage message={error} /> : null}

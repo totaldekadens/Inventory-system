@@ -2,7 +2,6 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import UploadForm from "./uploadForm";
-import SelectLocation from "./searchbars/SelectLocation";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
 import { articleContext } from "./context/ArticleProvider";
@@ -12,6 +11,7 @@ import SelectModels from "./searchbars/SelectModels";
 import { Types } from "mongoose";
 import { IconX } from "@tabler/icons-react";
 import clsx from "clsx";
+import SearchBarKombo from "./searchbars/SearchBarKombo";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -153,7 +153,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
   });
 
   const inputClass =
-    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto";
+    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-3  text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto";
 
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
@@ -289,14 +289,15 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   {errors.condition}
                 </div>
               ) : null}
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex flex-col gap-2">
                 <SelectModels
                   setSelectedModel={setSelectedModels}
                   selectedModel={selectedModels}
                 />
-                <SelectLocation
-                  setSelectedLocation={setSelectedLocation}
-                  selectedLocation={selectedLocation}
+                <SearchBarKombo
+                  property="inventoryLocation"
+                  selectedObject={selectedLocation}
+                  setSelectedObject={setSelectedLocation}
                 />
               </div>
 

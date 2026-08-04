@@ -14,12 +14,14 @@ interface Props {
   property: "inventoryLocation" | "vehicleModels";
   selectedObject: any | null;
   setSelectedObject: React.Dispatch<React.SetStateAction<any | null>>;
+  placeholder?: string;
 }
 
 const SearchBarKombo = ({
   property,
   selectedObject,
   setSelectedObject,
+  placeholder,
 }: Props) => {
   const { currentArticles } = useContext(articleContext);
 
@@ -54,13 +56,18 @@ const SearchBarKombo = ({
           return object.name?.toLowerCase().includes(query.toLowerCase());
         });
 
+  const placeholders = {
+    inventoryLocation: "Sök eller välj lagerplats...",
+    vehicleModels: "Sök eller välj modell...",
+  };
+
   return (
     <div
       className={clsx(
         property == "inventoryLocation"
           ? ` sm:min-w-[200px] sm:w-[200px]`
           : `sm:w-[220px] min-w-[220px] `,
-        `flex w-full items-center gap-2 `,
+        `flex w-full items-center gap-2 mt-2`,
       )}
     >
       <Combobox
@@ -72,11 +79,7 @@ const SearchBarKombo = ({
         <div className="relative w-full sm:w-auto flex items-center">
           <Combobox.Input
             type="text"
-            placeholder={clsx(
-              property == "inventoryLocation"
-                ? `Sök eller välj lagerplats...`
-                : `Sök eller välj modell...`,
-            )}
+            placeholder={placeholder ?? placeholders[property]}
             className="w-full flex items-center rounded-md border-0 bg-white py-3.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(object: { name?: string } | null) =>
@@ -106,7 +109,7 @@ const SearchBarKombo = ({
           {!filteredList
             ? null
             : filteredList.length > 0 && (
-                <Combobox.Options className="absolute left-0 top-full z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <Combobox.Options className="absolute left-0 top-full z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                   {filteredList.map((object) => (
                     <Combobox.Option
                       key={object._id}

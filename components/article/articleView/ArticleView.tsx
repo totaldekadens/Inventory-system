@@ -19,14 +19,14 @@ const ArticleView = ({ article, setOpen }: Props) => {
     const getHistory = async () => {
       try {
         const response = await fetch(
-          "/api/transactionhistory/" + article.artno
+          "/api/transactionhistory/" + article.artno,
         );
         const result = await response.json();
         if (result.success) {
           // Sort keys from Ö - A
           const descendingHistory: TransactionHistoryDocument[] =
             result.data.sort((a: any, b: any) =>
-              a.createdDate < b.createdDate ? 1 : -1
+              a.createdDate < b.createdDate ? 1 : -1,
             );
           setHistory(descendingHistory);
         }

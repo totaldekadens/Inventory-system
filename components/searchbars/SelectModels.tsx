@@ -31,9 +31,13 @@ const SelectModels = ({
         styles={{
           value: { marginLeft: 10 },
           input: {
-            paddingTop: "3.9px",
-            paddingBottom: "3.9px",
+            paddingTop: "8px",
+            paddingBottom: "8px",
             paddingLeft: 0,
+            borderRadius: "6px",
+            ":focus-visible": {
+              border: "0px",
+            },
           },
           searchInput: {
             paddingLeft: 0,

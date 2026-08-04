@@ -13,7 +13,6 @@ import {
 import { useFormik } from "formik";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
-import SelectLocation from "@/components/searchbars/SelectLocation";
 import UploadForm from "@/components/uploadForm";
 import Button from "@/components/buttons/Button";
 import SelectModels from "@/components/searchbars/SelectModels";
@@ -23,6 +22,7 @@ import { todayDate } from "@/lib/setDate";
 import clsx from "clsx";
 import RadioButtonsQuantity from "@/components/buttons/RadioButtonsQuantity";
 import { Types } from "mongoose";
+import SearchBarKombo from "@/components/searchbars/SearchBarKombo";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -263,7 +263,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
     : values.sellPrice;
 
   const inputClass =
-    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-1.5 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 md:h-auto";
+    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-3 mt-2 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset text-base sm:leading-6 md:h-auto";
 
   return (
     <aside
@@ -275,7 +275,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           <div className="w-full flex flex-col gap-3">
             {/* Title */}
             <div className="mt-5 sm:mt-0">
-              <label>Titel</label>
+              <label className="font-bold">Titel</label>
               <input
                 id="title"
                 name="title"
@@ -290,7 +290,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             </div>
             {/* SupplierNo */}
             <div>
-              <label>Lev.art. no</label>
+              <label className="font-bold">Lev.art. no</label>
               <input
                 id="supplierArtno"
                 name="supplierArtno"
@@ -304,7 +304,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             </div>
             {/* Condition */}
             <div>
-              <label>Skick</label>
+              <label className="font-bold">Skick</label>
               <input
                 id="condition"
                 name="condition"
@@ -320,7 +320,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
 
             {/* Quantity */}
             <div>
-              <label>Antal</label>
+              <label className="font-bold">Antal</label>
               <p className="mt-3 text-right w-full">
                 Tillgängligt antal: {article.qty} st
               </p>
@@ -525,7 +525,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
 
             {/* Description */}
             <div>
-              <label>Beskrivning</label>
+              <label className="font-bold">Beskrivning</label>
               <textarea
                 id="description"
                 name="description"
@@ -540,16 +540,17 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
             </div>
             {/* Inventory location */}
             <div>
-              <label>Lagerplats</label>
-              <SelectLocation
+              <label className="font-bold">Lagerplats</label>
+              <SearchBarKombo
+                property="inventoryLocation"
                 placeholder="Välj ny lagerplats"
-                setSelectedLocation={setSelectedLocation}
-                selectedLocation={selectedLocation}
+                selectedObject={selectedLocation}
+                setSelectedObject={setSelectedLocation}
               />
             </div>
             {/* Models */}
             <div>
-              <label>Fordonsmodeller</label>
+              <label className="font-bold">Fordonsmodeller</label>
               <SelectModels
                 setSelectedModel={setSelectedModels}
                 selectedModel={selectedModels}
@@ -558,7 +559,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
           </div>
         </div>
         {/* Purchase price */}
-        <label>Inköpspris</label>
+        <label className="font-bold">Inköpspris</label>
         <div className="relative mb-4">
           <input
             id="purchaseValue"
@@ -586,7 +587,7 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
         />
         {forSale ? (
           <div className="mt-5">
-            <label>Pris</label>
+            <label className="font-bold">Försäljningspris</label>
             <div className="relative">
               <input
                 id="price"
@@ -596,12 +597,12 @@ const SidebarEdit = ({ article, className, edit, setEdit }: Props) => {
                 autoComplete="price"
                 value={newPrice}
                 onChange={handleChange}
-                className={inputClass}
+                className={clsx(`pr-[120px]`, inputClass)}
                 placeholder="Till vilket pris?"
               />
               <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
                 <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
-                  Kr
+                  kr/st (inkl. moms)
                 </div>
               </div>
             </div>

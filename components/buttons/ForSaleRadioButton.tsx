@@ -19,7 +19,7 @@ const ForSaleRadioButton = ({ article, forSale, setForSale }: Props) => {
 
   return (
     <div>
-      <h3 className="font-medium text-gray-900">Säljas?</h3>
+      <h3 className="font-bold text-gray-900">Säljas?</h3>
       <div>
         <RadioGroup value={forSale} onChange={setForSale} className="mt-2">
           <div className="flex items-center space-x-10 space-y-0">
@@ -37,7 +37,7 @@ const ForSaleRadioButton = ({ article, forSale, setForSale }: Props) => {
                       !active && checked
                         ? "ring-2 ring-[#4A7660] bg-[#4A7660]"
                         : "",
-                      "relative -m-0.5 flex ring-1 cursor-pointer items-center justify-center rounded-full p-1.5 focus:outline-none"
+                      "relative -m-0.5 flex ring-1 cursor-pointer items-center justify-center rounded-full p-1.5 focus:outline-none",
                     )
                   }
                 />
