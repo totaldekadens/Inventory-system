@@ -27,7 +27,7 @@ const Filter = () => {
     any | null
   >(null);
 
-  const [stockFilter, setStockFilter] = useState<StockFilter>("all");
+  const [stockFilter, setStockFilter] = useState<StockFilter>("inStock");
 
   useEffect(() => {
     const normalizedQuery = query.trim().toLowerCase();
