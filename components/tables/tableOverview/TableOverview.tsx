@@ -34,15 +34,18 @@ const TableOverview = () => {
   }, [open]);
 
   useEffect(() => {
-    if (!currentArticle) return;
-    const foundUpdatedArticle = currentArticles.find(
-      (item) => item._id === currentArticle?._id,
+    if (!open || !currentArticle) {
+      return;
+    }
+
+    const updatedArticle = currentArticles.find(
+      (article) => article._id === currentArticle._id,
     );
 
-    if (!foundUpdatedArticle) return;
-
-    setCurrentArticle(foundUpdatedArticle);
-  }, [currentArticles]);
+    if (updatedArticle) {
+      setCurrentArticle(updatedArticle);
+    }
+  }, [open, currentArticle, currentArticles]);
 
   return (
     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">

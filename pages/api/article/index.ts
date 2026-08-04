@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import { todayDate } from "@/lib/setDate";
+import { getTodayDate } from "@/lib/setDate";
 import Article, { ArticleDocument } from "@/models/ArticleModel";
 import { NextApiRequest, NextApiResponse } from "next";
 import InventoryLocation from "@/models/InventoryLocationModel";
@@ -7,7 +7,7 @@ import Vehicle from "@/models/VehicleModel";
 import TransactionHistory from "@/models/TransactionHistoryModel";
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 
@@ -34,7 +34,7 @@ export default async function handler(
         }
 
         const descendingArticles = getAllArticles.sort((a, b) =>
-          a.createdDate < b.createdDate ? 1 : -1
+          a.createdDate < b.createdDate ? 1 : -1,
         );
 
         res.status(200).json({ success: true, data: descendingArticles });
@@ -61,7 +61,7 @@ export default async function handler(
         const newArticleNumber = Number(getHeightestArtNo[0].article.artno) + 1;
 
         newArticle.artno = newArticleNumber;
-        newArticle.createdDate = todayDate;
+        newArticle.createdDate = getTodayDate();
 
         const article = await Article.create(newArticle);
 
@@ -78,11 +78,11 @@ export default async function handler(
           qty: article.qty,
           article,
           comment: "",
-          createdDate: todayDate,
+          createdDate: getTodayDate(),
         };
 
         const transactionHistory = await TransactionHistory.create(
-          createTransactionHistory
+          createTransactionHistory,
         );
 
         if (!transactionHistory) {
@@ -109,7 +109,7 @@ export default async function handler(
 
         const updateArticle: ArticleDocument = new Article(req.body);
 
-        updateArticle.lastUpdated = todayDate;
+        updateArticle.lastUpdated = getTodayDate();
 
         const article = await Article.findOneAndUpdate(
           { _id: req.body._id },
@@ -117,7 +117,7 @@ export default async function handler(
           {
             new: true,
             runValidators: true,
-          }
+          },
         );
 
         if (!article) {

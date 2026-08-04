@@ -18,7 +18,7 @@ import Button from "@/components/buttons/Button";
 import SelectModels from "@/components/searchbars/SelectModels";
 import { ErrorMessage, schema } from "@/components/NewArticle";
 import SelectSimple from "@/components/searchbars/SelectSimple";
-import { todayDate } from "@/lib/setDate";
+import { getTodayDate } from "@/lib/setDate";
 import clsx from "clsx";
 import RadioButtonsQuantity, {
   UpdateMode,
@@ -135,7 +135,10 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
           const createTransactionHistory = {
             direction: newQty < article.qty ? "-" : "+",
             cause: newQty < article.qty ? scrapCause?.label : "",
-            pricePerUnit: Number(selectedScrapCause == "sold" && sellPrice),
+            pricePerUnit:
+              selectedScrapCause == "sold" &&
+              sellPrice !== undefined &&
+              Number(sellPrice),
             qty:
               article.qty > newQty
                 ? Math.abs(newQty - article.qty)
@@ -159,7 +162,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
               createdDate: article.createdDate,
             },
             comment: scrapComment,
-            createdDate: todayDate,
+            createdDate: getTodayDate(),
           };
 
           const request = {
@@ -194,6 +197,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
               ? newSellPrice
               : price,
           comment,
+          lastUpdated: getTodayDate(),
           images: imageList.length > 0 ? imageList : article.images,
           inventoryLocation:
             newQty == 0 ? "64a95847dec1488ee60d10cd" : selectedLocation?._id,

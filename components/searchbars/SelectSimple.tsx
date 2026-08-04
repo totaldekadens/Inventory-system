@@ -39,7 +39,7 @@ const SelectSimple = <T extends string>({
       <Listbox value={value} onChange={onChange}>
         {({ open }) => (
           <div className="relative w-full">
-            <Listbox.Button className="relative h-11 w-full min-w-[193px] cursor-pointer rounded-md bg-white py-3 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 md:h-auto sm:leading-6">
+            <Listbox.Button className="relative h-11 w-full min-w-[193px] cursor-pointer rounded-md bg-white py-3 pl-3 pr-10 text-left text-base text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 md:h-auto sm:leading-6">
               <span className="block truncate">
                 {selectedOption?.label ?? placeholder}
               </span>
@@ -59,7 +59,7 @@ const SelectSimple = <T extends string>({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute left-0 top-full z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute left-0 top-full z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none">
                 {options.map((option) => (
                   <Listbox.Option
                     key={option.value}

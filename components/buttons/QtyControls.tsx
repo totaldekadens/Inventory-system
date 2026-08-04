@@ -1,98 +1,80 @@
 import { IconMinus, IconPlus } from "@tabler/icons-react";
-import {
-  PopulatedArticleDocument,
-  articleContext,
-} from "../context/ArticleProvider";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { PopulatedArticleDocument } from "../context/ArticleProvider";
 import ScrapCause from "../ScrapCause";
 
 interface Props {
   articleObject: PopulatedArticleDocument;
 }
 
-// Todo: There are som small bugs. Go back and fix later.
-
 const QtyControls = ({ articleObject }: Props) => {
-  const [originQty, setOriginQty] = useState(articleObject.qty);
-  const [close, setClose] = useState(true);
-  const { currentArticles } = useContext(articleContext);
+  const [originalQty, setOriginalQty] = useState(articleObject.qty);
+
   const [updatedArticle, setUpdatedArticle] =
     useState<PopulatedArticleDocument>(articleObject);
 
-  let articlesCopy = [...currentArticles];
+  const [showQuantityDialog, setShowQuantityDialog] = useState(false);
 
-  const addQty = async (article: PopulatedArticleDocument) => {
-    try {
-      setClose(false);
-      let foundIndex = articlesCopy.findIndex(
-        (artCopy) => artCopy._id === article._id
-      );
-      if (foundIndex >= 0) {
-        articlesCopy[foundIndex].qty++;
-        const updated: any = { ...articlesCopy[foundIndex] };
-        setUpdatedArticle(updated);
-        // test
-        if (articleObject.qty == originQty) {
-          setClose(true);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  useEffect(() => {
+    setOriginalQty(articleObject.qty);
+    setUpdatedArticle(articleObject);
+    setShowQuantityDialog(false);
+  }, [articleObject]);
+
+  const addQty = () => {
+    setUpdatedArticle((previousArticle) => ({
+      ...previousArticle,
+      qty: previousArticle.qty + 1,
+    }));
+
+    setShowQuantityDialog(true);
   };
 
-  const deleteQty = async (article: PopulatedArticleDocument) => {
-    try {
-      setClose(false);
-      let foundIndex = articlesCopy.findIndex(
-        (artCopy) => artCopy._id === article._id
-      );
-      if (foundIndex >= 0) {
-        if (articlesCopy[foundIndex].qty > 0) {
-          articlesCopy[foundIndex].qty--;
-          const updated: any = { ...articlesCopy[foundIndex] };
-          setUpdatedArticle(updated);
-          // test
-          if (articleObject.qty == originQty) {
-            setClose(true);
-          }
-        }
-      }
-    } catch (err) {
-      console.error(err);
+  const removeQty = () => {
+    if (updatedArticle.qty <= 0) {
+      return;
     }
+
+    setUpdatedArticle((previousArticle) => ({
+      ...previousArticle,
+      qty: previousArticle.qty - 1,
+    }));
+
+    setShowQuantityDialog(true);
   };
 
   return (
-    <div className="relative flex items-center gap-2 justify-center">
-      {articleObject.qty != 0 ? (
-        <div
-          onClick={() => deleteQty(articleObject)}
-          className="rounded-full cursor-pointer p-1 flex items-center justify-center border "
-        >
-          <IconMinus width={16} height={16} />{" "}
-        </div>
-      ) : (
-        <div className=" p-1 w-[26px] h-[26px] "></div>
-      )}
-      {articleObject.qty} st{" "}
-      <div className="rounded-full cursor-pointer p-1 flex items-center justify-center border">
-        <IconPlus
-          onClick={() => addQty(articleObject)}
-          width={16}
-          height={16}
-        />
-      </div>
-      {/* Special with quantity if it changes */}
-      {!close ? (
+    <div className="relative flex items-center justify-center gap-2">
+      <button
+        type="button"
+        aria-label="Minska antal"
+        disabled={updatedArticle.qty === 0}
+        onClick={removeQty}
+        className="flex h-[26px] w-[26px] items-center justify-center rounded-full border p-1 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <IconMinus width={16} height={16} aria-hidden="true" />
+      </button>
+
+      <span>{updatedArticle.qty} st</span>
+
+      <button
+        type="button"
+        aria-label="Öka antal"
+        onClick={addQty}
+        className="flex h-[26px] w-[26px] items-center justify-center rounded-full border p-1"
+      >
+        <IconPlus width={16} height={16} aria-hidden="true" />
+      </button>
+
+      {showQuantityDialog && updatedArticle.qty !== originalQty && (
         <ScrapCause
-          newQty={articleObject.qty}
-          oldQty={originQty}
-          article={articleObject}
+          newQty={updatedArticle.qty}
+          oldQty={originalQty}
+          article={updatedArticle}
           setUpdatedArticle={setUpdatedArticle}
-          setClose={setClose}
+          setClose={(close) => setShowQuantityDialog(!close)}
         />
-      ) : null}
+      )}
     </div>
   );
 };

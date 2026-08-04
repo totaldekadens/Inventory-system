@@ -6,7 +6,7 @@ import {
   PopulatedArticleDocument,
   articleContext,
 } from "./context/ArticleProvider";
-import { todayDate } from "@/lib/setDate";
+import { getTodayDate } from "@/lib/setDate";
 import clsx from "clsx";
 import Button from "./buttons/Button";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
@@ -41,8 +41,12 @@ const ScrapCause = ({
     useState<string>("repair");
 
   const resetQty = () => {
-    article.qty = oldQty;
-    setUpdatedArticle(article);
+    setUpdatedArticle((previousArticle) => ({
+      ...previousArticle,
+      qty: oldQty,
+    }));
+
+    setClose(true);
   };
 
   const formik = useFormik({
@@ -65,44 +69,39 @@ const ScrapCause = ({
             return;
           }
 
+          const virtualLocationId =
+            "64a95847dec1488ee60d10cd" as unknown as Types.ObjectId;
+
           if (
             newQty > 0 &&
-            selectedLocation?._id ==
-              ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
+            selectedLocation?._id.toString() === virtualLocationId.toString()
           ) {
-            alert(
-              "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats ", // Check why setError doesnt work
+            setError(
+              "Lagerplats '00' är endast till för artiklar med lagersaldo 0. Välj en annan lagerplats.",
             );
             return;
           }
 
-          const updated: any = { ...article };
-
-          if (oldQty == 0) {
-            updated.inventoryLocation = selectedLocation?._id;
-          } else if (newQty == 0) {
-            updated.inventoryLocation =
-              "64a95847dec1488ee60d10cd" as unknown as Types.ObjectId;
-          } else {
-            updated.inventoryLocation = updated.inventoryLocation._id;
-          }
-
-          if (newQty < oldQty) {
-            if (selectedScrapCause == "sold" && !sellPrice) {
-              setError("Fyll i pris per enhet du sålde artiklarna för");
-              return;
-            }
-          }
-
-          // Updates the article
-          const updateArticle = { ...updated, lastUpdated: todayDate };
+          const updatedArticle = {
+            ...article,
+            qty: newQty,
+            price:
+              sellPrice !== undefined && sellPrice !== article.price
+                ? sellPrice
+                : article.price,
+            lastUpdated: getTodayDate(),
+            inventoryLocation:
+              newQty === 0
+                ? ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
+                : selectedLocation?._id,
+          };
 
           const request2 = {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(updateArticle),
+            body: JSON.stringify(updatedArticle),
           };
 
           const response2 = await fetch("/api/article", request2);
@@ -129,11 +128,14 @@ const ScrapCause = ({
           const createTransactionHistory = {
             direction: newQty < oldQty ? "-" : "+",
             cause: newQty < oldQty ? scrapCause?.label : "",
-            pricePerUnit: Number(sellPrice),
-            qty: oldQty > newQty ? Math.abs(newQty - oldQty) : newQty - oldQty,
-            article: article,
+            pricePerUnit:
+              selectedScrapCause == "sold" &&
+              sellPrice !== undefined &&
+              Number(sellPrice),
+            qty: Math.abs(newQty - oldQty),
+            article: updatedArticle,
             comment: scrapComment,
-            createdDate: todayDate,
+            createdDate: getTodayDate(),
           };
 
           const request = {
@@ -147,7 +149,9 @@ const ScrapCause = ({
           const response = await fetch("/api/transactionhistory", request);
           const result = await response.json();
           if (!result.success) {
-            setError("Problem vid transaktion. Ingen är uppdaterat");
+            setError(
+              "Artikelns antal uppdaterades, men transaktionshistoriken kunde inte sparas.",
+            );
             return;
           }
         } else {
@@ -163,7 +167,7 @@ const ScrapCause = ({
   const { errors, touched, values, handleChange, handleSubmit } = formik;
 
   const inputClass =
-    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-1.5 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:leading-6 md:h-auto";
+    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-3 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset text-base sm:leading-6 md:h-auto";
   return (
     <>
       <img
@@ -180,7 +184,9 @@ const ScrapCause = ({
         onSubmit={handleSubmit}
         className="text-sm rounded-md p-4  border absolute top-11 md:-top-20 left-0 md:left-28 bg-white z-50 shadow-lg"
       >
-        <div className="font-medium mb-2">Överblick ändring av antal</div>
+        <div className="font-semibold text-lg mb-2">
+          Överblick ändring av antal
+        </div>
         {newQty > oldQty && oldQty != 0 ? (
           <div>
             <div>
@@ -221,7 +227,7 @@ const ScrapCause = ({
               Från tidigare antal: {oldQty} st till: {newQty} st
             </div>
             <div>
-              <div className="font-medium mt-3 mb-1 ">
+              <div className="font-semibold text-base mt-6 mb-1 ">
                 Anledning till uttag?
               </div>
               <SelectSimple
@@ -244,7 +250,7 @@ const ScrapCause = ({
                       placeholder={"Såld för?"}
                     />
                     <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                      <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
+                      <div className="inline-flex items-center z-10 rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
                         Kr / enhet
                       </div>
                     </div>
@@ -262,8 +268,8 @@ const ScrapCause = ({
                 autoComplete="scrapComment"
                 value={values.scrapComment}
                 onChange={handleChange}
-                className={inputClass}
-                placeholder="Kommentar"
+                className={clsx(`mt-2`, inputClass)}
+                placeholder="Kommentar..."
               />
             </div>
           </div>

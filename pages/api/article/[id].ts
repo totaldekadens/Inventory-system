@@ -3,11 +3,11 @@ import Article from "@/models/ArticleModel";
 import { NextApiRequest, NextApiResponse } from "next";
 import InventoryLocation from "@/models/InventoryLocationModel";
 import Vehicle from "@/models/VehicleModel";
-import { todayDate } from "@/lib/setDate";
+import { getTodayDate } from "@/lib/setDate";
 import TransactionHistory from "@/models/TransactionHistoryModel";
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const {
     query: { id },
@@ -58,11 +58,11 @@ export default async function handler(
           qty: findArticle.qty,
           article: findArticle,
           comment: "",
-          createdDate: todayDate,
+          createdDate: getTodayDate(),
         };
 
         const transactionHistory = await TransactionHistory.create(
-          createTransactionHistory
+          createTransactionHistory,
         );
 
         if (!transactionHistory) {
