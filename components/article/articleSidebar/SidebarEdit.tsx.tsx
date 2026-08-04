@@ -26,7 +26,6 @@ import RadioButtonsQuantity, {
 import { Types } from "mongoose";
 import SearchBarKombo from "@/components/searchbars/SearchBarKombo";
 import { scrapCauses } from "@/lib/config";
-import { strictEqual } from "assert";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -87,23 +86,15 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
       scrapComment,
     }) => {
       try {
-        // Todo: Make this part shorter.
+        const enteredQty = Math.abs(Number(qty) || 0);
 
         const newQty =
-          id == "set"
-            ? qty
-            : id == "add"
-              ? article.qty + qty
-              : id == "remove"
-                ? article.qty - qty
-                : qty;
+          id === "set"
+            ? enteredQty
+            : id === "add"
+              ? article.qty + enteredQty
+              : article.qty - enteredQty;
 
-        console.log("onSubmit: ", {
-          id,
-          qty,
-          newQty,
-          articleQty: article.qty,
-        });
         if (newQty < 0) {
           setError("Du kan inte ta bort mer än vad som finns tillgängligt");
           return;
@@ -144,7 +135,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
           const createTransactionHistory = {
             direction: newQty < article.qty ? "-" : "+",
             cause: newQty < article.qty ? scrapCause?.label : "",
-            pricePerUnit: Number(sellPrice),
+            pricePerUnit: Number(selectedScrapCause == "sold" && sellPrice),
             qty:
               article.qty > newQty
                 ? Math.abs(newQty - article.qty)
@@ -223,7 +214,6 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
           alert("Artikeln är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
           setImageList([]);
           setFileList([]);
-          article.qty = newQty;
           setId("set");
 
           // If new quantity = 0 the article will be moved to a virtual location
@@ -255,7 +245,22 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
     formik;
 
   // Sets negative numbers to positive
-  const newQty = values.qty < 0 ? Math.abs(values.qty) : values.qty;
+  const enteredQty = Math.abs(Number(values.qty) || 0);
+
+  const resultingQty =
+    id === "set"
+      ? enteredQty
+      : id === "add"
+        ? article.qty + enteredQty
+        : article.qty - enteredQty;
+
+  const quantityChange = resultingQty - article.qty;
+
+  const isIncrease = quantityChange > 0;
+  const isDecrease = quantityChange < 0;
+  const hasQuantityChanged = quantityChange !== 0;
+  const hasInvalidQuantity = resultingQty < 0;
+
   const newPrice = values?.price
     ? values?.price < 0
       ? Math.abs(values.price)
@@ -276,6 +281,20 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
   const inputClass =
     "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-3 mt-2 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset text-base sm:leading-6 md:h-auto";
 
+  useEffect(() => {
+    setFieldValue("qty", id === "set" ? article.qty : 1);
+    setError("");
+  }, [id, article.qty, setFieldValue]);
+
+  useEffect(() => {
+    setFieldValue("qty", id === "set" ? article.qty : 1);
+
+    setSelectedScrapCause("repair");
+    setFieldValue("scrapComment", "");
+    setFieldValue("sellPrice", article.price);
+
+    setError("");
+  }, [id]);
   return (
     <aside
       className="flex flex-col col-span-1 md:px-6 mx-auto max-w-8xl py-6 w-full h-full"
@@ -332,23 +351,39 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
             {/* Quantity */}
             <div>
               <label className="font-bold">Antal</label>
-              <p className="mt-3 text-right w-full">
+
+              <p className="mt-3 w-full text-right">
                 Tillgängligt antal: {article.qty} st
               </p>
+
               <RadioButtonsQuantity id={id} setId={setId} />
+
               <div className="relative">
                 <input
                   id="qty"
                   name="qty"
                   type="number"
                   min={0}
-                  autoComplete="qty"
-                  value={newQty}
-                  onChange={handleChange}
+                  autoComplete="off"
+                  value={values.qty}
+                  onChange={(event) => {
+                    const value = Math.abs(Number(event.target.value));
+
+                    setFieldValue("qty", Number.isNaN(value) ? 0 : value);
+
+                    setError("");
+                  }}
                   required
-                  className={clsx(`pr-8`, inputClass)}
-                  placeholder="Antal*"
+                  className={clsx("pr-8", inputClass)}
+                  placeholder={
+                    id === "set"
+                      ? "Ange nytt antal"
+                      : id === "add"
+                        ? "Antal att lägga till"
+                        : "Antal att ta bort"
+                  }
                 />
+
                 <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
                   <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
                     st
@@ -356,183 +391,86 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
                 </div>
               </div>
 
-              {/* Special with quantity if it changes */}
-              {article.qty != newQty && id == "set" ? (
-                <div className="text-sm rounded-md p-2  m-3 border">
-                  <div className="font-medium mb-2">
+              {hasQuantityChanged && enteredQty > 0 && (
+                <div className="m-3 rounded-md border p-3 text-sm">
+                  <div className="mb-2 font-medium">
                     Överblick ändring av antal
                   </div>
 
-                  {newQty > article.qty ? (
-                    <div>
-                      <div>
-                        Du vill öka antalet med: {newQty - article.qty}{" "}
-                        {newQty - article.qty > 1 ? "artiklar" : "artikel"}
+                  <div>
+                    Du vill {isIncrease ? "öka" : "minska"} antalet med{" "}
+                    <strong>
+                      {Math.abs(quantityChange)}{" "}
+                      {Math.abs(quantityChange) === 1 ? "artikel" : "artiklar"}
+                    </strong>
+                    .
+                  </div>
+
+                  <div className="mt-1">
+                    Från tidigare antal: <strong>{article.qty} st</strong> till:{" "}
+                    <strong>{resultingQty} st</strong>
+                  </div>
+
+                  {hasInvalidQuantity && (
+                    <ErrorMessage message="Du kan inte ta bort mer än vad som finns tillgängligt" />
+                  )}
+
+                  {isDecrease && !hasInvalidQuantity && (
+                    <div className="mt-3">
+                      <div className="mb-1 font-medium">
+                        Anledning till uttag?
                       </div>
-                      <div>
-                        Från tidigare antal: {article.qty} st till: {newQty} st
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div>
-                        Du vill minska antalet med:{" "}
-                        {Math.abs(newQty - article.qty)}{" "}
-                        {Math.abs(newQty - article.qty) > 1
-                          ? "artiklar"
-                          : "artikel"}
-                      </div>
-                      <div>
-                        Från tidigare antal: {article.qty} st till: {newQty} st
-                      </div>
-                      <div>
-                        <div className="font-medium mt-3 mb-1 ">
-                          Anledning till uttag?
-                        </div>
-                        <SelectSimple
-                          value={selectedScrapCause}
-                          onChange={setSelectedScrapCause}
-                          options={scrapCauses}
-                        />
-                        {selectedScrapCause == "sold" ? (
-                          <div>
-                            <div className="relative mb-1 mt-2">
-                              <input
-                                id="sellPrice"
-                                name="sellPrice"
-                                min={0}
-                                type="number"
-                                autoComplete="sellPrice"
-                                value={newSellPrice}
-                                onChange={handleChange}
-                                className={clsx(`pr-20`, inputClass)}
-                                placeholder="Pris per enhet?"
-                              />
-                              <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                                <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
-                                  Kr / enhet
-                                </div>
+
+                      <SelectSimple
+                        value={selectedScrapCause}
+                        onChange={setSelectedScrapCause}
+                        options={scrapCauses}
+                      />
+
+                      {selectedScrapCause === "sold" && (
+                        <div>
+                          <div className="relative mb-1 mt-2">
+                            <input
+                              id="sellPrice"
+                              name="sellPrice"
+                              min={0}
+                              type="number"
+                              autoComplete="off"
+                              value={newSellPrice}
+                              onChange={handleChange}
+                              className={clsx("pr-20", inputClass)}
+                              placeholder="Pris per enhet?"
+                            />
+
+                            <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                              <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
+                                Kr / enhet
                               </div>
                             </div>
-                            <div className="w-full text-right mb-4">
-                              Sålt för totalt:{" "}
-                              {Number(values.sellPrice) *
-                                Math.abs(newQty - article.qty)}{" "}
-                              kr
-                            </div>
                           </div>
-                        ) : null}
-                        <input
-                          id="scrapComment"
-                          name="scrapComment"
-                          type="text"
-                          autoComplete="scrapComment"
-                          value={values.scrapComment}
-                          onChange={handleChange}
-                          className={inputClass}
-                          placeholder="Kommentar"
-                        />
-                      </div>
+
+                          <div className="mb-4 w-full text-right">
+                            Sålt för totalt:{" "}
+                            {Number(values.sellPrice) *
+                              Math.abs(quantityChange)}{" "}
+                            kr
+                          </div>
+                        </div>
+                      )}
+
+                      <input
+                        id="scrapComment"
+                        name="scrapComment"
+                        type="text"
+                        autoComplete="off"
+                        value={values.scrapComment}
+                        onChange={handleChange}
+                        className={inputClass}
+                        placeholder="Kommentar"
+                      />
                     </div>
                   )}
                 </div>
-              ) : (
-                <>
-                  {id == "add" && newQty > 0 ? (
-                    /* Här lägger vi till antal */
-                    <div className="text-sm rounded-md p-2  m-3 border">
-                      <div className="font-medium mb-2">
-                        Överblick ändring av antal
-                      </div>
-                      <div>
-                        <div>
-                          Du vill öka antalet med: {newQty}{" "}
-                          {newQty > 1 ? "artiklar" : "artikel"}
-                        </div>
-                        <div>
-                          Från tidigare antal: {article.qty} st till:{" "}
-                          {newQty + article.qty} st
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      {id == "remove" && newQty > 0 ? (
-                        /* Här tar vi bort antal */
-                        <div className="text-sm rounded-md p-2  m-3 border">
-                          <div className="font-medium mb-2">
-                            Överblick ändring av antal
-                          </div>
-                          <div>
-                            <div>
-                              Du vill minska antalet med: {newQty}
-                              {newQty > 1 ? " artiklar" : " artikel"}
-                            </div>
-                            <div>
-                              Från tidigare antal: {article.qty} st till:{" "}
-                              {article.qty - newQty} st
-                            </div>
-                            {article.qty - newQty < 0 ? (
-                              <ErrorMessage
-                                message={
-                                  "Du kan inte ta ut mer än vad du har tillgängligt"
-                                }
-                              />
-                            ) : null}
-                            <div>
-                              <div className="font-medium mt-3 mb-1 ">
-                                Anledning till uttag?
-                              </div>
-                              <SelectSimple
-                                value={selectedScrapCause}
-                                onChange={setSelectedScrapCause}
-                                options={scrapCauses}
-                              />
-                              {selectedScrapCause == "sold" ? (
-                                <div>
-                                  <div className="relative mb-1 mt-2">
-                                    <input
-                                      id="sellPrice"
-                                      name="sellPrice"
-                                      min={0}
-                                      type="number"
-                                      autoComplete="sellPrice"
-                                      value={newSellPrice}
-                                      onChange={handleChange}
-                                      className={clsx(`pr-20`, inputClass)}
-                                      placeholder="Pris per enhet?"
-                                    />
-                                    <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                                      <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
-                                        Kr / enhet
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="w-full text-right mb-4">
-                                    Sålt för totalt:{" "}
-                                    {Number(values.sellPrice) *
-                                      Math.abs(newQty - article.qty)}{" "}
-                                    kr
-                                  </div>
-                                </div>
-                              ) : null}
-                              <input
-                                id="scrapComment"
-                                name="scrapComment"
-                                type="text"
-                                autoComplete="scrapComment"
-                                value={values.scrapComment}
-                                onChange={handleChange}
-                                className={inputClass}
-                                placeholder="Kommentar"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ) : null}
-                    </>
-                  )}
-                </>
               )}
             </div>
 
