@@ -189,7 +189,10 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
           condition,
           purchaseValue,
           forSale,
-          price,
+          price:
+            newSellPrice !== undefined && newSellPrice !== price
+              ? newSellPrice
+              : price,
           comment,
           images: imageList.length > 0 ? imageList : article.images,
           inventoryLocation:

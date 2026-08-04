@@ -33,6 +33,17 @@ const TableOverview = () => {
     useRemoveBackgroundScroll(open);
   }, [open]);
 
+  useEffect(() => {
+    if (!currentArticle) return;
+    const foundUpdatedArticle = currentArticles.find(
+      (item) => item._id === currentArticle?._id,
+    );
+
+    if (!foundUpdatedArticle) return;
+
+    setCurrentArticle(foundUpdatedArticle);
+  }, [currentArticles]);
+
   return (
     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
       <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 ">
