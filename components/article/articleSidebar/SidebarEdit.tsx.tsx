@@ -593,7 +593,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
         <div className="mt-5 w-full flex flex-col sm:flex-row gap-2 justify-end">
           <Button
             title="Avbryt"
-            variant="danger"
+            variant="modest"
             className=" px-3 py-3  font-semibold"
             onClick={() => setEdit(false)}
           />

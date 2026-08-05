@@ -65,11 +65,6 @@ const TableOverview = () => {
               />
               <Th header="Antal" className="px-3 hidden md:flex text-left" />
               <Th header="Lagerplats" className="pl-3 text-left " />
-              <Th
-                header="Remove"
-                className="relative pl-3 pr-4 sm:pr-0"
-                empty
-              />
             </tr>
           </thead>
 

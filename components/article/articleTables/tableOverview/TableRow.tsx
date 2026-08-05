@@ -1,11 +1,7 @@
 import QtyControls from "@/components/article/QtyControls";
-import {
-  PopulatedArticleDocument,
-  articleContext,
-} from "@/components/context/ArticleProvider";
+import { PopulatedArticleDocument } from "@/components/context/ArticleProvider";
 import { Spoiler } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -16,8 +12,6 @@ interface Props {
 }
 
 const TableRow = ({ article, setOpen, setCurrentArticle }: Props) => {
-  const { currentArticles, setCurrentArticles } = useContext(articleContext);
-
   const path = `https://res.cloudinary.com/dkzh2lxon/image/upload/w_200/q_60/v1688383484/inventory/${article.images[0]}`;
 
   return (
@@ -120,41 +114,6 @@ const TableRow = ({ article, setOpen, setCurrentArticle }: Props) => {
       <td className="whitespace-nowrap pl-3 py-5 text-sm  text-gray-500">
         <div className="flex items-end md:items-center h-24">
           {article.inventoryLocation.name}
-        </div>
-      </td>
-      {/* Edit/Remove - Icons */}
-      <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-2 ">
-        <div
-          title="Radera artikel"
-          className="flex h-24 flex-col md:flex-row items-center justify-end md:justify-center"
-        >
-          <IconTrash
-            className="text-red-600 hover:text-red-900 cursor-pointer"
-            onClick={async () => {
-              const test = confirm(
-                `Är du säker på att du vill radera "${article.title}"?
-
-Artikeln är kopplad till lagerplatsen "${article.inventoryLocation.name}".
-
-All information om artikeln kommer att raderas permanent och kan inte återställas. Om du ångrar dig i efterhand behöver du skapa artikeln på nytt.`,
-              );
-              // Todo: Update this one later
-              if (test) {
-                try {
-                  await fetch(`api/article/${article._id}`, {
-                    method: "DELETE",
-                  });
-                  const response = await fetch("/api/article/");
-                  const result = await response.json();
-                  if (result.success) {
-                    setCurrentArticles(result.data);
-                  }
-                } catch (err) {
-                  console.error(err);
-                }
-              }
-            }}
-          />
         </div>
       </td>
     </tr>
