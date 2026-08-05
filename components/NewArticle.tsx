@@ -335,7 +335,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 className={inputClass}
                 placeholder="Övrig kommentar"
               />
-              <ForSaleRadioButton forSale={forSale} setForSale={setForSale} />
+              <ForSaleRadioButton setForSale={setForSale} />
               {forSale ? (
                 <div className="relative">
                   <input

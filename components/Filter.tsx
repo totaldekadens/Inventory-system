@@ -20,8 +20,9 @@ const Filter = () => {
 
   const [saleFilter, setSaleFilter] = useState<SaleFilter>("all");
 
-  const [selectedVehicleModel, setSelectedVehicleModel] =
-    useState<VehicleDocument | null>(null);
+  const [selectedVehicleModel, setSelectedVehicleModel] = useState<any | null>(
+    null,
+  );
 
   const [selectedInventoryLocation, setSelectedInventoryLocation] = useState<
     any | null

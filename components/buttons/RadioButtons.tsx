@@ -21,33 +21,33 @@ const RadioButtons = ({ value, onChange, options, label }: Props) => {
         <span className="whitespace-nowrap text-gray-900">{label}</span>
       )}
 
-      <RadioGroup value={value} onChange={onChange} className="ml-2 mt-2">
-        <div className="flex flex-wrap items-center space-x-6 sm:space-x-10">
+      <RadioGroup value={value} onChange={onChange} className="mt-2">
+        <div className="flex flex-wrap gap-2 sm:gap-4">
           {options.map((option) => (
-            <div key={option.value} className="flex items-center">
-              <RadioGroup.Option
-                id={option.value}
-                value={option.value}
-                className={({ active, checked }) =>
-                  classNames(
-                    active &&
-                      checked &&
-                      "bg-[#4A7660] ring ring-[#4A7660] ring-offset-1",
-                    !active &&
-                      checked &&
-                      "bg-[#4A7660] ring-4 ring-[#4A7660] sm:ring-2",
-                    "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-2 ring-2 focus:outline-none",
-                  )
-                }
-              />
+            <RadioGroup.Option
+              key={option.value}
+              value={option.value}
+              className="flex cursor-pointer items-center rounded-md px-3 py-2 transition [-webkit-tap-highlight-color:transparent]"
+            >
+              {({ active, checked }) => (
+                <>
+                  <span
+                    className={classNames(
+                      "flex h-5 w-5 items-center justify-center rounded-full border",
+                      checked
+                        ? "border-[#4A7660] bg-[#4A7660]"
+                        : "border-gray-400",
+                    )}
+                  >
+                    {checked && (
+                      <span className="h-2 w-2 rounded-full bg-white" />
+                    )}
+                  </span>
 
-              <label
-                htmlFor={option.value}
-                className="ml-3 block cursor-pointer leading-6 text-gray-900"
-              >
-                {option.label}
-              </label>
-            </div>
+                  <span className="ml-3 text-gray-900">{option.label}</span>
+                </>
+              )}
+            </RadioGroup.Option>
           ))}
         </div>
       </RadioGroup>

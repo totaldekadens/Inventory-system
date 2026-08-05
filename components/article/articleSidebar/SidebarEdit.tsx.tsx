@@ -554,11 +554,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
         </div>
 
         {/* For sale */}
-        <ForSaleRadioButton
-          article={article}
-          forSale={forSale}
-          setForSale={setForSale}
-        />
+        <ForSaleRadioButton setForSale={setForSale} />
         {forSale ? (
           <div className="mt-5">
             <label className="font-bold">Försäljningspris</label>
