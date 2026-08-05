@@ -1,7 +1,7 @@
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { PopulatedArticleDocument } from "../context/ArticleProvider";
-import ScrapCause from "../ScrapCause";
+import ScrapCause from "./ScrapCause";
 
 interface Props {
   articleObject: PopulatedArticleDocument;

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import RadioButtons from "./RadioButtons";
+import RadioButtons from "../../ui/RadioButtons";
 
 interface Props {
   id: UpdateMode;
@@ -8,7 +8,7 @@ interface Props {
 
 export type UpdateMode = "set" | "add" | "remove";
 
-const RadioButtonsQuantity = ({ id, setId }: Props) => {
+const QuantityModeField = ({ id, setId }: Props) => {
   const inventoryAdjustmentOptions: {
     value: UpdateMode;
     label: string;
@@ -31,4 +31,4 @@ const RadioButtonsQuantity = ({ id, setId }: Props) => {
   );
 };
 
-export default RadioButtonsQuantity;
+export default QuantityModeField;

@@ -29,7 +29,7 @@ const RadioButtons = ({ value, onChange, options, label }: Props) => {
               value={option.value}
               className="flex cursor-pointer items-center rounded-md px-3 py-2 transition [-webkit-tap-highlight-color:transparent]"
             >
-              {({ active, checked }) => (
+              {({ checked }) => (
                 <>
                   <span
                     className={classNames(

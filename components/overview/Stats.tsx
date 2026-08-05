@@ -5,11 +5,11 @@ import {
   type Icon,
 } from "@tabler/icons-react";
 import { useContext } from "react";
-import { inventoryLocationContext } from "./context/InventoryLocationProvider";
+import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import {
   articleContext,
   PopulatedArticleDocument,
-} from "./context/ArticleProvider";
+} from "../context/ArticleProvider";
 
 const formatCurrency = (value: number) => `${value.toLocaleString("sv-SE")} kr`;
 

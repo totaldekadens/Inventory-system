@@ -1,4 +1,4 @@
-import QtyControls from "@/components/buttons/QtyControls";
+import QtyControls from "@/components/article/QtyControls";
 import {
   PopulatedArticleDocument,
   articleContext,

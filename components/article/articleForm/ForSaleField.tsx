@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import RadioButtons from "./RadioButtons";
+import RadioButtons from "../../ui/RadioButtons";
 
 interface Props {
   setForSale: Dispatch<SetStateAction<boolean>>;
 }
 
-const ForSaleRadioButton = ({ setForSale }: Props) => {
+const ForSaleField = ({ setForSale }: Props) => {
   const forSaleRadio = [
     { value: "yes", label: "Ja" },
     { value: "no", label: "Nej" },
@@ -35,4 +35,4 @@ const ForSaleRadioButton = ({ setForSale }: Props) => {
   );
 };
 
-export default ForSaleRadioButton;
+export default ForSaleField;

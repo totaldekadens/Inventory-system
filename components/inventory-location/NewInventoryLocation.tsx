@@ -1,16 +1,8 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useContext, useState } from "react";
-import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
-import {
-  IconExclamationCircle,
-  IconPigMoney,
-  IconRefresh,
-  IconX,
-} from "@tabler/icons-react";
+import { IconPigMoney } from "@tabler/icons-react";
 import { inventoryLocationContext } from "../context/InventoryLocationProvider";
-import { articleContext } from "../context/ArticleProvider";
-import HoverInfo from "../HoverInfo";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -27,12 +19,9 @@ export const ErrorMessage = ({ message }: any) => {
   );
 };
 
-const NewLocation = () => {
+const NewInventoryLocation = () => {
   const [error, setError] = useState<string>("");
-  const { articles } = useContext(articleContext);
-  const { inventoryLocations, setInventoryLocations } = useContext(
-    inventoryLocationContext,
-  );
+  const { setInventoryLocations } = useContext(inventoryLocationContext);
 
   const formik = useFormik({
     initialValues: {
@@ -149,4 +138,4 @@ const NewLocation = () => {
   );
 };
 
-export default NewLocation;
+export default NewInventoryLocation;

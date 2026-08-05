@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import RadioButtons from "./buttons/RadioButtons";
-import { articleContext } from "./context/ArticleProvider";
-import SearchBar from "./searchbars/SearchBar";
-import SearchBarKombo from "./searchbars/SearchBarKombo";
-import { VehicleDocument } from "@/models/VehicleModel";
-import SelectSimple from "./searchbars/SelectSimple";
+import RadioButtons from "../ui/RadioButtons";
+import { articleContext } from "../context/ArticleProvider";
+import SearchBar from "../ui/SearchBar";
+import SearchBarKombo from "../ui/SearchBarKombo";
+import SelectSimple from "../ui/SelectSimple";
 import {
   SaleFilter,
   saleOptions,
@@ -12,7 +11,7 @@ import {
   stockOptions,
 } from "@/lib/config";
 
-const Filter = () => {
+const ArticleFilters = () => {
   const { setCurrentArticles, articles, currentArticles } =
     useContext(articleContext);
 
@@ -138,4 +137,4 @@ const Filter = () => {
   );
 };
 
-export default Filter;
+export default ArticleFilters;

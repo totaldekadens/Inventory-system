@@ -9,7 +9,12 @@ type Props = {
   title?: string;
 };
 
-const UploadForm: FC<Props> = ({ setImageList, value, setValue, title }) => {
+const UploadImagesForm: FC<Props> = ({
+  setImageList,
+  value,
+  setValue,
+  title,
+}) => {
   const [createObjectURL, setCreateObjectURL] = useState<string[]>([]);
 
   useEffect(() => {
@@ -53,4 +58,4 @@ const UploadForm: FC<Props> = ({ setImageList, value, setValue, title }) => {
   );
 };
 
-export default UploadForm;
+export default UploadImagesForm;

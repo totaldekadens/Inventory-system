@@ -1,7 +1,7 @@
-import Hero from "./Hero";
+import Hero from "../layout/Hero";
 import Stats from "./Stats";
-import Filter from "./Filter";
-import TableOverview from "./tables/tableOverview/TableOverview";
+import ArticleFilters from "./ArticleFilters";
+import TableOverview from "../article/articleTables/tableOverview/TableOverview";
 
 const Overview = () => {
   return (
@@ -11,7 +11,7 @@ const Overview = () => {
       <div className="flow-root">
         <div className="w-full text-5xl mb-7 ">Ditt lager</div>
         {/* Searchbars and filter */}
-        <Filter />
+        <ArticleFilters />
         {/* Table of all filtered articles */}
         <TableOverview />
         {/* Stats of articles and inventory locations */}

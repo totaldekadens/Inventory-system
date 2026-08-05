@@ -1,17 +1,17 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react";
-import SelectSimple from "./searchbars/SelectSimple";
+import SelectSimple from "../ui/SelectSimple";
 import * as Yup from "yup";
 import { ErrorMessage, useFormik } from "formik";
 import {
   PopulatedArticleDocument,
   articleContext,
-} from "./context/ArticleProvider";
+} from "../context/ArticleProvider";
 import { getTodayDate } from "@/lib/setDate";
 import clsx from "clsx";
-import Button from "./buttons/Button";
+import Button from "../ui/Button";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { Types } from "mongoose";
-import SearchBarKombo from "./searchbars/SearchBarKombo";
+import SearchBarKombo from "../ui/SearchBarKombo";
 import { scrapCauses } from "@/lib/config";
 interface Props {
   newQty: number;

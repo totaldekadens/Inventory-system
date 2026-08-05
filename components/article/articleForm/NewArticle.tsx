@@ -1,17 +1,17 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
-import UploadForm from "./uploadForm";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
-import { articleContext } from "./context/ArticleProvider";
-import ForSaleRadioButton from "./buttons/ForSaleRadioButton";
-import Button from "./buttons/Button";
-import SelectModels from "./searchbars/SelectModels";
+import { articleContext } from "../../context/ArticleProvider";
+import ForSaleField from "./ForSaleField";
+import Button from "../../ui/Button";
 import { Types } from "mongoose";
 import { IconX } from "@tabler/icons-react";
 import clsx from "clsx";
-import SearchBarKombo from "./searchbars/SearchBarKombo";
+import SearchBarKombo from "../../ui/SearchBarKombo";
+import UploadImagesForm from "./UploadImagesForm";
+import VehicleModelSelect from "@/components/vehicle-model/VehicleModelSelect";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -290,7 +290,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 </div>
               ) : null}
               <div className="flex flex-col gap-2">
-                <SelectModels
+                <VehicleModelSelect
                   setSelectedModel={setSelectedModels}
                   selectedModel={selectedModels}
                 />
@@ -335,7 +335,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 className={inputClass}
                 placeholder="Övrig kommentar"
               />
-              <ForSaleRadioButton setForSale={setForSale} />
+              <ForSaleField setForSale={setForSale} />
               {forSale ? (
                 <div className="relative">
                   <input
@@ -356,7 +356,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                   </div>
                 </div>
               ) : null}
-              <UploadForm
+              <UploadImagesForm
                 setImageList={setImageList}
                 setValue={setFileList}
                 value={fileList}

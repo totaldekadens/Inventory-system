@@ -1,39 +1,43 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { IconX } from "@tabler/icons-react";
-import HandleVehicleModel from "./HandleVehicleModel";
-import NewVehicleModel from "./NewVehicleModel";
-import { vehicleContext } from "../context/VehicleProvider";
-import SearchBar from "../searchbars/SearchBar";
+import { inventoryLocationContext } from "../context/InventoryLocationProvider";
+import InventoryLocationRow from "./InventoryLocationRow";
+import SearchBar from "../ui/SearchBar";
+import NewInventoryLocation from "./NewInventoryLocation";
 
 interface Props {
-  setHandleVehicleModels: Dispatch<SetStateAction<boolean>>;
+  setHandleLocations: Dispatch<SetStateAction<boolean>>;
 }
 
-const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
-  const { vehicles } = useContext(vehicleContext);
-
+const InventoryLocationManager = ({ setHandleLocations }: Props) => {
+  const { inventoryLocations, setInventoryLocations } = useContext(
+    inventoryLocationContext,
+  );
   const [query, setQuery] = useState("");
 
   const normalizedQuery = query.trim().toLowerCase();
 
-  const filteredVehicles = vehicles.filter((vehicle) => {
+  const filteredLocations = inventoryLocations.filter((location) => {
     if (!normalizedQuery) {
       return true;
     }
 
-    return vehicle.name?.toLowerCase().includes(normalizedQuery);
+    return (
+      location.name?.toLowerCase().includes(normalizedQuery) ||
+      location.description?.toLowerCase().includes(normalizedQuery)
+    );
   });
 
   return (
     <div className="pt-10 sm:pt-0 z-20 fixed inset-0 bg-black/20 flex justify-center ">
-      <div className="pt-5 sm:pt-0 pb-10  sm:px-2 sm:pb-16 shadow-lg rounded-lg absolute top-0 bottom-0 my-0 sm:my-10 md:my-20 w-full  sm:w-8/12 sm:max-w-[730px]  bg-white overflow-y-auto">
+      <div className="pt-5 sm:pt-0 pb-10  sm:px-2 sm:pb-16 shadow-lg rounded-lg absolute top-0 bottom-0 my-0 sm:my-10 md:my-20 w-full  sm:w-8/12 sm:max-w-[770px]  bg-white overflow-y-auto">
         <div className="flex sm:hidden  w-full justify-end px-5 ">
           <IconX
             className="cursor-pointer"
             width={32}
             height={32}
             onClick={() => {
-              setHandleVehicleModels(false);
+              setHandleLocations(false);
             }}
           />
         </div>
@@ -41,29 +45,31 @@ const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
           <div className="px-4 py-5 bg-white w-full">
             <div className=" w-full flex justify-between mb-4">
               <h3 className="text-xl font-medium leading-6 text-gray-900">
-                Hantera modeller
+                Hantera lagerplatser
               </h3>
               <IconX
                 className="cursor-pointer hidden sm:block"
                 onClick={() => {
-                  setHandleVehicleModels(false);
+                  setHandleLocations(false);
                 }}
               />
             </div>
             {/* Add new inventory location */}
             <div>
               <div className="py-2 text-sm mt-10  font-semibold text-gray-900 text-start max-w-[150px] w-[150px]">
-                Lägg till modell
+                Lägg till lagerplats
               </div>
               <div className="divide-gray-200 relative bg-white divide-y">
-                <NewVehicleModel />
+                {" "}
+                {/* border border-t-0 border-x-0 border-b-gray-300  */}
+                <NewInventoryLocation />
               </div>
             </div>
-            {/* Divider line */}
+
             <div className="w-full my-10 bg-gray-300 rounded-lg h-[2px]" />
 
             <div className="py-2 text-sm  mt-10  font-semibold text-gray-900 text-start max-w-[200px] w-[200px]">
-              Ändra / Ta bort modell
+              Ändra / Ta bort lagerplats
             </div>
             {/* Search inventory location */}
             <div className=" mt-3 ">
@@ -80,6 +86,9 @@ const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
                     <div className="py-2 text-sm pl-2 font-semibold text-gray-900 text-start max-w-[150px] w-[150px]">
                       Namn
                     </div>
+                    <div className="py-2 pl-2 text-sm font-semibold text-gray-900 text-start ">
+                      Beskrivning
+                    </div>
                   </div>
                   <div className="py-2 text-sm font-semibold text-gray-900 ">
                     <span className=""></span>
@@ -87,9 +96,11 @@ const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
                 </div>
               </div>
               <div className="divide-y w-full divide-gray-300 relative bg-white">
-                {filteredVehicles.map((model, i) => (
-                  <HandleVehicleModel key={i} model={model} />
-                ))}
+                {filteredLocations.length > 0
+                  ? filteredLocations.map((location, i) => (
+                      <InventoryLocationRow key={i} location={location} />
+                    ))
+                  : null}
               </div>
             </div>
           </div>
@@ -99,4 +110,4 @@ const HandleVehicleModels = ({ setHandleVehicleModels }: Props) => {
   );
 };
 
-export default HandleVehicleModels;
+export default InventoryLocationManager;

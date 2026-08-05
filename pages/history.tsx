@@ -6,8 +6,8 @@ import TransactionHistory, {
   TransactionHistoryDocument,
 } from "@/models/TransactionHistoryModel";
 import { useState } from "react";
-import SearchBar from "@/components/searchbars/SearchBarTransactionHistory";
-import TableHistory from "@/components/tables/TableHistory";
+import SearchBar from "@/components/ui/SearchBarTransactionHistory";
+import TableHistory from "@/components/article/articleTables/TableHistory";
 import Article from "@/models/ArticleModel";
 import InventoryLocation, {
   InventoryLocationDocument,
@@ -86,7 +86,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     });
 
   const descendingArticles = getArticles.sort((a, b) =>
-    a.createdDate < b.createdDate ? 1 : -1
+    a.createdDate < b.createdDate ? 1 : -1,
   );
 
   const getInventoryLocations = await InventoryLocation.find({});
@@ -96,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     await TransactionHistory.find({});
   // Sort keys from Ö - A
   const descendingHistory = getTransactionHistory.sort((a, b) =>
-    a.createdDate < b.createdDate ? 1 : -1
+    a.createdDate < b.createdDate ? 1 : -1,
   );
 
   return {

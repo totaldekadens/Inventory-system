@@ -3,7 +3,7 @@ import Header from "@/components/layout/Header";
 import { GetServerSideProps } from "next";
 import Article from "@/models/ArticleModel";
 import dbConnect from "@/lib/dbConnect";
-import Overview from "@/components/Overview";
+import Overview from "@/components/overview/Overview";
 import InventoryLocation, {
   InventoryLocationDocument,
 } from "@/models/InventoryLocationModel";
@@ -65,7 +65,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     });
 
   const descendingArticles = getArticles.sort((a, b) =>
-    a.createdDate < b.createdDate ? 1 : -1
+    a.createdDate < b.createdDate ? 1 : -1,
   );
 
   const getInventoryLocations = await InventoryLocation.find({});

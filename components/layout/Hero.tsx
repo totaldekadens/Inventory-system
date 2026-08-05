@@ -1,12 +1,10 @@
 import { IconPlus } from "@tabler/icons-react";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import NewArticle from "./NewArticle";
-import { clsx } from "@mantine/core";
-import HandleLocations from "./handleLocations/HandleLocations";
-import HandleVehicleModels from "./handleVehicleModels/HandleVehicleModels";
+import NewArticle from "../article/articleForm/NewArticle";
+import VehicleModelManager from "../vehicle-model/VehicleModelManager";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
+import InventoryLocationManager from "../inventory-location/InventoryLocationManager";
 const Hero = () => {
   const { data: session } = useSession();
   const [createArticle, setCreateArticle] = useState(false);
@@ -69,10 +67,10 @@ const Hero = () => {
         <NewArticle setCreateArticle={setCreateArticle} />
       ) : null}
       {handleLocations ? (
-        <HandleLocations setHandleLocations={setHandleLocations} />
+        <InventoryLocationManager setHandleLocations={setHandleLocations} />
       ) : null}
       {handleVehiceModels ? (
-        <HandleVehicleModels setHandleVehicleModels={setHandleVehicleModels} />
+        <VehicleModelManager setHandleVehicleModels={setHandleVehicleModels} />
       ) : null}
     </div>
   );

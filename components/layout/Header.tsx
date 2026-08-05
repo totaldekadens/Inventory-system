@@ -1,13 +1,13 @@
 import Link from "next/link";
-import LogoutButton from "../buttons/LogoutButton";
+import LogoutButton from "../ui/LogoutButton";
 import Image from "next/image";
 import { IconPlus } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import NewArticle from "../NewArticle";
-import HandleLocations from "../handleLocations/HandleLocations";
-import HandleVehicleModels from "../handleVehicleModels/HandleVehicleModels";
+import NewArticle from "../article/articleForm/NewArticle";
+import VehicleModelManager from "../vehicle-model/VehicleModelManager";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
 import MobileNavigation from "./MobileNavigation";
+import InventoryLocationManager from "../inventory-location/InventoryLocationManager";
 
 const Header = () => {
   const [createArticle, setCreateArticle] = useState(false);
@@ -71,10 +71,10 @@ const Header = () => {
         <NewArticle setCreateArticle={setCreateArticle} />
       ) : null}
       {handleLocations ? (
-        <HandleLocations setHandleLocations={setHandleLocations} />
+        <InventoryLocationManager setHandleLocations={setHandleLocations} />
       ) : null}
       {handleVehicleModels ? (
-        <HandleVehicleModels setHandleVehicleModels={setHandleVehicleModels} />
+        <VehicleModelManager setHandleVehicleModels={setHandleVehicleModels} />
       ) : null}
     </header>
   );

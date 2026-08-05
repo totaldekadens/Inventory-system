@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
-import ArticleViewHistory from "../article/articleView/ArticleViewHistory";
+import ArticleViewHistory from "../articleView/ArticleViewHistory";
 
 interface ThProps {
   header: string;
@@ -16,7 +16,7 @@ const Th = ({ header, className, empty }: ThProps) => (
     scope="col"
     className={clsx(
       `py-3.5 px-3 text-xs text-left font-semibold text-gray-900 whitespace-nowrap  `,
-      className
+      className,
     )}
   >
     {empty ? <span className="sr-only">{header}</span> : header}

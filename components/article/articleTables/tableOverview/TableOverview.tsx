@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import {
   PopulatedArticleDocument,
   articleContext,
-} from "../../context/ArticleProvider";
-import ArticleView from "../../article/articleView/ArticleView";
+} from "../../../context/ArticleProvider";
+import ArticleView from "../../articleView/ArticleView";
 import clsx from "clsx";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
 import TableRow from "./TableRow";

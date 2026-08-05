@@ -1,14 +1,10 @@
 import dbConnect from "@/lib/dbConnect";
-import TransactionHistory, {
-  TransactionHistoryDocument,
-} from "@/models/TransactionHistoryModel";
-import InventoryLocation from "@/models/InventoryLocationModel";
-import { Types } from "mongoose";
+import TransactionHistory from "@/models/TransactionHistoryModel";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const {
     query: { id },

@@ -1,16 +1,7 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useContext, useState } from "react";
-import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
-import {
-  IconExclamationCircle,
-  IconPigMoney,
-  IconRefresh,
-  IconX,
-} from "@tabler/icons-react";
-import { inventoryLocationContext } from "../context/InventoryLocationProvider";
-import { articleContext } from "../context/ArticleProvider";
-import HoverInfo from "../HoverInfo";
+import { IconPigMoney } from "@tabler/icons-react";
 import { vehicleContext } from "../context/VehicleProvider";
 
 // Yup schema to validate the form
@@ -30,7 +21,6 @@ export const ErrorMessage = ({ message }: any) => {
 
 const NewVehicleModel = () => {
   const [error, setError] = useState<string>("");
-  const { articles } = useContext(articleContext);
   const { vehicles, setVehicles } = useContext(vehicleContext);
 
   const formik = useFormik({

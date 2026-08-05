@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
-import Accordion from "../Accordion";
+import Accordion from "../../ui/Accordion";
 
 interface ThProps {
   header: string;
@@ -13,7 +13,7 @@ const Th = ({ header, className, empty }: ThProps) => (
   <div
     className={clsx(
       `py-3.5  text-sm  text-left flex flex-1  font-semibold text-gray-900 whitespace-nowrap  `,
-      className
+      className,
     )}
   >
     {empty ? <span className="sr-only">{header}</span> : header}
@@ -24,7 +24,7 @@ const TableItem = ({ header, className }: ThProps) => (
   <div
     className={clsx(
       `whitespace-nowrap text-left py-2 text-sm  flex flex-1 `,
-      className
+      className,
     )}
   >
     {header}
@@ -77,7 +77,7 @@ const TableHistoryArticle = ({ history }: Props) => {
                           style={{ flexFlow: "row" }}
                           className={clsx(
                             lastIndex == i ? `border-b-0` : `border-b`,
-                            ` border border-x-0 border-t-0 flex border-gray-200 `
+                            ` border border-x-0 border-t-0 flex border-gray-200 `,
                           )}
                         >
                           {/* Datum */}

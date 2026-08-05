@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Button from "@/components/buttons/Button";
+import Button from "@/components/ui/Button";
 import Image from "next/image";
 // Yup schema to validate the form
 const schema = Yup.object().shape({

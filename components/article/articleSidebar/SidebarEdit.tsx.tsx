@@ -2,7 +2,7 @@ import {
   PopulatedArticleDocument,
   articleContext,
 } from "../../context/ArticleProvider";
-import ForSaleRadioButton from "@/components/buttons/ForSaleRadioButton";
+import ForSaleField from "@/components/article/articleForm/ForSaleField";
 import {
   Dispatch,
   SetStateAction,
@@ -13,19 +13,22 @@ import {
 import { useFormik } from "formik";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
-import UploadForm from "@/components/uploadForm";
-import Button from "@/components/buttons/Button";
-import SelectModels from "@/components/searchbars/SelectModels";
-import { ErrorMessage, schema } from "@/components/NewArticle";
-import SelectSimple from "@/components/searchbars/SelectSimple";
+import Button from "@/components/ui/Button";
+import {
+  ErrorMessage,
+  schema,
+} from "@/components/article/articleForm/NewArticle";
+import SelectSimple from "@/components/ui/SelectSimple";
 import { getTodayDate } from "@/lib/setDate";
 import clsx from "clsx";
-import RadioButtonsQuantity, {
-  UpdateMode,
-} from "@/components/buttons/RadioButtonsQuantity";
 import { Types } from "mongoose";
-import SearchBarKombo from "@/components/searchbars/SearchBarKombo";
+import SearchBarKombo from "@/components/ui/SearchBarKombo";
 import { scrapCauses } from "@/lib/config";
+import QuantityModeField, {
+  UpdateMode,
+} from "@/components/article/articleForm/QuantityModeField";
+import UploadImagesForm from "../articleForm/UploadImagesForm";
+import VehicleModelSelect from "@/components/vehicle-model/VehicleModelSelect";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -363,7 +366,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
                 Tillgängligt antal: {article.qty} st
               </p>
 
-              <RadioButtonsQuantity id={id} setId={setId} />
+              <QuantityModeField id={id} setId={setId} />
 
               <div className="relative">
                 <input
@@ -509,7 +512,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
             {/* Models */}
             <div>
               <label className="font-bold">Fordonsmodeller</label>
-              <SelectModels
+              <VehicleModelSelect
                 setSelectedModel={setSelectedModels}
                 selectedModel={selectedModels}
               />
@@ -554,7 +557,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
         </div>
 
         {/* For sale */}
-        <ForSaleRadioButton setForSale={setForSale} />
+        <ForSaleField setForSale={setForSale} />
         {forSale ? (
           <div className="mt-5">
             <label className="font-bold">Försäljningspris</label>
@@ -571,7 +574,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
                 placeholder="Till vilket pris?"
               />
               <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
+                <div className="inline-flex items-center z-10 rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
                   kr/st (inkl. moms)
                 </div>
               </div>
@@ -580,7 +583,7 @@ const SidebarEdit = ({ article, setEdit }: Props) => {
         ) : null}
 
         {/* Upload images */}
-        <UploadForm
+        <UploadImagesForm
           setImageList={setImageList}
           setValue={setFileList}
           value={fileList}

@@ -3,9 +3,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IconX } from "@tabler/icons-react";
 import { PopulatedArticleDocument } from "@/components/context/ArticleProvider";
 import ArticleSidebar from "../articleSidebar/ArticleSidebar";
-import Slider from "@/components/Slider";
+import Slider from "@/components/ui/Slider";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
-import TableHistoryArticle from "@/components/tables/TableHistoryArticle";
+import TableHistoryArticle from "@/components/article/articleTables/TableHistoryArticle";
 
 interface Props {
   article: PopulatedArticleDocument;

@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { IconX } from "@tabler/icons-react";
-import Slider from "@/components/Slider";
+import Slider from "@/components/ui/Slider";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
-import HoverInfo from "@/components/HoverInfo";
+import HoverInfo from "@/components/ui/HoverInfo";
 
 interface Props {
   object: TransactionHistoryDocument;
