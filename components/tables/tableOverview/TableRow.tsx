@@ -128,7 +128,13 @@ const TableRow = ({ article, setOpen, setCurrentArticle }: Props) => {
           <IconX
             className="text-red-600 hover:text-red-900 cursor-pointer"
             onClick={async () => {
-              const test = confirm("Är du säker?");
+              const test = confirm(
+                `Är du säker på att du vill radera "${article.title}"?
+
+Artikeln är kopplad till lagerplatsen "${article.inventoryLocation.name}".
+
+All information om artikeln kommer att raderas permanent och kan inte återställas. Om du ångrar dig i efterhand behöver du skapa artikeln på nytt.`,
+              );
               // Todo: Update this one later
               if (test) {
                 try {
