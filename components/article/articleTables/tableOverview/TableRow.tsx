@@ -4,8 +4,8 @@ import {
   articleContext,
 } from "@/components/context/ArticleProvider";
 import { Spoiler } from "@mantine/core";
-import { IconX } from "@tabler/icons-react";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { IconTrash } from "@tabler/icons-react";
+import { Dispatch, SetStateAction, useContext } from "react";
 
 interface Props {
   article: PopulatedArticleDocument;
@@ -123,9 +123,12 @@ const TableRow = ({ article, setOpen, setCurrentArticle }: Props) => {
         </div>
       </td>
       {/* Edit/Remove - Icons */}
-      <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 ">
-        <div className="flex h-24 flex-col md:flex-row items-center justify-end md:justify-center">
-          <IconX
+      <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-2 ">
+        <div
+          title="Radera artikel"
+          className="flex h-24 flex-col md:flex-row items-center justify-end md:justify-center"
+        >
+          <IconTrash
             className="text-red-600 hover:text-red-900 cursor-pointer"
             onClick={async () => {
               const test = confirm(
