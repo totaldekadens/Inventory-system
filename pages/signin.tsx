@@ -145,10 +145,11 @@ export default function SignIn() {
                 <div>
                   <Button
                     variant="positive"
-                    title="Logga in"
                     className="flex w-full justify-center"
                     type="submit"
-                  />
+                  >
+                    Loggain
+                  </Button>
                 </div>
               </form>
             </>
