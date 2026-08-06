@@ -46,7 +46,7 @@ const ArticleView = ({ setOpen }: Props) => {
         <div className="mx-auto max-w-3xl px-4 sm:px-6  lg:max-w-8xl lg:px-8 pt-6 sm:pt-0 flex flex-col lg:flex-row">
           {/* Image slider */}
           <div className="w-full ">
-            <Slider />
+            <Slider images={currentArticle?.images ?? []} />
             {edit && (
               <div className="hidden lg:flex gap-10 flex-col  divide-y-2 divide-gray-200 lg:max-w-xl ">
                 <ArticleQuantitySection

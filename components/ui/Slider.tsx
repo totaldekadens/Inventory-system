@@ -1,8 +1,6 @@
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import Image from "next/image";
-import { useContext } from "react";
-import { articleContext } from "../context/ArticleProvider";
 
 const splideOptions = {
   arrows: false,
@@ -12,10 +10,7 @@ const splideOptions = {
   },
 };
 
-const Slider = () => {
-  const { currentArticle } = useContext(articleContext);
-  if (!currentArticle) return;
-  const { images } = currentArticle;
+const Slider = ({ images }: { images: string[] }) => {
   return (
     <Splide
       hasTrack={false}
