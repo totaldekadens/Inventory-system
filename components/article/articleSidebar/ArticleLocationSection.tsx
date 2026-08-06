@@ -14,6 +14,7 @@ import clsx from "clsx";
 import { inventoryLocationContext } from "@/components/context/InventoryLocationProvider";
 import SearchSelect from "@/components/ui/SearchSelect";
 import { useRefreshArticles } from "@/lib/useRefreshArticles";
+import { articleApi } from "@/lib/api/articles";
 
 interface Props {
   selectedLocation: InventoryLocationDocument | null;
@@ -58,34 +59,25 @@ const ArticleLocationSection = ({
       }
 
       const updatedArticle = {
-        articleId: currentArticle._id,
-        newLocationId: selectedLocation._id,
+        articleId: currentArticle._id.toString(),
+        newLocationId: selectedLocation._id.toString(),
       };
 
-      const response = await fetch("/api/article/move", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedArticle),
-      });
+      setError("");
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        setError(
-          "Lagerplatsen kunde inte uppdateras. Meddelande: " + result.data,
-        );
-        return;
-      }
+      await articleApi.move(updatedArticle);
 
       setSectionDirty("location", false);
+
       await refreshArticles();
 
       alert("Lagerplatsen är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
     } catch (err) {
       console.error(err);
-      setError("Ett oväntat fel inträffade.");
+
+      setError(
+        err instanceof Error ? err.message : "Ett oväntat fel inträffade.",
+      );
     }
   };
 

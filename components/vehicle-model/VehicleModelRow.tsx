@@ -8,6 +8,8 @@ import { articleContext } from "../context/ArticleProvider";
 import HoverInfo from "../ui/HoverInfo";
 import { VehicleDocument } from "@/models/VehicleModel";
 import { vehicleContext } from "../context/VehicleProvider";
+import { vehicleApi } from "@/lib/api/vehicles";
+import { useRefreshVehicles } from "@/lib/useRefreshVehicles";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -30,7 +32,8 @@ interface Props {
 const VehicleModelRow = ({ model }: Props) => {
   const [error, setError] = useState<string>("");
   const { articles } = useContext(articleContext);
-  const { vehicles, setVehicles } = useContext(vehicleContext);
+
+  const refreshVehicles = useRefreshVehicles();
 
   const hasArticles = articles.some((article) =>
     article.vehicleModels.some((hej) => hej._id == model._id),
@@ -49,37 +52,24 @@ const VehicleModelRow = ({ model }: Props) => {
     // Handle form submission
     onSubmit: async ({ name }) => {
       try {
-        const updateVehicleModel = {
-          _id: model._id,
+        setError("");
+
+        await vehicleApi.update({
+          _id: String(model._id),
           name,
-        };
+        });
 
-        const request = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateVehicleModel),
-        };
+        await refreshVehicles();
 
-        const response = await fetch("/api/vehicle", request);
-        const result = await response.json();
+        alert("Modellen är uppdaterad.");
+      } catch (error) {
+        console.error("Update vehicle error:", error);
 
-        if (result.success) {
-          alert("Modellen är uppdaterad"); // Fix a proper pop up later. Ask if you want to continue or close window
-
-          // Updates list
-          const response = await fetch("/api/vehicle/");
-          const result = await response.json();
-          if (result.success) {
-            setVehicles(result.data);
-            setError("");
-          }
-        } else {
-          setError(result.data);
-        }
-      } catch (err) {
-        console.error(err);
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Modellen kunde inte uppdateras.",
+        );
       }
     },
   });
@@ -141,18 +131,26 @@ const VehicleModelRow = ({ model }: Props) => {
                   width={24}
                   className="text-xs cursor-pointer text-red-500"
                   onClick={async () => {
-                    const test = confirm("Är du säker?");
-                    // Todo: Update this one later
-                    if (test) {
-                      await fetch(`api/vehicle/${model._id}`, {
-                        method: "DELETE",
-                      });
+                    const confirmed = confirm(
+                      "Är du säker på att du vill radera modellen?",
+                    );
 
-                      const response = await fetch("/api/vehicle/");
-                      const result = await response.json();
-                      if (result.success) {
-                        setVehicles(result.data);
-                      }
+                    if (!confirmed) return;
+
+                    try {
+                      await vehicleApi.delete(String(model._id));
+
+                      await refreshVehicles();
+
+                      alert("Modellen är raderad.");
+                    } catch (error) {
+                      console.error("Delete vehicle error:", error);
+
+                      setError(
+                        error instanceof Error
+                          ? error.message
+                          : "Modellen kunde inte raderas.",
+                      );
                     }
                   }}
                 />

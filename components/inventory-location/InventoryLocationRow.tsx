@@ -3,10 +3,11 @@ import { useFormik } from "formik";
 import { useContext, useState } from "react";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { IconPigMoney, IconRefresh, IconX } from "@tabler/icons-react";
-import { inventoryLocationContext } from "../context/InventoryLocationProvider";
 import { articleContext } from "../context/ArticleProvider";
 import HoverInfo from "../ui/HoverInfo";
 import { Types } from "mongoose";
+import { inventoryLocationApi } from "@/lib/api/inventoryLocations";
+import { useRefreshInventoryLocations } from "@/lib/api/useRefreshInventoryLocations";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -30,9 +31,8 @@ interface InventoryLocationRowProps {
 const InventoryLocationRow = ({ location }: InventoryLocationRowProps) => {
   const [error, setError] = useState<string>("");
   const { articles } = useContext(articleContext);
-  const { inventoryLocations, setInventoryLocations } = useContext(
-    inventoryLocationContext,
-  );
+
+  const refreshInventoryLocations = useRefreshInventoryLocations();
 
   const hasArticles = articles.some(
     (article) => article.inventoryLocation._id == location._id,
@@ -51,38 +51,25 @@ const InventoryLocationRow = ({ location }: InventoryLocationRowProps) => {
     // Handle form submission
     onSubmit: async ({ name, description }) => {
       try {
-        const updateLocation = {
-          _id: location._id,
+        setError("");
+
+        await inventoryLocationApi.update({
+          _id: String(location._id),
           name,
           description,
-        };
+        });
 
-        const request = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateLocation),
-        };
+        await refreshInventoryLocations();
 
-        const response = await fetch("/api/inventorylocation", request);
-        const result = await response.json();
+        alert("Lagerplatsen är uppdaterad");
+      } catch (error) {
+        console.error("Update inventory location error:", error);
 
-        if (result.success) {
-          alert("Lagerplatsen är uppdaterad"); // Fix a proper pop up later. Ask if you want to continue or close window
-
-          // Updates list
-          const response = await fetch("/api/inventorylocation/");
-          const result = await response.json();
-          if (result.success) {
-            setInventoryLocations(result.data);
-            setError("");
-          }
-        } else {
-          setError(result.data);
-        }
-      } catch (err) {
-        console.error(err);
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Lagerplatsen kunde inte uppdateras.",
+        );
       }
     },
   });
@@ -176,18 +163,26 @@ const InventoryLocationRow = ({ location }: InventoryLocationRowProps) => {
                   width={24}
                   className="text-xs cursor-pointer text-red-500"
                   onClick={async () => {
-                    const test = confirm("Är du säker?");
-                    // Todo: Update this one later
-                    if (test) {
-                      await fetch(`api/inventorylocation/${location._id}`, {
-                        method: "DELETE",
-                      });
+                    const confirmed = confirm(
+                      "Är du säker på att du vill radera lagerplatsen?",
+                    );
 
-                      const response = await fetch("/api/inventorylocation/");
-                      const result = await response.json();
-                      if (result.success) {
-                        setInventoryLocations(result.data);
-                      }
+                    if (!confirmed) return;
+
+                    try {
+                      await inventoryLocationApi.delete(String(location._id));
+
+                      await refreshInventoryLocations();
+
+                      alert("Lagerplatsen är raderad.");
+                    } catch (error) {
+                      console.error(error);
+
+                      setError(
+                        error instanceof Error
+                          ? error.message
+                          : "Lagerplatsen kunde inte raderas.",
+                      );
                     }
                   }}
                 />

@@ -1,91 +1,66 @@
 import dbConnect from "@/lib/dbConnect";
-import TransactionHistory, {
-  TransactionHistoryDocument,
-} from "@/models/TransactionHistoryModel";
-import Article from "@/models/ArticleModel";
-import { NextApiRequest, NextApiResponse } from "next";
+import TransactionHistory from "@/models/TransactionHistoryModel";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { method } = req;
-
   await dbConnect();
 
-  switch (method) {
-    case "GET":
+  switch (req.method) {
+    case "GET": {
       try {
-        const getTransactionHistory: TransactionHistoryDocument[] | null =
-          await TransactionHistory.find({}).populate({
-            path: "article",
-            model: Article,
-          });
+        const transactionHistory = await TransactionHistory.find({}).sort({
+          createdDate: -1,
+        });
 
-        if (!getTransactionHistory) {
-          return res.status(500).send({
+        return res.status(200).json({
+          success: true,
+          data: transactionHistory,
+        });
+      } catch (error) {
+        console.error("Get transaction history error:", error);
+
+        return res.status(500).json({
+          success: false,
+          data: "Transaktionshistoriken kunde inte hämtas.",
+        });
+      }
+    }
+
+    case "POST": {
+      try {
+        if (!req.body) {
+          return res.status(400).json({
             success: false,
-            data: "Server problem",
+            data: "Underlag för transaktionen saknas.",
           });
         }
 
-        res.status(200).json({ success: true, data: getTransactionHistory });
+        const transactionHistory = await TransactionHistory.create(req.body);
+
+        return res.status(201).json({
+          success: true,
+          data: transactionHistory._id,
+        });
       } catch (error) {
-        res.status(400).json({ success: false, data: error });
+        console.error("Create transaction history error:", error);
+
+        return res.status(500).json({
+          success: false,
+          data: "Transaktionshistoriken kunde inte skapas.",
+        });
       }
-      break;
-    case "POST":
-      try {
-        if (!req.body) {
-          return res
-            .status(400)
-            .json({ success: false, data: "Bad request, check body" });
-        }
+    }
 
-        let newTransactionHistory: TransactionHistoryDocument =
-          new TransactionHistory(req.body);
+    default: {
+      res.setHeader("Allow", ["GET", "POST"]);
 
-        const transactionHistory = await TransactionHistory.create(
-          newTransactionHistory,
-        );
-
-        res.status(201).json({ success: true, data: transactionHistory._id });
-      } catch (error) {
-        res.status(500).json({ success: false, data: error });
-      }
-      break;
-
-    case "PUT":
-      try {
-        if (!req.body) {
-          return res
-            .status(400)
-            .json({ success: false, data: "Bad request, check body" });
-        }
-
-        const updateTransactionHistory: TransactionHistoryDocument =
-          new TransactionHistory(req.body);
-
-        const transactionHistory = await TransactionHistory.findOneAndUpdate(
-          { _id: req.body._id },
-          updateTransactionHistory,
-          {
-            new: true,
-            runValidators: true,
-          },
-        );
-
-        if (!transactionHistory) {
-          return res.status(400).json({ success: false });
-        }
-        res.status(200).json({ success: true, data: transactionHistory });
-      } catch (error) {
-        res.status(400).json({ success: false, data: error });
-      }
-      break;
-
-    default:
-      res.json({ success: false, data: "break error" });
-      break;
+      return res.status(405).json({
+        success: false,
+        data: "Method not allowed.",
+      });
+    }
   }
 }

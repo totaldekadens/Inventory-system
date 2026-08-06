@@ -3,52 +3,103 @@ import { useFormik } from "formik";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
-import { articleContext } from "../../context/ArticleProvider";
 import ForSaleField from "./ForSaleField";
 import Button from "../../ui/Button";
-import { Types } from "mongoose";
 import { IconX } from "@tabler/icons-react";
 import clsx from "clsx";
-import SearchBarKombo from "../../ui/SearchBarKombo";
 import UploadImagesForm from "./UploadImagesForm";
 import VehicleModelSelect from "@/components/vehicle-model/VehicleModelSelect";
+import SearchSelect from "../../ui/SearchSelect";
+import { inventoryLocationContext } from "../../context/InventoryLocationProvider";
+import { articleApi } from "@/lib/api/articles";
+import { useRefreshArticles } from "@/lib/useRefreshArticles";
+import Input from "@/components/ui/Input";
 
-// Yup schema to validate the form
-export const schema = Yup.object().shape({
+const VIRTUAL_LOCATION_ID = "64a95847dec1488ee60d10cd";
+
+export const schema = Yup.object({
   supplierArtno: Yup.string(),
-  title: Yup.string().max(37, "Max 37 tecken!").required(),
+
+  title: Yup.string().max(37, "Max 37 tecken!").required("Titel måste anges"),
+
   description: Yup.string(),
-  qty: Yup.number().required("Fyll i antal!"),
+
+  qty: Yup.number()
+    .typeError("Ange ett giltigt antal")
+    .integer("Antalet måste vara ett heltal")
+    .min(0, "Antalet kan inte vara negativt")
+    .required("Fyll i antal!"),
+
   condition: Yup.string()
     .max(25, "Max 25 tecken!")
     .required("Fyll i skicket på din artikel!"),
-  purchaseValue: Yup.number(),
-  price: Yup.number(),
+
+  purchaseValue: Yup.number()
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value,
+    )
+    .min(0, "Inköpspriset kan inte vara negativt")
+    .optional(),
+
+  price: Yup.number()
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value,
+    )
+    .min(0, "Försäljningspriset kan inte vara negativt")
+    .optional(),
+
   comment: Yup.string(),
 });
 
-export const ErrorMessage = ({ message }: any) => {
-  return (
-    <span className="text-xs text-red-600 dark:text-red-500">{message}</span>
-  );
-};
+export const ErrorMessage = ({ message }: { message: string }) => (
+  <span className="text-xs text-red-600 dark:text-red-500">{message}</span>
+);
 
 interface Props {
   setCreateArticle: Dispatch<SetStateAction<boolean>>;
 }
 
+interface FormValues {
+  supplierArtno: string;
+  title: string;
+  description: string;
+  qty: number | "";
+  condition: string;
+  purchaseValue: number | "";
+  price: number | "";
+  comment: string;
+}
+
 const NewArticle = ({ setCreateArticle }: Props) => {
+  const { inventoryLocations } = useContext(inventoryLocationContext);
+
+  const refreshArticles = useRefreshArticles();
+
   const [forSale, setForSale] = useState(false);
-  const { setCurrentArticles } = useContext(articleContext);
 
   const [selectedLocation, setSelectedLocation] =
     useState<InventoryLocationDocument | null>(null);
-  const [selectedModels, setSelectedModels] = useState<string[]>([]);
 
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
-  const [error, setError] = useState<string>("");
-  const formik = useFormik({
+  const [error, setError] = useState("");
+
+  const inventoryLocationOptions = inventoryLocations.map((location) => ({
+    key: String(location._id),
+    value: location,
+    label: location.name,
+  }));
+
+  const selectedLocationOption = selectedLocation
+    ? {
+        key: String(selectedLocation._id),
+        value: selectedLocation,
+        label: selectedLocation.name,
+      }
+    : null;
+
+  const formik = useFormik<FormValues>({
     initialValues: {
       supplierArtno: "",
       title: "",
@@ -60,10 +111,8 @@ const NewArticle = ({ setCreateArticle }: Props) => {
       comment: "",
     },
 
-    // Pass the Yup schema to validate the form
     validationSchema: schema,
 
-    // Handle form submission
     onSubmit: async ({
       supplierArtno,
       title,
@@ -74,301 +123,327 @@ const NewArticle = ({ setCreateArticle }: Props) => {
       price,
       comment,
     }) => {
+      setError("");
+
+      if (imageList.length < 1) {
+        setError("Lägg till minst en bild.");
+        return;
+      }
+
+      if (selectedModels.length < 1) {
+        setError("Välj minst en fordonsmodell.");
+        return;
+      }
+
+      if (!selectedLocation) {
+        setError("Välj en lagerplats.");
+        return;
+      }
+
+      const numericQty = Number(qty);
+
+      if (
+        numericQty > 0 &&
+        String(selectedLocation._id) === VIRTUAL_LOCATION_ID
+      ) {
+        setError(
+          "Lagerplats 00 är endast till för artiklar med lagersaldo 0. Välj en annan lagerplats.",
+        );
+        return;
+      }
+
+      // Fixa i backend senare
+      const isVirtualLocation =
+        String(selectedLocation._id) === VIRTUAL_LOCATION_ID;
+
+      if (numericQty === 0 && !isVirtualLocation) {
+        setError(
+          "Artiklar med lagersaldo 0 måste placeras på lagerplats 00. Välj lagerplats 00 innan du sparar.",
+        );
+        return;
+      }
+
+      if (numericQty > 0 && isVirtualLocation) {
+        setError(
+          "Lagerplats 00 är endast till för artiklar med lagersaldo 0. Välj en annan lagerplats innan du sparar.",
+        );
+        return;
+      }
+
       try {
-        if (imageList.length < 1) {
-          setError("Lägg till minst en bild");
-          return;
-        }
-
-        if (selectedModels.length < 1) {
-          setError("Välj minst en fordonsmodell");
-          return;
-        }
-
-        if (!selectedLocation) {
-          setError("Välj en lagerplats");
-          return;
-        }
-
-        if (
-          Number(qty) > 0 &&
-          selectedLocation?._id ==
-            ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
-        ) {
-          setError(
-            "Lagerplats '00' är endast till för artiklar med lagersaldo '0'. Välj ny lagerplats ",
-          );
-          return;
-        }
-
-        const newArticle = {
-          supplierArtno,
-          vehicleModels: selectedModels as unknown as Types.ObjectId[],
-          title,
-          description,
-          qty: Number(qty),
-          condition,
-          purchaseValue: Number(purchaseValue),
-          forSale,
-          price: Number(price),
-          comment,
-          images: imageList,
-          inventoryLocation: selectedLocation?._id as unknown as Types.ObjectId,
-        };
-
-        // Upload images to Cloudinary
+        /*
+         * Ladda upp bilderna innan artikeln skapas.
+         * Om funktionen returnerar URL:er bör de användas här i stället
+         * för imageList, beroende på hur din upload-funktion fungerar.
+         */
         await UploadToImagesToServer(fileList);
 
-        const request = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newArticle),
-        };
+        await articleApi.create({
+          supplierArtno: supplierArtno.trim() || undefined,
+          vehicleModels: selectedModels,
+          title: title.trim(),
+          description: description.trim() || undefined,
+          qty: numericQty,
+          condition: condition.trim(),
 
-        const response = await fetch("/api/article", request);
-        const result = await response.json();
+          purchaseValue:
+            purchaseValue === "" ? undefined : Number(purchaseValue),
 
-        if (result.success) {
-          alert("Artikeln är inlagd!"); // Fix a proper pop up later. Ask if you want to continue or close window
-          formik.resetForm();
-          setImageList([]);
-          setFileList([]);
+          forSale,
 
-          // Updates list
-          const response = await fetch("/api/article/");
-          const result = await response.json();
+          price: forSale && price !== "" ? Number(price) : undefined,
 
-          if (result.success) {
-            setCurrentArticles(result.data);
-          }
-        } else {
-          setError("Något gick fel!");
-        }
-      } catch (err) {
-        console.error(err);
+          comment: comment.trim() || undefined,
+          images: imageList,
+          inventoryLocation: String(selectedLocation._id),
+        });
+
+        await refreshArticles();
+
+        formik.resetForm();
+        setForSale(false);
+        setSelectedLocation(null);
+        setSelectedModels([]);
+        setImageList([]);
+        setFileList([]);
+
+        alert("Artikeln är inlagd!");
+      } catch (error) {
+        console.error("Create article error:", error);
+
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Artikeln kunde inte skapas.",
+        );
       }
     },
   });
 
+  const {
+    errors,
+    touched,
+    values,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFieldValue,
+    isSubmitting,
+  } = formik;
+
   const inputClass =
-    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-3  text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset sm:leading-6 md:h-auto";
-
-  // Destructure the formik object
-  const { errors, touched, values, handleChange, handleSubmit } = formik;
-
-  // Sets negative numbers to positive
-  const newQty =
-    Number(values.qty) < 0 ? Math.abs(Number(values.qty)) : values.qty;
-  const newPrice = values?.price
-    ? Number(values?.price) < 0
-      ? Math.abs(Number(values.price))
-      : values.price
-    : values.price;
-  const newPurchaseValue = values?.purchaseValue
-    ? Number(values?.purchaseValue) < 0
-      ? Math.abs(Number(values.purchaseValue))
-      : values.purchaseValue
-    : values.purchaseValue;
+    "relative block h-11 w-full rounded-md border-0 bg-dark-50/20 py-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-light-300 sm:leading-6 md:h-auto";
 
   return (
-    <div className="pt-10 sm:pt-0 z-20 fixed inset-0 bg-black/20 flex justify-center ">
-      <div className="pt-5 sm:pt-0 pb-10  sm:px-2 sm:pb-16 shadow-lg rounded-lg absolute top-0 bottom-0 my-0 sm:my-10 md:my-20 w-full  sm:w-auto  bg-white overflow-y-auto">
-        <div className="flex sm:hidden  w-full justify-end px-5 ">
-          <IconX
-            className="cursor-pointer"
-            width={32}
-            height={32}
-            onClick={() => {
-              setCreateArticle(false);
-            }}
-          />
+    <div className="fixed inset-0 z-20 flex justify-center bg-black/20 pt-10 sm:pt-0">
+      <div className="absolute bottom-0 top-0 my-0 w-full overflow-y-auto rounded-lg bg-white pb-10 pt-5 shadow-lg sm:my-10 sm:w-auto sm:px-2 sm:pb-16 sm:pt-0 md:my-20">
+        <div className="flex w-full justify-end px-5 sm:hidden">
+          <button
+            type="button"
+            aria-label="Stäng"
+            onClick={() => setCreateArticle(false)}
+          >
+            <IconX width={32} height={32} aria-hidden="true" />
+          </button>
         </div>
-        <div className="pt-5 sm:pt-0 w-full flex sm:items-center justify-center sm:rounded-lg">
-          <div className="px-4 py-5 bg-white max-w-2xl w-full">
-            <div className=" w-full flex justify-between">
-              <h3 className="text-xl font-medium leading-6 text-gray-900">
+
+        <div className="flex w-full justify-center pt-5 sm:items-center sm:rounded-lg sm:pt-0">
+          <div className="w-full max-w-2xl bg-white px-4 py-5">
+            <div className="flex w-full justify-between">
+              <h2 className="text-2xl font-medium leading-6 text-gray-900">
                 Lägg till artikel
-              </h3>
-              <IconX
-                className="cursor-pointer hidden sm:block"
-                onClick={() => {
-                  setCreateArticle(false);
-                }}
-              />
+              </h2>
+
+              <button
+                type="button"
+                aria-label="Stäng"
+                className="hidden sm:block"
+                onClick={() => setCreateArticle(false)}
+              >
+                <IconX aria-hidden="true" />
+              </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3 mt-7">
-              <input
+            <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-3">
+              <Input
                 id="supplierArtno"
                 name="supplierArtno"
+                label="Leverantörens artikelnummer"
                 value={values.supplierArtno}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 type="text"
-                autoComplete="Leverantörens artikelnummer"
+                autoComplete="off"
                 className={inputClass}
-                placeholder="Leverantörens artikelnummer"
+                placeholder="Ange leverantörens artikelnummer"
               />
-              {errors.supplierArtno && touched.supplierArtno ? (
-                <div className="text-red-600 pl-3 -mt-3 text-xs">
-                  {errors.supplierArtno}
-                </div>
-              ) : null}
-              <input
+
+              <Input
                 id="title"
                 name="title"
+                label="Titel"
                 value={values.title}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 type="text"
-                autoComplete="Titel"
                 className={inputClass}
-                placeholder="Titel*"
+                placeholder="Ange artikelns titel"
+                required
+                error={touched.title && errors.title ? errors.title : ""}
               />
-              {errors.title && touched.title ? (
-                <div className="text-red-600 pl-3 -mt-3 text-xs">
-                  {errors.title}
-                </div>
-              ) : null}
 
-              <label htmlFor="description" className="sr-only">
-                Beskrivning
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                rows={4}
-                autoComplete="description"
-                value={values.description}
-                onChange={handleChange}
-                style={{ height: "100px" }}
-                className={inputClass}
-                placeholder="Beskrivning"
-              />
-              {errors.description && touched.description ? (
-                <div className="text-red-600 pl-3 -mt-3 text-xs">
-                  {errors.description}
-                </div>
-              ) : null}
+              <div>
+                <label htmlFor="description" className="font-semibold">
+                  Beskrivning
+                </label>
 
-              <div className="relative">
-                <input
-                  id="qty"
-                  name="qty"
-                  type="number"
-                  min={0}
-                  autoComplete="qty"
-                  value={newQty}
+                <textarea
+                  id="description"
+                  name="description"
+                  rows={4}
+                  value={values.description}
                   onChange={handleChange}
-                  className={clsx(`pr-8`, inputClass)}
-                  placeholder="Antal"
+                  onBlur={handleBlur}
+                  className={inputClass}
+                  placeholder="Beskriv artikeln"
                 />
-                <div className="z-10 absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                  <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
-                    st
-                  </div>
-                </div>
-                {errors.qty && touched.qty ? (
-                  <div className="text-red-600 pl-3 -mt-3 text-xs">
-                    {errors.qty}
-                  </div>
-                ) : null}
               </div>
-              <input
+
+              <Input
+                id="qty"
+                name="qty"
+                label="Antal"
+                type="number"
+                min={0}
+                step={1}
+                value={values.qty}
+                onBlur={handleBlur}
+                onChange={(event) => {
+                  const value = event.target.value;
+
+                  void setFieldValue("qty", value === "" ? "" : Number(value));
+
+                  setError("");
+                }}
+                className={clsx("pr-8", inputClass)}
+                placeholder="Ange antal"
+                required
+                suffix="st"
+                error={touched.qty && errors.qty ? errors.qty : ""}
+              />
+
+              <Input
                 id="condition"
                 name="condition"
+                label="Skick"
                 type="text"
-                autoComplete="condition"
                 value={values.condition}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className={inputClass}
-                placeholder="Beskriv skicket på artikeln*"
+                placeholder="Beskriv artikelns skick"
+                error={
+                  touched.condition && errors.condition ? errors.condition : ""
+                }
+                required
               />
-              {errors.condition && touched.condition ? (
-                <div className="text-red-600 pl-3 -mt-3 text-xs">
-                  {errors.condition}
-                </div>
-              ) : null}
-              <div className="flex flex-col gap-2">
+
+              <div>
+                <div className="mb-2 font-semibold">Fordonsmodeller *</div>
                 <VehicleModelSelect
                   setSelectedModel={setSelectedModels}
                   selectedModel={selectedModels}
                 />
-                <SearchBarKombo
-                  property="inventoryLocation"
-                  selectedObject={selectedLocation}
-                  setSelectedObject={setSelectedLocation}
+              </div>
+
+              <div>
+                <div className="mb-2 font-semibold">Lagerplats *</div>
+
+                <SearchSelect
+                  options={inventoryLocationOptions}
+                  selectedOption={selectedLocationOption}
+                  onChange={(option) => {
+                    setSelectedLocation(option?.value ?? null);
+                    setError("");
+                  }}
+                  placeholder="Välj lagerplats"
                 />
               </div>
 
-              <div className="relative">
-                <input
-                  id="purchaseValue"
-                  name="purchaseValue"
-                  type="number"
-                  min={0}
-                  autoComplete="purchaseValue"
-                  value={newPurchaseValue}
-                  onChange={handleChange}
-                  className={clsx(`pr-[120px]`, inputClass)}
-                  placeholder="Inköpspris"
-                />
-                <div className="z-10 absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                  <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
-                    kr/st (inkl. moms)
-                  </div>
-                </div>
-                {errors.purchaseValue && touched.purchaseValue ? (
-                  <div className="text-red-600 pl-3 -mt-3 text-xs">
-                    {errors.purchaseValue}
-                  </div>
-                ) : null}
-              </div>
+              <Input
+                id="purchaseValue"
+                name="purchaseValue"
+                label="Inköpspris"
+                type="number"
+                min={0}
+                value={values.purchaseValue}
+                onBlur={handleBlur}
+                onChange={(event) => {
+                  const value = event.target.value;
 
-              <input
+                  void setFieldValue(
+                    "purchaseValue",
+                    value === "" ? "" : Number(value),
+                  );
+                }}
+                className={inputClass}
+                placeholder="Ange inköpspris"
+                suffix="kr/st (inkl. moms)"
+              />
+
+              <Input
                 id="comment"
                 name="comment"
+                label="Övrig kommentar"
                 type="text"
-                autoComplete="comment"
                 value={values.comment}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className={inputClass}
-                placeholder="Övrig kommentar"
+                placeholder="Skriv en kommentar"
               />
+
               <ForSaleField setForSale={setForSale} forSale={forSale} />
-              {forSale ? (
-                <div className="relative">
-                  <input
-                    id="price"
-                    name="price"
-                    type="number"
-                    min={0}
-                    autoComplete="price"
-                    value={newPrice}
-                    onChange={handleChange}
-                    className={clsx(`pr-[120px]`, inputClass)}
-                    placeholder="Till vilket pris?"
-                  />
-                  <div className="z-10 absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                    <div className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-600">
-                      kr/st (inkl. moms)
-                    </div>
-                  </div>
-                </div>
-              ) : null}
+
+              {forSale && (
+                <Input
+                  id="price"
+                  name="price"
+                  type="number"
+                  label="Försäljningspris"
+                  min={0}
+                  value={values.price}
+                  onBlur={handleBlur}
+                  onChange={(event) => {
+                    const value = event.target.value;
+
+                    void setFieldValue(
+                      "price",
+                      value === "" ? "" : Number(value),
+                    );
+                  }}
+                  className={clsx("pr-[120px]", inputClass)}
+                  placeholder="Ange försäljningspris"
+                  suffix=" kr/st (inkl. moms)"
+                />
+              )}
+
               <UploadImagesForm
                 setImageList={setImageList}
                 setValue={setFileList}
                 value={fileList}
               />
-              {error ? <ErrorMessage message={error} /> : null}
-              <div className="mt-5 w-full flex justify-end">
+
+              {error && <ErrorMessage message={error} />}
+
+              <div className="mt-5 flex w-full justify-end">
                 <Button
                   type="submit"
                   variant="positive"
-                  className=" w-full sm:w-36 px-3 py-3"
+                  className="w-full px-3 py-3 sm:w-36"
+                  disabled={isSubmitting}
                 >
-                  Skapa
+                  {isSubmitting ? "Skapar artikel..." : "Lägg till artikel"}
                 </Button>
               </div>
             </form>

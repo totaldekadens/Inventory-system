@@ -1,8 +1,9 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { useContext, useState } from "react";
 import { IconPigMoney } from "@tabler/icons-react";
-import { vehicleContext } from "../context/VehicleProvider";
+import { vehicleApi } from "@/lib/api/vehicles";
+import { useRefreshVehicles } from "@/lib/useRefreshVehicles";
+import { useState } from "react";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -21,7 +22,8 @@ export const ErrorMessage = ({ message }: any) => {
 
 const NewVehicleModel = () => {
   const [error, setError] = useState<string>("");
-  const { vehicles, setVehicles } = useContext(vehicleContext);
+
+  const refreshVehicles = useRefreshVehicles();
 
   const formik = useFormik({
     initialValues: {
@@ -34,35 +36,25 @@ const NewVehicleModel = () => {
     // Handle form submission
     onSubmit: async ({ name }) => {
       try {
-        const newVehicleModel = {
+        setError("");
+
+        await vehicleApi.create({
           name,
-        };
-        const request = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newVehicleModel),
-        };
+        });
 
-        const response = await fetch("/api/vehicle", request);
-        const result = await response.json();
+        await refreshVehicles();
 
-        if (result.success) {
-          alert("Modellen är skapad"); // Fix a proper pop up later. Ask if you want to continue or close window
+        formik.resetForm();
 
-          // Updates list
-          const response = await fetch("/api/vehicle/");
-          const result = await response.json();
-          if (result.success) {
-            setVehicles(result.data);
-            formik.resetForm();
-          }
-        } else {
-          setError("Något gick fel!");
-        }
-      } catch (err) {
-        console.error(err);
+        alert("Modellen är skapad.");
+      } catch (error) {
+        console.error("Create vehicle error:", error);
+
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Modellen kunde inte skapas.",
+        );
       }
     },
   });
@@ -98,9 +90,10 @@ const NewVehicleModel = () => {
           <>
             <button
               type="submit"
+              disabled={formik.isSubmitting}
               className="border gap-2 border-gray-300 flex justify-center rounded-md p-3 hover:bg-[#264133] hover:text-white bg-[#264133] sm:bg-white text-white sm:text-[#264133]"
             >
-              Spara
+              {formik.isSubmitting ? "Skapar modell..." : "Skapa modell"}
               <IconPigMoney
                 height={24}
                 width={24}

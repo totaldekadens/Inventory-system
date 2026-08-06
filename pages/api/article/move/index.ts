@@ -17,6 +17,8 @@ type PopulatedArticle = Omit<ArticleDocument, "inventoryLocation"> & {
   inventoryLocation: InventoryLocationDocument;
 };
 
+const VIRTUAL_LOCATION_ID = "64a95847dec1488ee60d10cd";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -26,14 +28,12 @@ export default async function handler(
 
     return res.status(405).json({
       success: false,
-      data: "Method not allowed",
+      data: "Method not allowed.",
     });
   }
 
-  await dbConnect();
-
   const { articleId, newLocationId } = req.body as MoveArticleBody;
-  const createdDate = getTodayDate();
+
   if (!articleId || !newLocationId) {
     return res.status(400).json({
       success: false,
@@ -51,14 +51,16 @@ export default async function handler(
     });
   }
 
+  await dbConnect();
+
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
 
     const article = await Article.findById(articleId)
-      .populate("inventoryLocation")
-      .session(session);
+      .session(session)
+      .populate("inventoryLocation");
 
     if (!article) {
       throw new Error("Artikeln hittades inte.");
@@ -87,11 +89,9 @@ export default async function handler(
       });
     }
 
-    const virtualLocationId = "64a95847dec1488ee60d10cd";
-
     if (
       populatedArticle.qty > 0 &&
-      String(newLocation._id) === virtualLocationId
+      String(newLocation._id) === VIRTUAL_LOCATION_ID
     ) {
       await session.abortTransaction();
 
@@ -101,11 +101,15 @@ export default async function handler(
       });
     }
 
+    const createdDate = getTodayDate();
+
     const updatedArticle = await Article.findByIdAndUpdate(
       articleId,
       {
-        inventoryLocation: newLocation._id,
-        lastUpdated: createdDate,
+        $set: {
+          inventoryLocation: newLocation._id,
+          lastUpdated: createdDate,
+        },
       },
       {
         new: true,
@@ -113,8 +117,6 @@ export default async function handler(
         session,
       },
     );
-
-    console.log("updatedArticle in backend", updatedArticle);
 
     if (!updatedArticle) {
       throw new Error("Artikeln kunde inte uppdateras.");
@@ -125,26 +127,7 @@ export default async function handler(
         {
           direction: "",
           cause: "Flytt till ny lagerplats",
-
-          article: {
-            _id: updatedArticle._id,
-            artno: updatedArticle.artno,
-            supplierArtno: updatedArticle.supplierArtno,
-            vehicleModels: updatedArticle.vehicleModels,
-            title: updatedArticle.title,
-            description: updatedArticle.description,
-            qty: updatedArticle.qty,
-            condition: updatedArticle.condition,
-            forSale: updatedArticle.forSale,
-            price: updatedArticle.price,
-            inventoryLocation: updatedArticle.inventoryLocation,
-            images: updatedArticle.images,
-            purchaseValue: updatedArticle.purchaseValue,
-            comment: updatedArticle.comment,
-            issue: updatedArticle.issue,
-            createdDate: updatedArticle.createdDate,
-            lastUpdated: updatedArticle.lastUpdated,
-          },
+          article: updatedArticle.toObject(),
 
           fromLocation: {
             _id: oldLocation._id,
@@ -157,9 +140,7 @@ export default async function handler(
           },
 
           qty: updatedArticle.qty,
-
           comment: `Flytt från "${oldLocation.name}" till "${newLocation.name}"`,
-
           createdDate,
         },
       ],
@@ -173,7 +154,9 @@ export default async function handler(
       data: updatedArticle,
     });
   } catch (error) {
-    await session.abortTransaction();
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
 
     console.error("Move article error:", error);
 

@@ -104,6 +104,8 @@ const ArticlesProvider: FC<PropsWithChildren> = (props) => {
     setDirtySections(initialDirtySections);
   };
 
+  console.log("Hur ofta körs denna?");
+
   return (
     <articleContext.Provider
       value={{

@@ -1,17 +1,27 @@
-import { useCallback, useContext } from "react";
+// hooks/useRefreshArticles.ts
+
 import { articleContext } from "@/components/context/ArticleProvider";
+import { articleApi } from "@/lib/api/articles";
+import { useCallback, useContext } from "react";
 
 export const useRefreshArticles = () => {
-  const { setCurrentArticles } = useContext(articleContext);
+  const { setArticles, setCurrentArticles, setCurrentArticle } =
+    useContext(articleContext);
 
-  return useCallback(async () => {
-    const response = await fetch("/api/article");
-    const result = await response.json();
+  return useCallback(async (): Promise<void> => {
+    const articles = await articleApi.getAll();
 
-    if (!response.ok || !result.success) {
-      throw new Error("Kunde inte hämta artiklar.");
-    }
+    setArticles(articles);
+    setCurrentArticles(articles);
 
-    setCurrentArticles(result.data);
-  }, [setCurrentArticles]);
+    setCurrentArticle((current) => {
+      if (!current) {
+        return undefined;
+      }
+
+      return articles.find(
+        (article) => String(article._id) === String(current._id),
+      );
+    });
+  }, [setArticles, setCurrentArticles, setCurrentArticle]);
 };

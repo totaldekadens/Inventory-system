@@ -1,106 +1,161 @@
 import mongoose, { Types } from "mongoose";
 import { ArticleDocument } from "./ArticleModel";
-const { Schema } = mongoose;
 
-const TransactionHistorySchema = new Schema<TransactionHistoryDocument>({
-  direction: { type: String, enum: ["-", "+", ""] },
-  cause: { type: String },
-  article: {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
-    artno: { type: Number, required: true },
-    supplierArtno: { type: String },
-    vehicleModels: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Vehicle",
-      },
-    ],
-    title: { type: String, required: true },
-    description: { type: String },
-    qty: { type: Number, required: true },
-    condition: { type: String, required: true },
-    forSale: { type: Boolean, required: true },
-    price: { type: Number },
-    inventoryLocation: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "InventoryLocation",
-      required: true,
-    },
-    images: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    purchaseValue: { type: Number },
-    comment: String,
-    issue: [
-      {
-        sold: Boolean,
-        qty: Number,
-        unitPrice: Number,
-        comment: String,
-        date: Date,
-      },
-    ],
-    createdDate: { type: String, required: true },
-    lastUpdated: String,
-  },
-  fromLocation: {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-    },
-    name: {
-      type: String,
-    },
-  },
+export type TransactionDirection = "-" | "+" | "";
 
-  toLocation: {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-    },
-    name: {
-      type: String,
-    },
-  },
-  qty: { type: Number, required: true },
-  pricePerUnit: { type: Number },
-  comment: { type: String },
-  createdDate: { type: String, required: true },
-});
+export type TransactionCause =
+  | "Såld"
+  | "Kastad (överflödig)"
+  | "Kastad (trasig)"
+  | "Använd vid reparation"
+  | "Diff"
+  | "Artikel permanent borttagen"
+  | "Artikel skapad"
+  | "Flytt till ny lagerplats";
+
+interface LocationSnapshot {
+  _id: Types.ObjectId;
+  name: string;
+}
 
 export interface TransactionHistoryDocument {
   _id?: Types.ObjectId;
-  direction: "-" | "+" | "";
-  cause?:
-    | "Såld"
-    | "Kastad (överflödig)"
-    | "Kastad (trasig)"
-    | "Använd vid reparation"
-    | "Diff"
-    | "Artikel permanent borttagen"
-    | "Artikel skapad"
-    | "Flytt till ny lagerplats";
-
+  direction: TransactionDirection;
+  cause?: TransactionCause;
   article: ArticleDocument;
   qty: number;
-  fromLocation?: {
-    _id: Types.ObjectId;
-    name: string;
-  };
-
-  toLocation?: {
-    _id: Types.ObjectId;
-    name: string;
-  };
+  fromLocation?: LocationSnapshot;
+  toLocation?: LocationSnapshot;
   pricePerUnit?: number;
   comment?: string;
   createdDate: string;
 }
 
-export default module.exports =
+const LocationSnapshotSchema = new mongoose.Schema<LocationSnapshot>(
+  {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    _id: false,
+  },
+);
+
+const TransactionHistorySchema =
+  new mongoose.Schema<TransactionHistoryDocument>({
+    direction: {
+      type: String,
+      enum: ["-", "+", ""],
+    },
+
+    cause: {
+      type: String,
+    },
+
+    article: {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+      },
+      artno: {
+        type: Number,
+        required: true,
+      },
+      supplierArtno: String,
+
+      vehicleModels: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Vehicle",
+        },
+      ],
+
+      title: {
+        type: String,
+        required: true,
+      },
+      description: String,
+
+      qty: {
+        type: Number,
+        required: true,
+      },
+
+      condition: {
+        type: String,
+        required: true,
+      },
+
+      forSale: {
+        type: Boolean,
+        required: true,
+      },
+
+      price: Number,
+
+      inventoryLocation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "InventoryLocation",
+        required: true,
+      },
+
+      images: [String],
+      purchaseValue: Number,
+      comment: String,
+
+      issue: [
+        {
+          sold: Boolean,
+          qty: Number,
+          unitPrice: Number,
+          comment: String,
+          date: Date,
+        },
+      ],
+
+      createdDate: {
+        type: String,
+        required: true,
+      },
+
+      lastUpdated: String,
+    },
+
+    fromLocation: {
+      type: LocationSnapshotSchema,
+      required: false,
+    },
+
+    toLocation: {
+      type: LocationSnapshotSchema,
+      required: false,
+    },
+
+    qty: {
+      type: Number,
+      required: true,
+    },
+
+    pricePerUnit: Number,
+    comment: String,
+
+    createdDate: {
+      type: String,
+      required: true,
+    },
+  });
+
+const TransactionHistoryModel =
   mongoose.models.TransactionHistory ||
-  mongoose.model("TransactionHistory", TransactionHistorySchema);
+  mongoose.model<TransactionHistoryDocument>(
+    "TransactionHistory",
+    TransactionHistorySchema,
+  );
+
+export default TransactionHistoryModel;

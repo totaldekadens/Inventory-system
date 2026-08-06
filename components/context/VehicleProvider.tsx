@@ -1,5 +1,5 @@
 import { VehicleDocument } from "@/models/VehicleModel";
-import React, { useEffect } from "react";
+import React from "react";
 import { FC, PropsWithChildren, useState } from "react";
 
 interface vehicleContextData {

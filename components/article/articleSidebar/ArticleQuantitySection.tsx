@@ -23,6 +23,7 @@ import QuantityModeField, {
 import { inventoryLocationContext } from "@/components/context/InventoryLocationProvider";
 import SearchSelect from "@/components/ui/SearchSelect";
 import { useRefreshArticles } from "@/lib/useRefreshArticles";
+import { articleApi } from "@/lib/api/articles";
 
 interface Props {
   selectedLocation: InventoryLocationDocument | null;
@@ -159,45 +160,26 @@ const ArticleQuantitySection = ({
       }
 
       try {
-        const response = await fetch("/api/article/quantity", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            articleId: currentArticle._id,
-            updateMode,
-            enteredQty,
+        const result = await articleApi.updateQuantity({
+          articleId: String(currentArticle._id),
+          updateMode,
+          enteredQty,
 
-            newLocationId: requiresNewLocation
-              ? selectedLocation?._id
+          newLocationId: requiresNewLocation
+            ? String(selectedLocation?._id)
+            : undefined,
+
+          cause: isDecrease ? selectedCause : undefined,
+
+          pricePerUnit:
+            isDecrease && selectedCause === "sold"
+              ? Number(values.sellPrice)
               : undefined,
 
-            cause: isDecrease ? selectedCause : undefined,
-
-            pricePerUnit:
-              isDecrease && selectedCause === "sold"
-                ? Number(values.sellPrice)
-                : undefined,
-
-            comment: values.transactionComment.trim() || undefined,
-          }),
+          comment: values.transactionComment.trim() || undefined,
         });
 
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          setError(result.data ?? "Lagersaldot kunde inte uppdateras.");
-          return;
-        }
-
-        /*
-         * Endpointen returnerar den nya lagerplatsen,
-         * oavsett om den blev 00 eller en riktig plats.
-         */
-        if (result.data.inventoryLocation) {
-          setSelectedLocation(result.data.inventoryLocation);
-        }
+        setSelectedLocation(result.inventoryLocation);
 
         await refreshArticles();
 
@@ -206,16 +188,20 @@ const ArticleQuantitySection = ({
 
         formik.resetForm({
           values: {
-            qty: result.data.qty,
-            sellPrice: result.data.price ?? "",
+            qty: result.qty,
+            sellPrice: result.price ?? "",
             transactionComment: "",
           },
         });
         setSectionDirty("quantity", false);
-        alert("Lagersaldot är uppdaterat!");
+        alert("Lagersaldot är uppdaterat!"); // fixa
       } catch (error) {
         console.error(error);
-        setError("Ett oväntat fel inträffade.");
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Ett oväntat fel inträffade.",
+        );
       }
     },
   });
@@ -228,7 +214,6 @@ const ArticleQuantitySection = ({
     handleSubmit,
     setFieldValue,
     isSubmitting,
-    dirty,
   } = formik;
 
   /*

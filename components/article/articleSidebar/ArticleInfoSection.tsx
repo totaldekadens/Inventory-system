@@ -11,6 +11,8 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import * as Yup from "yup";
 import { useRefreshArticles } from "@/lib/useRefreshArticles";
+import { articleApi, UpdateArticleRequest } from "@/lib/api/articles";
+import { Types } from "mongoose";
 
 export const inputClass =
   "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-3 mt-2 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset text-base sm:leading-6 md:h-auto";
@@ -79,46 +81,42 @@ const ArticleInfoSection = () => {
       }
 
       try {
-        const updateArticle = {
+        const updateArticle: UpdateArticleRequest = {
           ...currentArticle,
+          _id: String(currentArticle._id),
           supplierArtno,
           vehicleModels: selectedModels,
           title,
           description,
           condition,
-          purchaseValue,
+          purchaseValue:
+            purchaseValue === "" ? undefined : Number(purchaseValue),
           forSale,
-          price: forSale ? price : undefined,
+          price: price === "" ? undefined : Number(price),
           comment,
-          lastUpdated: getTodayDate(), // Lägg till i backend istället
           images: imageList.length > 0 ? imageList : currentArticle.images,
         };
 
         // Upload images to Cloudinary
         await UploadToImagesToServer(fileList);
 
-        const response = await fetch("/api/article", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateArticle),
-        });
+        await articleApi.update(updateArticle);
 
-        const result = await response.json();
+        setImageList([]);
+        setFileList([]);
 
-        if (response.ok && result.success) {
-          setImageList([]);
-          setFileList([]);
-          await refreshArticles();
-          setSectionDirty("info", false);
-          alert("Artikeln är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
-        } else {
-          setError("Något gick fel!");
-        }
+        await refreshArticles();
+
+        setSectionDirty("info", false);
+
+        alert("Artikeln är uppdaterad!");
       } catch (err) {
         console.error(err);
-        setError("Ett oväntat fel inträffade.");
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Artikeln kunde inte uppdateras.",
+        );
       }
     },
   });

@@ -1,100 +1,156 @@
 import caseInsensitive from "@/lib/caseCheck";
 import dbConnect from "@/lib/dbConnect";
-import Vehicle, { VehicleDocument } from "@/models/VehicleModel";
-import { NextApiRequest, NextApiResponse } from "next";
+import Vehicle from "@/models/VehicleModel";
+import { Types } from "mongoose";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+interface CreateVehicleBody {
+  name: string;
+}
+
+interface UpdateVehicleBody {
+  _id: string;
+  name: string;
+}
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const { method } = req;
-
   await dbConnect();
 
-  switch (method) {
-    case "GET":
+  switch (req.method) {
+    case "GET": {
       try {
-        const getAllVehicles: VehicleDocument[] | null = await Vehicle.find({});
-
-        if (!getAllVehicles) {
-          return res.status(500).send({
-            success: false,
-            data: "Server problem",
-          });
-        }
-
-        res.status(200).json({ success: true, data: getAllVehicles });
-      } catch (error) {
-        res.status(400).json({ success: false, data: error });
-      }
-      break;
-    case "POST":
-      try {
-        if (!req.body) {
-          return res
-            .status(400)
-            .json({ success: false, data: "Bad request, check body" });
-        }
-        const vehicleTaken: VehicleDocument | null = await Vehicle.findOne({
-          name: caseInsensitive(req.body.name),
-        });
-        if (vehicleTaken) {
-          return res.status(403).send({
-            success: false,
-            data: "Vehicle name already exist",
-          });
-        }
-
-        let newVehicle: VehicleDocument = new Vehicle(req.body);
-
-        const vehicle = await Vehicle.create(newVehicle);
-
-        res.status(201).json({ success: true, data: vehicle._id });
-      } catch (error) {
-        res.json({ success: false, data: error });
-      }
-      break;
-
-    case "PUT":
-      try {
-        if (!req.body) {
-          return res
-            .status(400)
-            .json({ success: false, data: "Bad request, check body" });
-        }
-        const vehicleTaken: VehicleDocument[] | null = await Vehicle.find({
-          name: caseInsensitive(req.body.name),
+        const vehicles = await Vehicle.find({}).sort({
+          name: 1,
         });
 
-        if (vehicleTaken.length > 0 && vehicleTaken[0]._id != req.body._id) {
-          return res.status(403).send({
+        return res.status(200).json({
+          success: true,
+          data: vehicles,
+        });
+      } catch (error) {
+        console.error("Get vehicles error:", error);
+
+        return res.status(500).json({
+          success: false,
+          data: "Fordonsmodellerna kunde inte hämtas.",
+        });
+      }
+    }
+
+    case "POST": {
+      try {
+        const { name } = req.body as CreateVehicleBody;
+
+        if (!name?.trim()) {
+          return res.status(400).json({
             success: false,
-            data: "Vehicle name already exist",
+            data: "Fordonsmodellens namn måste anges.",
           });
         }
 
-        const updateVehicle: VehicleDocument = new Vehicle(req.body);
+        const existingVehicle = await Vehicle.findOne({
+          name: caseInsensitive(name.trim()),
+        });
 
-        const vehicle = await Vehicle.findOneAndUpdate(
-          { _id: req.body._id },
-          updateVehicle,
+        if (existingVehicle) {
+          return res.status(409).json({
+            success: false,
+            data: "Det finns redan en fordonsmodell med det namnet.",
+          });
+        }
+
+        const vehicle = await Vehicle.create({
+          name: name.trim(),
+        });
+
+        return res.status(201).json({
+          success: true,
+          data: vehicle._id,
+        });
+      } catch (error) {
+        console.error("Create vehicle error:", error);
+
+        return res.status(500).json({
+          success: false,
+          data: "Fordonsmodellen kunde inte skapas.",
+        });
+      }
+    }
+
+    case "PUT": {
+      try {
+        const { _id, name } = req.body as UpdateVehicleBody;
+
+        if (!_id || !Types.ObjectId.isValid(_id)) {
+          return res.status(400).json({
+            success: false,
+            data: "Ogiltigt fordonsmodell-id.",
+          });
+        }
+
+        if (!name?.trim()) {
+          return res.status(400).json({
+            success: false,
+            data: "Fordonsmodellens namn måste anges.",
+          });
+        }
+
+        const existingVehicle = await Vehicle.findOne({
+          name: caseInsensitive(name.trim()),
+          _id: { $ne: _id },
+        });
+
+        if (existingVehicle) {
+          return res.status(409).json({
+            success: false,
+            data: "Det finns redan en fordonsmodell med det namnet.",
+          });
+        }
+
+        const vehicle = await Vehicle.findByIdAndUpdate(
+          _id,
+          {
+            $set: {
+              name: name.trim(),
+            },
+          },
           {
             new: true,
             runValidators: true,
-          }
+          },
         );
 
         if (!vehicle) {
-          return res.status(400).json({ success: false });
+          return res.status(404).json({
+            success: false,
+            data: "Fordonsmodellen hittades inte.",
+          });
         }
-        res.status(200).json({ success: true, data: vehicle });
-      } catch (error) {
-        res.status(400).json({ success: false, data: error });
-      }
-      break;
 
-    default:
-      res.json({ success: false, data: "break error" });
-      break;
+        return res.status(200).json({
+          success: true,
+          data: vehicle,
+        });
+      } catch (error) {
+        console.error("Update vehicle error:", error);
+
+        return res.status(500).json({
+          success: false,
+          data: "Fordonsmodellen kunde inte uppdateras.",
+        });
+      }
+    }
+
+    default: {
+      res.setHeader("Allow", ["GET", "POST", "PUT"]);
+
+      return res.status(405).json({
+        success: false,
+        data: "Method not allowed.",
+      });
+    }
   }
 }

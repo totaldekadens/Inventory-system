@@ -1,59 +1,113 @@
 import dbConnect from "@/lib/dbConnect";
-import InventoryLocation, {
-  InventoryLocationDocument,
-} from "@/models/InventoryLocationModel";
-import { NextApiRequest, NextApiResponse } from "next";
+import Article from "@/models/ArticleModel";
+import InventoryLocation from "@/models/InventoryLocationModel";
+import { Types } from "mongoose";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+const VIRTUAL_LOCATION_ID = "64a95847dec1488ee60d10cd";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const {
-    query: { id },
-    method,
-  } = req;
+  const { id } = req.query;
+
+  if (typeof id !== "string" || !Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      success: false,
+      data: "Ogiltigt lagerplats-id.",
+    });
+  }
 
   await dbConnect();
 
-  switch (method) {
-    case "GET":
+  switch (req.method) {
+    case "GET": {
       try {
-        const inventoryLocation: InventoryLocationDocument | null =
-          await InventoryLocation.findById(id);
+        const inventoryLocation = await InventoryLocation.findById(id);
 
         if (!inventoryLocation) {
-          return res.status(403).send({
+          return res.status(404).json({
             success: false,
-            data: "Inventory location not found",
+            data: "Lagerplatsen hittades inte.",
           });
         }
 
-        res.status(201).json({ success: true, data: inventoryLocation });
-      } catch (error) {
-        res.json({ success: false, data: error });
-      }
-      break;
-
-    case "DELETE":
-      try {
-        // Todo:  Check if an article is on the location, it shall not be able to delete before the article is moved to a new location.
-        const deletedLocation = await InventoryLocation.deleteOne({ _id: id });
-        if (deletedLocation.deletedCount < 1) {
-          return res
-            .status(400)
-            .json({ success: false, data: "Inventory location not deleted" });
-        }
-        res.status(200).json({
+        return res.status(200).json({
           success: true,
-          data: "Inventory location is successfully deleted",
+          data: inventoryLocation,
         });
       } catch (error) {
-        res.status(400).json({ success: false, data: error });
-      }
-      break;
+        console.error("Get inventory location error:", error);
 
-    default:
-      res.json({ success: false, data: "break error" });
-      break;
+        return res.status(500).json({
+          success: false,
+          data: "Lagerplatsen kunde inte hämtas.",
+        });
+      }
+    }
+
+    case "DELETE": {
+      try {
+        if (id === VIRTUAL_LOCATION_ID) {
+          return res.status(403).json({
+            success: false,
+            data: "Den virtuella lagerplatsen 00 kan inte raderas.",
+          });
+        }
+
+        const inventoryLocation = await InventoryLocation.findById(id);
+
+        if (!inventoryLocation) {
+          return res.status(404).json({
+            success: false,
+            data: "Lagerplatsen hittades inte.",
+          });
+        }
+
+        const locationIsUsed = await Article.exists({
+          inventoryLocation: id,
+        });
+
+        if (locationIsUsed) {
+          return res.status(409).json({
+            success: false,
+            data: "Lagerplatsen kan inte raderas eftersom det finns artiklar placerade på den.",
+          });
+        }
+
+        const deleteResult = await InventoryLocation.deleteOne({
+          _id: id,
+        });
+
+        if (deleteResult.deletedCount !== 1) {
+          return res.status(500).json({
+            success: false,
+            data: "Lagerplatsen kunde inte raderas.",
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: "Lagerplatsen är raderad.",
+        });
+      } catch (error) {
+        console.error("Delete inventory location error:", error);
+
+        return res.status(500).json({
+          success: false,
+          data: "Lagerplatsen kunde inte raderas.",
+        });
+      }
+    }
+
+    default: {
+      res.setHeader("Allow", ["GET", "DELETE"]);
+
+      return res.status(405).json({
+        success: false,
+        data: "Method not allowed.",
+      });
+    }
   }
 }

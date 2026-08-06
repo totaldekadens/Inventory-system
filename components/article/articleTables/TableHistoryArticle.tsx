@@ -4,6 +4,7 @@ import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
 import Accordion from "../../ui/Accordion";
 import { useContext, useEffect, useState } from "react";
 import { articleContext } from "@/components/context/ArticleProvider";
+import { transactionHistoryApi } from "@/lib/api/transactionHistory";
 
 interface ThProps {
   header: string;
@@ -36,25 +37,20 @@ const TableItem = ({ header, className }: ThProps) => (
 const TableHistoryArticle = () => {
   const { currentArticle } = useContext(articleContext);
   const [history, setHistory] = useState<TransactionHistoryDocument[]>([]);
+
   // Fetches transaction history for this specific article
   useEffect(() => {
     const getHistory = async () => {
       if (!currentArticle) return;
+
       try {
-        const response = await fetch(
-          "/api/transactionhistory/" + currentArticle.artno,
+        const history = await transactionHistoryApi.getByArticleNumber(
+          currentArticle.artno,
         );
-        const result = await response.json();
-        if (result.success) {
-          // Sort keys from Ö - A
-          const descendingHistory: TransactionHistoryDocument[] =
-            result.data.sort((a: any, b: any) =>
-              a.createdDate < b.createdDate ? 1 : -1,
-            );
-          setHistory(descendingHistory);
-        }
-      } catch (err) {
-        console.error(err);
+
+        setHistory(history);
+      } catch (error) {
+        console.error("Get transaction history error:", error);
       }
     };
     getHistory();
@@ -111,7 +107,7 @@ const TableHistoryArticle = () => {
                           {/* Antal */}
                           <TableItem
                             className="text-gray-500 min-w-[70px]"
-                            header={`${article.direction}${article.qty}`}
+                            header={`${!article.direction ? "" : article.direction + article.qty}`}
                           />
                           {/* Anledning */}
                           <TableItem

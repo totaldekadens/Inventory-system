@@ -1,18 +1,24 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react";
-import SelectSimple from "../ui/SelectSimple";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ErrorMessage, useFormik } from "formik";
+
 import {
   PopulatedArticleDocument,
   articleContext,
 } from "../context/ArticleProvider";
-import { getTodayDate } from "@/lib/setDate";
-import clsx from "clsx";
+import { inventoryLocationContext } from "../context/InventoryLocationProvider";
+
 import Button from "../ui/Button";
+import Input from "../ui/Input";
+import SearchSelect from "../ui/SearchSelect";
+import SelectSimple from "../ui/SelectSimple";
+
+import { ErrorMessage } from "./articleForm/NewArticle";
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
-import { Types } from "mongoose";
-import SearchBarKombo from "../ui/SearchBarKombo";
 import { scrapCauses } from "@/lib/config";
+import { useRefreshArticles } from "@/lib/useRefreshArticles";
+import { articleApi } from "@/lib/api/articles";
+
 interface Props {
   newQty: number;
   oldQty: number;
@@ -21,8 +27,22 @@ interface Props {
   setClose: Dispatch<SetStateAction<boolean>>;
 }
 
-const schema = Yup.object().shape({
-  sellPrice: Yup.number(),
+interface FormValues {
+  sellPrice: number | "";
+  scrapComment: string;
+}
+
+const VIRTUAL_LOCATION_ID = "64a95847dec1488ee60d10cd";
+
+const schema = Yup.object({
+  sellPrice: Yup.number()
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value,
+    )
+    .typeError("Ange ett giltigt pris")
+    .min(0, "Försäljningspriset kan inte vara negativt")
+    .optional(),
+
   scrapComment: Yup.string(),
 });
 
@@ -33,264 +53,282 @@ const ScrapCause = ({
   setUpdatedArticle,
   setClose,
 }: Props) => {
+  const { setSectionDirty } = useContext(articleContext);
+  const { inventoryLocations } = useContext(inventoryLocationContext);
+
+  const refreshArticles = useRefreshArticles();
+
   const [selectedLocation, setSelectedLocation] =
     useState<InventoryLocationDocument | null>(article.inventoryLocation);
-  const [error, setError] = useState<string>("");
-  const { setCurrentArticles } = useContext(articleContext);
-  const [selectedScrapCause, setSelectedScrapCause] =
-    useState<string>("repair");
 
-  const resetQty = () => {
+  const [selectedScrapCause, setSelectedScrapCause] = useState("repair");
+
+  const [error, setError] = useState("");
+
+  const isIncrease = newQty > oldQty;
+  const isDecrease = newQty < oldQty;
+
+  const quantityChange = Math.abs(newQty - oldQty);
+
+  const requiresNewLocation =
+    oldQty === 0 &&
+    newQty > 0 &&
+    String(article.inventoryLocation._id) === VIRTUAL_LOCATION_ID;
+
+  const hasSelectedValidLocation =
+    selectedLocation !== null &&
+    String(selectedLocation._id) !== VIRTUAL_LOCATION_ID;
+
+  const inventoryLocationOptions = inventoryLocations
+    .filter((location) => String(location._id) !== VIRTUAL_LOCATION_ID)
+    .map((location) => ({
+      key: String(location._id),
+      value: location,
+      label: location.name,
+    }));
+
+  const selectedLocationOption =
+    selectedLocation && String(selectedLocation._id) !== VIRTUAL_LOCATION_ID
+      ? {
+          key: String(selectedLocation._id),
+          value: selectedLocation,
+          label: selectedLocation.name,
+        }
+      : null;
+
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      sellPrice: article.price ?? "",
+      scrapComment: "",
+    },
+
+    validationSchema: schema,
+
+    onSubmit: async ({ sellPrice, scrapComment }) => {
+      setError("");
+
+      if (newQty === oldQty) {
+        setClose(true);
+        return;
+      }
+
+      if (requiresNewLocation && !hasSelectedValidLocation) {
+        setError("Välj en lagerplats innan du höjer saldot från 0.");
+        return;
+      }
+
+      if (isDecrease && selectedScrapCause === "sold" && sellPrice === "") {
+        setError("Fyll i pris per enhet för de sålda artiklarna.");
+        return;
+      }
+
+      try {
+        /*
+         * newQty är redan det slutliga saldot.
+         * Därför används alltid updateMode "set".
+         */
+        const result = await articleApi.updateQuantity({
+          articleId: String(article._id),
+          updateMode: "set",
+          enteredQty: newQty,
+
+          newLocationId: requiresNewLocation
+            ? String(selectedLocation?._id)
+            : undefined,
+
+          cause: isDecrease ? selectedScrapCause : undefined,
+
+          pricePerUnit:
+            isDecrease && selectedScrapCause === "sold"
+              ? Number(sellPrice)
+              : undefined,
+
+          comment: scrapComment.trim() || undefined,
+        });
+
+        const updatedArticle: PopulatedArticleDocument = {
+          ...article,
+          qty: result.qty,
+          price: result.price,
+          inventoryLocation: result.inventoryLocation,
+        };
+
+        setUpdatedArticle(updatedArticle);
+
+        await refreshArticles();
+
+        setSectionDirty("quantity", false);
+        setClose(true);
+
+        alert("Lagersaldot är uppdaterat!");
+      } catch (error) {
+        console.error("Update article quantity error:", error);
+
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Lagersaldot kunde inte uppdateras.",
+        );
+      }
+    },
+  });
+
+  const resetQty = (): void => {
     setUpdatedArticle((previousArticle) => ({
       ...previousArticle,
       qty: oldQty,
     }));
 
+    setSectionDirty("quantity", false);
     setClose(true);
   };
 
-  const formik = useFormik({
-    initialValues: {
-      sellPrice: article.price,
-      scrapComment: "",
-    },
+  const canSubmit =
+    newQty !== oldQty &&
+    (!requiresNewLocation || hasSelectedValidLocation) &&
+    !formik.isSubmitting;
 
-    enableReinitialize: true,
-
-    // Pass the Yup schema to validate the form
-    validationSchema: schema,
-
-    // Handle form submission
-    onSubmit: async ({ sellPrice, scrapComment }) => {
-      try {
-        if (newQty != oldQty) {
-          if (oldQty == 0 && !selectedLocation) {
-            alert("Välj en lagerplats"); // Check why setError doesnt work
-            return;
-          }
-
-          const virtualLocationId =
-            "64a95847dec1488ee60d10cd" as unknown as Types.ObjectId;
-
-          if (
-            newQty > 0 &&
-            selectedLocation?._id.toString() === virtualLocationId.toString()
-          ) {
-            setError(
-              "Lagerplats '00' är endast till för artiklar med lagersaldo 0. Välj en annan lagerplats.",
-            );
-            return;
-          }
-
-          const updatedArticle = {
-            ...article,
-            qty: newQty,
-            price:
-              sellPrice !== undefined && sellPrice !== article.price
-                ? sellPrice
-                : article.price,
-            lastUpdated: getTodayDate(),
-            inventoryLocation:
-              newQty === 0
-                ? ("64a95847dec1488ee60d10cd" as unknown as Types.ObjectId)
-                : selectedLocation?._id,
-          };
-
-          const request2 = {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedArticle),
-          };
-
-          const response2 = await fetch("/api/article", request2);
-          const result2 = await response2.json();
-
-          if (result2.success) {
-            alert("Artikeln är uppdaterad!"); // Fix a proper pop up later. Ask if you want to continue or close window
-
-            setClose(true);
-            // Updates article list
-            const response = await fetch("/api/article/");
-            const result = await response.json();
-            if (result.success) {
-              setCurrentArticles(result.data);
-              setUpdatedArticle(article);
-            }
-          } else {
-            setError("Något gick fel!");
-          }
-          const scrapCause = scrapCauses.find(
-            (cause) => cause.value === selectedScrapCause,
-          );
-          // Create Transaction history
-          const createTransactionHistory = {
-            direction: newQty < oldQty ? "-" : "+",
-            cause: newQty < oldQty ? scrapCause?.label : "",
-            pricePerUnit:
-              selectedScrapCause == "sold" &&
-              sellPrice !== undefined &&
-              Number(sellPrice),
-            qty: Math.abs(newQty - oldQty),
-            article: updatedArticle,
-            comment: scrapComment,
-            createdDate: getTodayDate(),
-          };
-
-          const request = {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(createTransactionHistory),
-          };
-
-          const response = await fetch("/api/transactionhistory", request);
-          const result = await response.json();
-          if (!result.success) {
-            setError(
-              "Artikelns antal uppdaterades, men transaktionshistoriken kunde inte sparas.",
-            );
-            return;
-          }
-        } else {
-          setClose(true);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    },
-  });
-
-  // Destructure the formik object
-  const { errors, touched, values, handleChange, handleSubmit } = formik;
-
-  const inputClass =
-    "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-3 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset text-base sm:leading-6 md:h-auto";
   return (
     <>
       <img
         src="/arrow.png"
-        alt="picture of an arrow pointing at quantity"
-        className="absolute -top-12 left-20 text-gray-400 opacity-50 w-6 h-6 arrow hidden md:block"
+        alt=""
+        aria-hidden="true"
+        className="arrow absolute -top-12 left-20 hidden h-6 w-6 opacity-50 md:block"
       />
+
       <img
         src="/arrow2.png"
-        alt="picture of an arrow pointing at quantity"
-        className="absolute top-3 left-24 text-gray-400 opacity-50 w-6 h-6 arrow md:hidden"
+        alt=""
+        aria-hidden="true"
+        className="arrow absolute left-24 top-3 h-6 w-6 opacity-50 md:hidden"
       />
+
       <form
-        onSubmit={handleSubmit}
-        className="text-sm rounded-md p-4  border absolute top-11 md:-top-20 left-0 md:left-28 bg-white z-50 shadow-lg"
+        onSubmit={formik.handleSubmit}
+        className="absolute left-0 top-11 z-50 rounded-md border bg-white p-4 text-sm shadow-lg md:-top-20 md:left-28"
       >
-        <div className="font-semibold text-lg mb-2">
-          Överblick ändring av antal
-        </div>
-        {newQty > oldQty && oldQty != 0 ? (
-          <div>
-            <div>
-              Du vill öka antalet med: {newQty - oldQty}{" "}
-              {newQty - oldQty > 1 ? "artiklar" : "artikel"}
-            </div>
-            <div>
-              Från tidigare antal: {oldQty} st till: {newQty} st
-            </div>
-          </div>
-        ) : oldQty == 0 && newQty > oldQty ? (
-          <div>
-            <div>
-              Du vill öka antalet med: {newQty - oldQty}{" "}
-              {newQty - oldQty > 1 ? "artiklar" : "artikel"}
-            </div>
-            <div className="mb-4">
-              Från tidigare antal: {oldQty} st till: {newQty} st
-            </div>
-            <div>
-              <label className="mb-2">Välj ny lagerplats</label>
-              <SearchBarKombo
-                property="inventoryLocation"
-                placeholder="Välj ny lagerplats"
-                selectedObject={selectedLocation}
-                setSelectedObject={setSelectedLocation}
-              />
-            </div>
-            {error ? <ErrorMessage message={error} /> : null}
-          </div>
-        ) : (
-          <div>
-            <div>
-              Du vill minska antalet med: {Math.abs(newQty - oldQty)}{" "}
-              {Math.abs(newQty - oldQty) > 1 ? "artiklar" : "artikel"}
-            </div>
-            <div>
-              Från tidigare antal: {oldQty} st till: {newQty} st
-            </div>
-            <div>
-              <div className="font-semibold text-base mt-6 mb-1 ">
-                Anledning till uttag?
-              </div>
-              <SelectSimple
-                value={selectedScrapCause}
-                onChange={setSelectedScrapCause}
-                options={scrapCauses}
-              />
-              {selectedScrapCause == "sold" ? (
-                <div>
-                  <div className="relative mb-1 mt-2">
-                    <input
-                      id="sellPrice"
-                      name="sellPrice"
-                      min={0}
-                      type="number"
-                      autoComplete="sellPrice"
-                      value={values.sellPrice}
-                      onChange={handleChange}
-                      className={clsx(`pr-20`, inputClass)}
-                      placeholder={"Såld för?"}
-                    />
-                    <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                      <div className="inline-flex items-center z-10 rounded border border-gray-200 px-1 font-sans text-sm text-gray-600">
-                        Kr / enhet
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full text-right mb-4">
-                    Sålt för totalt:{" "}
-                    {Number(values.sellPrice) * Math.abs(newQty - oldQty)} kr
-                  </div>
-                </div>
-              ) : null}
-              <input
-                id="scrapComment"
-                name="scrapComment"
-                type="text"
-                autoComplete="scrapComment"
-                value={values.scrapComment}
-                onChange={handleChange}
-                className={clsx(`mt-2`, inputClass)}
-                placeholder="Kommentar..."
-              />
-            </div>
+        <h2 className="mb-2 text-lg font-semibold">
+          Överblick av saldoändringen
+        </h2>
+
+        <p>
+          Du vill {isIncrease ? "öka" : "minska"} saldot med{" "}
+          <strong>
+            {quantityChange} {quantityChange === 1 ? "artikel" : "artiklar"}
+          </strong>
+          .
+        </p>
+
+        <p className="mt-1">
+          Från <strong>{oldQty} st</strong> till <strong>{newQty} st</strong>.
+        </p>
+
+        {requiresNewLocation && (
+          <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 p-3">
+            <p className="font-semibold">Välj ny lagerplats</p>
+
+            <p className="mt-1 text-gray-700">
+              Artikeln ligger på den virtuella lagerplatsen 00. När saldot höjs
+              behöver artikeln placeras på en riktig lagerplats.
+            </p>
+
+            <SearchSelect
+              options={inventoryLocationOptions}
+              selectedOption={selectedLocationOption}
+              onChange={(option) => {
+                setSelectedLocation(option?.value ?? null);
+                setError("");
+              }}
+              placeholder="Välj lagerplats"
+            />
           </div>
         )}
-        {error ? <ErrorMessage message={error} /> : null}
-        <div className="mt-5 w-full flex flex-col sm:flex-row gap-2 justify-end">
+
+        {isDecrease && (
+          <div className="mt-5">
+            <div className="mb-1 font-semibold">Anledning till uttag</div>
+
+            <SelectSimple
+              value={selectedScrapCause}
+              onChange={(value) => {
+                setSelectedScrapCause(value);
+                setError("");
+              }}
+              options={scrapCauses}
+            />
+
+            {selectedScrapCause === "sold" && (
+              <>
+                <Input
+                  id="sellPrice"
+                  name="sellPrice"
+                  label="Försäljningspris per enhet"
+                  type="number"
+                  min={0}
+                  value={formik.values.sellPrice}
+                  onBlur={formik.handleBlur}
+                  onChange={(event) => {
+                    const value = event.target.value;
+
+                    void formik.setFieldValue(
+                      "sellPrice",
+                      value === "" ? "" : Number(value),
+                    );
+
+                    setError("");
+                  }}
+                  error={
+                    formik.touched.sellPrice
+                      ? formik.errors.sellPrice
+                      : undefined
+                  }
+                  placeholder="Ange försäljningspris"
+                  suffix="kr/st"
+                  required
+                />
+
+                <p className="mt-2 text-right">
+                  Totalt försäljningsvärde:{" "}
+                  <strong>
+                    {Number(formik.values.sellPrice || 0) * quantityChange} kr
+                  </strong>
+                </p>
+              </>
+            )}
+
+            <Input
+              id="scrapComment"
+              name="scrapComment"
+              label="Kommentar"
+              type="text"
+              value={formik.values.scrapComment}
+              onChange={formik.handleChange}
+              containerClassName="mt-3"
+              placeholder="Ange en kommentar till uttaget"
+            />
+          </div>
+        )}
+
+        {error && <ErrorMessage message={error} />}
+
+        <div className="mt-5 flex w-full flex-col justify-end gap-2 sm:flex-row">
           <Button
-            variant="danger"
-            className=" px-3 py-3  font-semibold"
-            onClick={() => {
-              resetQty();
-            }}
+            variant="modest"
+            type="button"
+            className="px-3 py-3 font-semibold"
+            onClick={resetQty}
           >
             Avbryt
           </Button>
+
           <Button
             variant="positive"
             type="submit"
-            className=" px-3 py-3 text-sm font-semibold "
+            className="px-3 py-3 text-sm font-semibold"
+            disabled={!canSubmit}
           >
-            Uppdatera antal
+            {formik.isSubmitting ? "Uppdaterar..." : "Uppdatera saldo"}
           </Button>
         </div>
       </form>

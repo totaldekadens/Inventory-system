@@ -70,7 +70,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   const getInventoryLocations = await InventoryLocation.find({});
   const getVehicleModels = await Vehicle.find({});
-
+  console.log({ getVehicleModels, getInventoryLocations });
   return {
     props: {
       articles: JSON.parse(JSON.stringify(descendingArticles)),

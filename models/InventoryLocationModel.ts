@@ -1,9 +1,15 @@
 import mongoose, { Types } from "mongoose";
-const { Schema } = mongoose;
 
-const InventoryLocationSchema = new Schema<InventoryLocationDocument>({
-  name: { type: String, required: true },
-  description: { type: String },
+const InventoryLocationSchema = new mongoose.Schema<InventoryLocationDocument>({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
 });
 
 export interface InventoryLocationDocument {
@@ -12,6 +18,11 @@ export interface InventoryLocationDocument {
   description?: string;
 }
 
-export default module.exports =
+const InventoryLocationModel =
   mongoose.models.InventoryLocation ||
-  mongoose.model("InventoryLocation", InventoryLocationSchema);
+  mongoose.model<InventoryLocationDocument>(
+    "InventoryLocation",
+    InventoryLocationSchema,
+  );
+
+export default InventoryLocationModel;

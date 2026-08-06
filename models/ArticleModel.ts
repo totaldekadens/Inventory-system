@@ -57,15 +57,13 @@ export interface ArticleDocument {
   images: string[];
   purchaseValue?: number;
   comment?: string;
-  issue?: [
-    {
-      sold: boolean;
-      qty: number;
-      unitPrice: number;
-      comment?: string;
-      date: Date;
-    }
-  ];
+  issue?: {
+    sold: boolean;
+    qty: number;
+    unitPrice: number;
+    comment?: string;
+    date: Date;
+  }[];
   createdDate: string;
   lastUpdated?: string;
 }

@@ -23,7 +23,7 @@ const VehicleModelSelect = ({ selectedModel, setSelectedModel }: Props) => {
         selectedObjects={selectedModel}
         setSelectedObjects={setSelectedModel}
         options={values}
-        placeholder="Välj fordonsmodell*"
+        placeholder="Välj fordonsmodell"
       />
     </div>
   );

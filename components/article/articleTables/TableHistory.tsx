@@ -123,7 +123,7 @@ const TableHistory = ({ history }: Props) => {
                     {/* Antal */}
                     <TableItem
                       className="text-gray-500"
-                      header={article.direction + article.qty}
+                      header={`${!article.direction ? "" : article.direction + article.qty}`}
                     />
                     {/* Anledning */}
                     <TableItem header={article.cause ? article.cause : ""} />

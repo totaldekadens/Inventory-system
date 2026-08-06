@@ -1,56 +1,104 @@
 import dbConnect from "@/lib/dbConnect";
-import Vehicle, { VehicleDocument } from "@/models/VehicleModel";
-import { NextApiRequest, NextApiResponse } from "next";
+import Article from "@/models/ArticleModel";
+import Vehicle from "@/models/VehicleModel";
+import { Types } from "mongoose";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const {
-    query: { id },
-    method,
-  } = req;
+  const { id } = req.query;
+
+  if (typeof id !== "string" || !Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      success: false,
+      data: "Ogiltigt fordonsmodell-id.",
+    });
+  }
 
   await dbConnect();
 
-  switch (method) {
-    case "GET":
+  switch (req.method) {
+    case "GET": {
       try {
-        const vehicle: VehicleDocument | null = await Vehicle.findById(id);
+        const vehicle = await Vehicle.findById(id);
 
         if (!vehicle) {
-          return res.status(403).send({
+          return res.status(404).json({
             success: false,
-            data: "Vehicle not found",
+            data: "Fordonsmodellen hittades inte.",
           });
         }
 
-        res.status(201).json({ success: true, data: vehicle });
-      } catch (error) {
-        res.json({ success: false, data: error });
-      }
-      break;
-
-    case "DELETE":
-      try {
-        // Todo:  Check if an article is on the location, it shall not be able to delete before the article is moved to a new location.
-        const deletedLocation = await Vehicle.deleteOne({ _id: id });
-        if (deletedLocation.deletedCount < 1) {
-          return res
-            .status(400)
-            .json({ success: false, data: "Vehicle not deleted" });
-        }
-        res.status(200).json({
+        return res.status(200).json({
           success: true,
-          data: "Vehicle is successfully deleted",
+          data: vehicle,
         });
       } catch (error) {
-        res.status(400).json({ success: false, data: error });
-      }
-      break;
+        console.error("Get vehicle error:", error);
 
-    default:
-      res.json({ success: false, data: "break error" });
-      break;
+        return res.status(500).json({
+          success: false,
+          data: "Fordonsmodellen kunde inte hämtas.",
+        });
+      }
+    }
+
+    case "DELETE": {
+      try {
+        const vehicle = await Vehicle.findById(id);
+
+        if (!vehicle) {
+          return res.status(404).json({
+            success: false,
+            data: "Fordonsmodellen hittades inte.",
+          });
+        }
+
+        const vehicleIsUsed = await Article.exists({
+          vehicleModels: id,
+        });
+
+        if (vehicleIsUsed) {
+          return res.status(409).json({
+            success: false,
+            data: "Fordonsmodellen kan inte raderas eftersom den används av en eller flera artiklar.",
+          });
+        }
+
+        const deleteResult = await Vehicle.deleteOne({
+          _id: id,
+        });
+
+        if (deleteResult.deletedCount !== 1) {
+          return res.status(500).json({
+            success: false,
+            data: "Fordonsmodellen kunde inte raderas.",
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: "Fordonsmodellen är raderad.",
+        });
+      } catch (error) {
+        console.error("Delete vehicle error:", error);
+
+        return res.status(500).json({
+          success: false,
+          data: "Fordonsmodellen kunde inte raderas.",
+        });
+      }
+    }
+
+    default: {
+      res.setHeader("Allow", ["GET", "DELETE"]);
+
+      return res.status(405).json({
+        success: false,
+        data: "Method not allowed.",
+      });
+    }
   }
 }

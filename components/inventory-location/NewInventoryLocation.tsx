@@ -3,6 +3,8 @@ import { useFormik } from "formik";
 import { useContext, useState } from "react";
 import { IconPigMoney } from "@tabler/icons-react";
 import { inventoryLocationContext } from "../context/InventoryLocationProvider";
+import { inventoryLocationApi } from "@/lib/api/inventoryLocations";
+import { useRefreshInventoryLocations } from "@/lib/api/useRefreshInventoryLocations";
 
 // Yup schema to validate the form
 export const schema = Yup.object().shape({
@@ -21,7 +23,8 @@ export const ErrorMessage = ({ message }: any) => {
 
 const NewInventoryLocation = () => {
   const [error, setError] = useState<string>("");
-  const { setInventoryLocations } = useContext(inventoryLocationContext);
+
+  const refreshInventoryLocations = useRefreshInventoryLocations();
 
   const formik = useFormik({
     initialValues: {
@@ -35,37 +38,26 @@ const NewInventoryLocation = () => {
     // Handle form submission
     onSubmit: async ({ name, description }) => {
       try {
-        const newLocation = {
+        setError("");
+
+        await inventoryLocationApi.create({
           name,
           description,
-        };
-        console.log("kommer jag in?");
-        const request = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newLocation),
-        };
+        });
 
-        const response = await fetch("/api/inventorylocation", request);
-        const result = await response.json();
+        await refreshInventoryLocations();
 
-        if (result.success) {
-          alert("Lagerplatsen är skapad"); // Fix a proper pop up later. Ask if you want to continue or close window
+        formik.resetForm();
 
-          // Updates list
-          const response = await fetch("/api/inventorylocation/");
-          const result = await response.json();
-          if (result.success) {
-            setInventoryLocations(result.data);
-            formik.resetForm();
-          }
-        } else {
-          setError("Något gick fel!");
-        }
-      } catch (err) {
-        console.error(err);
+        alert("Lagerplatsen är skapad.");
+      } catch (error) {
+        console.error("Create inventory location error:", error);
+
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Lagerplatsen kunde inte skapas.",
+        );
       }
     },
   });
@@ -120,10 +112,12 @@ const NewInventoryLocation = () => {
           <>
             <button
               type="submit"
-              title="Spara lagerplats"
+              disabled={formik.isSubmitting}
               className="border gap-2 border-gray-300 flex justify-center rounded-md p-3 hover:bg-[#264133] hover:text-white bg-[#264133] sm:bg-white text-white sm:text-[#264133] w-full sm:w-auto"
             >
-              Spara
+              {formik.isSubmitting
+                ? "Skapar lagerplats..."
+                : "Skapa lagerplats"}
               <IconPigMoney
                 height={24}
                 width={24}
