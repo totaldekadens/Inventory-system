@@ -1,9 +1,10 @@
 import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { VehicleDocument } from "@/models/VehicleModel";
 import { Types } from "mongoose";
-import React, { useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { FC, PropsWithChildren, useState } from "react";
 
+type DirtySection = "quantity" | "location" | "info";
 export interface PopulatedArticleDocument {
   _id: Types.ObjectId;
   artno: number;
@@ -26,7 +27,7 @@ export interface PopulatedArticleDocument {
       unitPrice: number;
       comment?: string;
       date: Date;
-    }
+    },
   ];
   createdDate: string;
   lastUpdated?: string;
@@ -34,13 +35,20 @@ export interface PopulatedArticleDocument {
 
 interface articleContextData {
   currentArticles: PopulatedArticleDocument[] | [];
-  setCurrentArticles: React.Dispatch<
-    React.SetStateAction<PopulatedArticleDocument[] | []>
-  >;
+  setCurrentArticles: Dispatch<SetStateAction<PopulatedArticleDocument[] | []>>;
   articles: PopulatedArticleDocument[] | [];
-  setArticles: React.Dispatch<
-    React.SetStateAction<PopulatedArticleDocument[] | []>
+  setArticles: Dispatch<SetStateAction<PopulatedArticleDocument[] | []>>;
+  currentArticle: PopulatedArticleDocument | undefined;
+  setCurrentArticle: Dispatch<
+    SetStateAction<PopulatedArticleDocument | undefined>
   >;
+  dirtySections: Record<DirtySection, boolean>;
+
+  setSectionDirty: (section: DirtySection, dirty: boolean) => void;
+
+  isDirty: boolean;
+
+  resetDirtySections: () => void;
 }
 
 export const articleContext = React.createContext<articleContextData>({
@@ -48,6 +56,17 @@ export const articleContext = React.createContext<articleContextData>({
   setCurrentArticles: () => {},
   articles: [],
   setArticles: () => {},
+  currentArticle: undefined,
+  setCurrentArticle: () => {},
+  dirtySections: {
+    quantity: false,
+    location: false,
+    info: false,
+  },
+
+  setSectionDirty: () => {},
+  isDirty: false,
+  resetDirtySections: () => {},
 });
 
 const ArticlesProvider: FC<PropsWithChildren> = (props) => {
@@ -55,10 +74,50 @@ const ArticlesProvider: FC<PropsWithChildren> = (props) => {
   const [currentArticles, setCurrentArticles] = useState<
     PopulatedArticleDocument[] | []
   >([]);
+  const [currentArticle, setCurrentArticle] =
+    useState<PopulatedArticleDocument>();
+
+  const initialDirtySections: Record<DirtySection, boolean> = {
+    quantity: false,
+    location: false,
+    info: false,
+  };
+
+  const [dirtySections, setDirtySections] = useState(initialDirtySections);
+
+  const setSectionDirty = (section: DirtySection, dirty: boolean): void => {
+    setDirtySections((previous) => {
+      if (previous[section] === dirty) {
+        return previous;
+      }
+
+      return {
+        ...previous,
+        [section]: dirty,
+      };
+    });
+  };
+
+  const isDirty = Object.values(dirtySections).some(Boolean);
+
+  const resetDirtySections = (): void => {
+    setDirtySections(initialDirtySections);
+  };
 
   return (
     <articleContext.Provider
-      value={{ articles, setArticles, currentArticles, setCurrentArticles }}
+      value={{
+        articles,
+        setArticles,
+        currentArticles,
+        setCurrentArticles,
+        currentArticle,
+        setCurrentArticle,
+        dirtySections,
+        setSectionDirty,
+        isDirty,
+        resetDirtySections,
+      }}
     >
       {props.children}
     </articleContext.Provider>

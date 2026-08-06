@@ -1,7 +1,11 @@
 import { IconEdit } from "@tabler/icons-react";
-import { PopulatedArticleDocument } from "../../context/ArticleProvider";
-import { Dispatch, SetStateAction } from "react";
+import {
+  articleContext,
+  PopulatedArticleDocument,
+} from "../../context/ArticleProvider";
+import { Dispatch, SetStateAction, useContext } from "react";
 import clsx from "clsx";
+import Button from "@/components/ui/Button";
 
 interface ItemInfoProps {
   name: string;
@@ -24,30 +28,48 @@ const ItemInfoSmall = ({ name, value, className }: ItemInfoProps) => (
 );
 
 interface Props {
-  article: PopulatedArticleDocument;
   className?: string;
   setEdit: Dispatch<SetStateAction<boolean>>;
 }
-const SidebarRead = ({ article, className, setEdit }: Props) => {
+const SidebarRead = ({ className, setEdit }: Props) => {
+  const { currentArticle } = useContext(articleContext);
+  if (!currentArticle) return;
   return (
     <aside className={className} style={{ maxWidth: "600px" }}>
+      <div className="flex justify-end">
+        <div>
+          <Button
+            onClick={() => setEdit(true)}
+            variant="modest"
+            className="flex gap-2 items-center"
+          >
+            <IconEdit className="cursor-pointer" />
+            Redigera artikel
+          </Button>
+        </div>
+      </div>
       <div className="flex justify-between mb-4">
         <div>
-          <h1 className="text-xl font-medium text-gray-900">{article.title}</h1>
+          <h1 className="text-xl font-medium text-gray-900">
+            {currentArticle.title}
+          </h1>
           <p className="text-lg font-medium tracking-tight text-gray-900/70 ">
-            {article.supplierArtno}
+            {currentArticle.supplierArtno}
           </p>
         </div>
-        <IconEdit onClick={() => setEdit(true)} className="cursor-pointer" />
       </div>
       <div className="flex justify-between flex-wrap">
-        <ItemInfo name="Skick" value={article.condition} />
-        <ItemInfo name="Plats" value={article.inventoryLocation.name} />
-        <ItemInfo name="Antal" value={article.qty} />
+        <ItemInfo name="Skick" value={currentArticle.condition} />
+        <ItemInfo name="Plats" value={currentArticle.inventoryLocation.name} />
+        <ItemInfo name="Antal" value={currentArticle.qty} />
       </div>
       <ItemInfo
         name="Beskrivning"
-        value={article.description ? article.description : "Ingen beskrivning"}
+        value={
+          currentArticle.description
+            ? currentArticle.description
+            : "Ingen beskrivning"
+        }
       />
 
       <div className="mt-4 lg:row-span-3 lg:mt-8">
@@ -56,19 +78,21 @@ const SidebarRead = ({ article, className, setEdit }: Props) => {
             Mer information
           </div>
         </div>
-        <ItemInfoSmall name="Art.no" value={article.artno} />
+        <ItemInfoSmall name="Art.no" value={currentArticle.artno} />
         <ItemInfoSmall
           name="Lev. art. no: "
-          value={article.supplierArtno ? article.supplierArtno : "-"}
+          value={
+            currentArticle.supplierArtno ? currentArticle.supplierArtno : "-"
+          }
         />
         <div className=" grid grid-cols-2">
           <p className=" tracking-tight text-gray-900/80">
-            {article.vehicleModels?.length > 1
+            {currentArticle.vehicleModels?.length > 1
               ? "Fordonsmodeller: "
               : "Fordonsmodell: "}
           </p>
           <div>
-            {article.vehicleModels?.map((model, i) => (
+            {currentArticle.vehicleModels?.map((model, i) => (
               <p key={i} className=" ">
                 {model.name}
               </p>
@@ -78,24 +102,30 @@ const SidebarRead = ({ article, className, setEdit }: Props) => {
         <ItemInfoSmall
           name="Inköpspris:"
           value={
-            article.purchaseValue
-              ? article.purchaseValue + " kr/st (inkl. moms)"
+            currentArticle.purchaseValue
+              ? currentArticle.purchaseValue + " kr/st (inkl. moms)"
               : "-"
           }
         />
         <ItemInfoSmall
           name="Försäljningspris:"
-          value={article.price ? article.price + " kr/st (inkl. moms)" : "-"}
+          value={
+            currentArticle.price
+              ? currentArticle.price + " kr/st (inkl. moms)"
+              : "-"
+          }
         />
 
         <ItemInfoSmall
           name="Övrig kommentar:"
-          value={article.comment ? article.comment : "-"}
+          value={currentArticle.comment ? currentArticle.comment : "-"}
         />
         <ItemInfoSmall
           name="Senast uppdaterad:"
           value={
-            article.lastUpdated ? article.lastUpdated : article.createdDate
+            currentArticle.lastUpdated
+              ? currentArticle.lastUpdated
+              : currentArticle.createdDate
           }
         />
 
@@ -103,7 +133,7 @@ const SidebarRead = ({ article, className, setEdit }: Props) => {
         <div>
           <div className=" font-medium text-gray-900 mt-4 lg:mt-8">Säljas?</div>
           <div className="text-gray-900/80">
-            {article.forSale ? "Ja" : "Nej"}
+            {currentArticle.forSale ? "Ja" : "Nej"}
           </div>
         </div>
       </div>

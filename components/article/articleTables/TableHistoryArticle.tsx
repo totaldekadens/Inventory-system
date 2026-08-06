@@ -2,6 +2,8 @@ import clsx from "clsx";
 import { Spoiler } from "@mantine/core";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
 import Accordion from "../../ui/Accordion";
+import { useContext, useEffect, useState } from "react";
+import { articleContext } from "@/components/context/ArticleProvider";
 
 interface ThProps {
   header: string;
@@ -31,11 +33,32 @@ const TableItem = ({ header, className }: ThProps) => (
   </div>
 );
 
-interface Props {
-  history: TransactionHistoryDocument[];
-}
-
-const TableHistoryArticle = ({ history }: Props) => {
+const TableHistoryArticle = () => {
+  const { currentArticle } = useContext(articleContext);
+  const [history, setHistory] = useState<TransactionHistoryDocument[]>([]);
+  // Fetches transaction history for this specific article
+  useEffect(() => {
+    const getHistory = async () => {
+      if (!currentArticle) return;
+      try {
+        const response = await fetch(
+          "/api/transactionhistory/" + currentArticle.artno,
+        );
+        const result = await response.json();
+        if (result.success) {
+          // Sort keys from Ö - A
+          const descendingHistory: TransactionHistoryDocument[] =
+            result.data.sort((a: any, b: any) =>
+              a.createdDate < b.createdDate ? 1 : -1,
+            );
+          setHistory(descendingHistory);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getHistory();
+  }, []);
   return (
     <>
       <div className="-my-2 overflow-x-auto mt-2 mx-auto max-w-3xl px-4 sm:px-6  lg:max-w-8xl lg:px-8 ">

@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 const variantStyle = {
   danger:
@@ -14,20 +15,22 @@ const variantStyle = {
 
 interface ButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   variant: "modest" | "normal" | "positive" | "danger";
-  title: string;
+  children: ReactNode;
   className?: string;
   href?: string;
+  disabled?: boolean;
 }
 
 interface LinkProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: "modest" | "normal" | "positive" | "danger";
-  title: string;
+  children: ReactNode;
   className?: string;
   href?: string;
 }
 
 const Button = ({
   variant,
+  children,
   className,
   href,
   title,
@@ -35,16 +38,17 @@ const Button = ({
 }: ButtonProps & LinkProps) => {
   className = clsx(
     "rounded-md px-3 py-2 text-sm font-semibold  shadow-sm",
+    "disabled:opacity-60 disabled:cursor-not-allowed",
     variantStyle[variant],
     className,
   );
   return href ? (
     <Link href={href} className={className} {...props}>
-      {title}
+      {children}
     </Link>
   ) : (
     <button className={className} {...props}>
-      {title}
+      {children}
     </button>
   );
 };

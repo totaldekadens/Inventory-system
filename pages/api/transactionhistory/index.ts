@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 
@@ -46,12 +46,12 @@ export default async function handler(
           new TransactionHistory(req.body);
 
         const transactionHistory = await TransactionHistory.create(
-          newTransactionHistory
+          newTransactionHistory,
         );
 
         res.status(201).json({ success: true, data: transactionHistory._id });
       } catch (error) {
-        res.json({ success: false, data: error });
+        res.status(500).json({ success: false, data: error });
       }
       break;
 
@@ -72,7 +72,7 @@ export default async function handler(
           {
             new: true,
             runValidators: true,
-          }
+          },
         );
 
         if (!transactionHistory) {

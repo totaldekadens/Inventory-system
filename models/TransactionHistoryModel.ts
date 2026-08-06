@@ -1,9 +1,9 @@
 import mongoose, { Types } from "mongoose";
-import { ArticleDocument, ArticleSchema } from "./ArticleModel";
+import { ArticleDocument } from "./ArticleModel";
 const { Schema } = mongoose;
 
 const TransactionHistorySchema = new Schema<TransactionHistoryDocument>({
-  direction: { type: String, required: true },
+  direction: { type: String, enum: ["-", "+", ""] },
   cause: { type: String },
   article: {
     _id: {
@@ -49,6 +49,23 @@ const TransactionHistorySchema = new Schema<TransactionHistoryDocument>({
     createdDate: { type: String, required: true },
     lastUpdated: String,
   },
+  fromLocation: {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    name: {
+      type: String,
+    },
+  },
+
+  toLocation: {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    name: {
+      type: String,
+    },
+  },
   qty: { type: Number, required: true },
   pricePerUnit: { type: Number },
   comment: { type: String },
@@ -57,7 +74,7 @@ const TransactionHistorySchema = new Schema<TransactionHistoryDocument>({
 
 export interface TransactionHistoryDocument {
   _id?: Types.ObjectId;
-  direction: "-" | "+";
+  direction: "-" | "+" | "";
   cause?:
     | "Såld"
     | "Kastad (överflödig)"
@@ -65,9 +82,20 @@ export interface TransactionHistoryDocument {
     | "Använd vid reparation"
     | "Diff"
     | "Artikel permanent borttagen"
-    | "Artikel skapad";
+    | "Artikel skapad"
+    | "Flytt till ny lagerplats";
+
   article: ArticleDocument;
   qty: number;
+  fromLocation?: {
+    _id: Types.ObjectId;
+    name: string;
+  };
+
+  toLocation?: {
+    _id: Types.ObjectId;
+    name: string;
+  };
   pricePerUnit?: number;
   comment?: string;
   createdDate: string;

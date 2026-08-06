@@ -277,19 +277,21 @@ const ScrapCause = ({
         {error ? <ErrorMessage message={error} /> : null}
         <div className="mt-5 w-full flex flex-col sm:flex-row gap-2 justify-end">
           <Button
-            title="Avbryt"
             variant="danger"
             className=" px-3 py-3  font-semibold"
             onClick={() => {
               resetQty();
             }}
-          />
+          >
+            Avbryt
+          </Button>
           <Button
             variant="positive"
-            title="  Uppdatera antal"
             type="submit"
             className=" px-3 py-3 text-sm font-semibold "
-          />
+          >
+            Uppdatera antal
+          </Button>
         </div>
       </form>
     </>

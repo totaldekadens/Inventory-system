@@ -335,7 +335,7 @@ const NewArticle = ({ setCreateArticle }: Props) => {
                 className={inputClass}
                 placeholder="Övrig kommentar"
               />
-              <ForSaleField setForSale={setForSale} />
+              <ForSaleField setForSale={setForSale} forSale={forSale} />
               {forSale ? (
                 <div className="relative">
                   <input
@@ -364,11 +364,12 @@ const NewArticle = ({ setCreateArticle }: Props) => {
               {error ? <ErrorMessage message={error} /> : null}
               <div className="mt-5 w-full flex justify-end">
                 <Button
-                  title="Skapa"
                   type="submit"
                   variant="positive"
                   className=" w-full sm:w-36 px-3 py-3"
-                />
+                >
+                  Skapa
+                </Button>
               </div>
             </form>
           </div>

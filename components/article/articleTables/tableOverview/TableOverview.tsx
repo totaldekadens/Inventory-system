@@ -24,10 +24,9 @@ const Th = ({ header, className, empty }: ThProps) => (
 );
 
 const TableOverview = () => {
-  const { currentArticles } = useContext(articleContext);
+  const { currentArticles, currentArticle, setCurrentArticle } =
+    useContext(articleContext);
   const [open, setOpen] = useState(false);
-  const [currentArticle, setCurrentArticle] =
-    useState<PopulatedArticleDocument>();
 
   useEffect(() => {
     useRemoveBackgroundScroll(open);
@@ -90,9 +89,7 @@ const TableOverview = () => {
             )}
           </tbody>
         </table>
-        {open && currentArticle ? (
-          <ArticleView setOpen={setOpen} article={currentArticle} />
-        ) : null}
+        {open && currentArticle ? <ArticleView setOpen={setOpen} /> : null}
       </div>
     </div>
   );
