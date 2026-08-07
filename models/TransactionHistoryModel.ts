@@ -114,7 +114,7 @@ const TransactionHistorySchema =
         required: true,
       },
 
-      lastUpdated: String,
+      lastUpdated: Date,
     },
 
     fromLocation: {

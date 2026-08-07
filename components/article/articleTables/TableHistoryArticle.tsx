@@ -5,6 +5,7 @@ import Accordion from "../../ui/Accordion";
 import { useContext, useEffect, useState } from "react";
 import { articleContext } from "@/components/context/ArticleProvider";
 import { transactionHistoryApi } from "@/lib/api/transactionHistory";
+import { formatDate } from "@/lib/formatDate";
 
 interface ThProps {
   header: string;
@@ -101,7 +102,7 @@ const TableHistoryArticle = () => {
                         >
                           {/* Datum */}
                           <TableItem
-                            header={article.createdDate}
+                            header={formatDate(article.createdDate)}
                             className="min-w-[160px] pl-2"
                           />
                           {/* Antal */}

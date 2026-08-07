@@ -148,7 +148,7 @@ export default function SignIn() {
                     className="flex w-full justify-center"
                     type="submit"
                   >
-                    Loggain
+                    Logga in
                   </Button>
                 </div>
               </form>

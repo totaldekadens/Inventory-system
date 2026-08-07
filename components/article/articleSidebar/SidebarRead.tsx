@@ -1,11 +1,9 @@
 import { IconEdit } from "@tabler/icons-react";
-import {
-  articleContext,
-  PopulatedArticleDocument,
-} from "../../context/ArticleProvider";
+import { articleContext } from "../../context/ArticleProvider";
 import { Dispatch, SetStateAction, useContext } from "react";
 import clsx from "clsx";
 import Button from "@/components/ui/Button";
+import { formatDate } from "@/lib/formatDate";
 
 interface ItemInfoProps {
   name: string;
@@ -122,11 +120,7 @@ const SidebarRead = ({ className, setEdit }: Props) => {
         />
         <ItemInfoSmall
           name="Senast uppdaterad:"
-          value={
-            currentArticle.lastUpdated
-              ? currentArticle.lastUpdated
-              : currentArticle.createdDate
-          }
+          value={formatDate(currentArticle.lastUpdated)}
         />
 
         {/* For sale */}

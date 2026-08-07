@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/formatDate";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
 import clsx from "clsx";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -38,7 +39,9 @@ const SearchBar = ({
             object.article.title.toUpperCase().includes(query.toUpperCase()) ||
             object.comment?.toUpperCase().includes(query.toUpperCase()) ||
             object.cause?.toUpperCase().includes(query.toUpperCase()) ||
-            object.createdDate.toUpperCase().includes(query.toUpperCase()),
+            formatDate(object.createdDate)
+              .toUpperCase()
+              .includes(query.toUpperCase()),
         );
 
         if (query) {

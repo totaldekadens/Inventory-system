@@ -32,7 +32,9 @@ export default async function handler(
   try {
     const transactionHistory = await TransactionHistory.find({
       "article.artno": Number(articleNumber),
-    }).sort({ createdDate: -1 });
+    }).sort({
+      createdDate: -1,
+    });
 
     return res.status(200).json({
       success: true,

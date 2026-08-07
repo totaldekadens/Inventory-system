@@ -3,6 +3,7 @@ import { IconX } from "@tabler/icons-react";
 import Slider from "@/components/ui/Slider";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
 import HoverInfo from "@/components/ui/HoverInfo";
+import { formatDate } from "@/lib/formatDate";
 
 interface Props {
   object: TransactionHistoryDocument;
@@ -69,7 +70,9 @@ const ArticleViewHistory = ({ object, setOpen }: Props) => {
                 <div className=" font-medium text-gray-900 mt-4 lg:mt-8">
                   Transaktionsdatum
                 </div>
-                <div className="text-gray-900/80">{object.createdDate}</div>
+                <div className="text-gray-900/80">
+                  {formatDate(object.createdDate)}
+                </div>
               </div>
             </div>
 

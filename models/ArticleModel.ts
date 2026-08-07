@@ -59,5 +59,8 @@ export interface ArticleDocument {
   lastUpdated: Date;
 }
 
-export default module.exports =
-  mongoose.models.Article || mongoose.model("Article", ArticleSchema);
+const ArticleModel =
+  mongoose.models.Article ||
+  mongoose.model<ArticleDocument>("Article", ArticleSchema);
+
+export default ArticleModel;

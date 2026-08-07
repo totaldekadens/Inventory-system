@@ -54,7 +54,7 @@ export default function Index({
 export const getServerSideProps: GetServerSideProps = async () => {
   await dbConnect();
 
-  const getArticles: PopulatedArticleDocument[] = await Article.find({})
+  const getArticles = await Article.find({})
     .populate({
       path: "inventoryLocation",
       model: InventoryLocation,
@@ -62,18 +62,16 @@ export const getServerSideProps: GetServerSideProps = async () => {
     .populate({
       path: "vehicleModels",
       model: Vehicle,
+    })
+    .sort({
+      lastUpdated: -1,
     });
-
-  const descendingArticles = getArticles.sort((a, b) =>
-    a.createdDate < b.createdDate ? 1 : -1,
-  );
-
   const getInventoryLocations = await InventoryLocation.find({});
   const getVehicleModels = await Vehicle.find({});
-  console.log({ getVehicleModels, getInventoryLocations });
+
   return {
     props: {
-      articles: JSON.parse(JSON.stringify(descendingArticles)),
+      articles: JSON.parse(JSON.stringify(getArticles)),
       inventoryLocations: JSON.parse(JSON.stringify(getInventoryLocations)),
       vehicleModels: JSON.parse(JSON.stringify(getVehicleModels)),
     },

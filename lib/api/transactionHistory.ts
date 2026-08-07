@@ -10,7 +10,7 @@ export interface CreateTransactionHistoryRequest {
   toLocation?: TransactionHistoryDocument["toLocation"];
   pricePerUnit?: number;
   comment?: string;
-  createdDate: string;
+  createdDate: Date;
 }
 
 export const transactionHistoryApi = {

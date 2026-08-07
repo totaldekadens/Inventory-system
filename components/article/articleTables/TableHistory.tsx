@@ -4,6 +4,7 @@ import { Spoiler } from "@mantine/core";
 import { TransactionHistoryDocument } from "@/models/TransactionHistoryModel";
 import { useRemoveBackgroundScroll } from "@/lib/useRemoveBackgroundScroll";
 import ArticleViewHistory from "../articleView/ArticleViewHistory";
+import { formatDate } from "@/lib/formatDate";
 
 interface ThProps {
   header: string;
@@ -152,7 +153,7 @@ const TableHistory = ({ history }: Props) => {
                       </Spoiler>
                     </td>
                     {/* Datum */}
-                    <TableItem header={article.createdDate} />
+                    <TableItem header={formatDate(article.createdDate)} />
                   </tr>
                 );
               })

@@ -15,7 +15,7 @@ export default async function handler(
   switch (method) {
     case "GET":
       try {
-        const getAllArticles: ArticleDocument[] | null = await Article.find({})
+        const getAllArticles = await Article.find({})
           .populate({
             path: "inventoryLocation",
             model: InventoryLocation,
@@ -23,24 +23,24 @@ export default async function handler(
           .populate({
             path: "vehicleModels",
             model: Vehicle,
+          })
+          .sort({
+            lastUpdated: -1,
           });
 
-        if (!getAllArticles) {
-          return res.status(500).send({
-            success: false,
-            data: "Server problem",
-          });
-        }
-
-        const descendingArticles = getAllArticles.sort((a, b) =>
-          a.createdDate < b.createdDate ? 1 : -1,
-        );
-
-        res.status(200).json({ success: true, data: descendingArticles });
+        return res.status(200).json({
+          success: true,
+          data: getAllArticles,
+        });
       } catch (error) {
-        res.status(400).json({ success: false, data: error });
+        console.error("Get articles error:", error);
+
+        return res.status(500).json({
+          success: false,
+          data: "Artiklarna kunde inte hämtas.",
+        });
       }
-      break;
+
     case "POST":
       try {
         if (!req.body) {
@@ -61,6 +61,7 @@ export default async function handler(
 
         newArticle.artno = newArticleNumber;
         newArticle.createdDate = new Date();
+        newArticle.lastUpdated = new Date();
 
         const article = await Article.create(newArticle);
 
