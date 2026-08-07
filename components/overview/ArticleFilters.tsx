@@ -10,6 +10,7 @@ import {
   StockFilter,
   stockOptions,
 } from "@/lib/config";
+import { formatDate } from "@/lib/formatDate";
 
 const ArticleFilters = () => {
   const { setCurrentArticles, articles, currentArticles } =
@@ -40,6 +41,16 @@ const ArticleFilters = () => {
         article.supplierArtno?.toLowerCase().includes(normalizedQuery) ||
         article.comment?.toLowerCase().includes(normalizedQuery) ||
         article.title?.toLowerCase().includes(normalizedQuery);
+      formatDate(article.createdDate).toLowerCase().includes(normalizedQuery) ||
+        formatDate(article.lastUpdated)
+          .toLowerCase()
+          .includes(normalizedQuery) ||
+        article.qty.toString().toLowerCase().includes(normalizedQuery) ||
+        article.price?.toString().toLowerCase().includes(normalizedQuery) ||
+        article.purchaseValue
+          ?.toString()
+          .toLowerCase()
+          .includes(normalizedQuery);
 
       const matchesSaleFilter =
         saleFilter === "all" ||
