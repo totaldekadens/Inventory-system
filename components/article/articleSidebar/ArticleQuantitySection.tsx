@@ -20,6 +20,7 @@ import QuantityModeField, {
 import { useRefreshArticles } from "@/lib/useRefreshArticles";
 import { articleApi } from "@/lib/api/articles";
 import QtyFromZeroNewLocation from "../QtyFromZeroNewLocationField";
+import QuantityChangeDetails from "../QuantityChangeDetails";
 
 interface Props {
   selectedLocation: InventoryLocationDocument | null;
@@ -301,8 +302,8 @@ const ArticleQuantitySection = ({
         />
 
         {hasQuantityChanged && (
-          <div className="mt-4 rounded-md border p-3 text-sm">
-            <p className="font-medium">Överblick av ändringen</p>
+          <div className="mt-4 rounded-md border p-3 text-sm ">
+            <p className="font-bold text-base">Överblick av saldoändringen</p>
 
             {!hasInvalidQuantity && (
               <>
@@ -322,80 +323,27 @@ const ArticleQuantitySection = ({
               <ErrorMessage message="Du kan inte ta bort mer än vad som finns tillgängligt." />
             )}
 
-            {isDecrease && !hasInvalidQuantity && (
-              <div className="mt-4">
-                <div className="mb-2 font-bold">Anledning till uttag</div>
-
-                <SelectSimple
-                  value={selectedCause}
-                  onChange={(value) => {
-                    setSelectedCause(value);
-                    setError("");
-                  }}
-                  options={scrapCauses}
-                />
-
-                {selectedCause === "sold" && (
-                  <>
-                    <Input
-                      id="sellPrice"
-                      name="sellPrice"
-                      label="Försäljningspris per enhet"
-                      type="number"
-                      min={0}
-                      value={values.sellPrice}
-                      onBlur={handleBlur}
-                      onChange={(event) => {
-                        const value = event.target.value;
-
-                        void setFieldValue(
-                          "sellPrice",
-                          value === "" ? "" : Number(value),
-                        );
-
-                        setError("");
-                      }}
-                      error={touched.sellPrice ? errors.sellPrice : undefined}
-                      placeholder="Ange försäljningspris"
-                      suffix="kr/st (inkl. moms)"
-                      required
-                      containerClassName="mt-2"
-                    />
-
-                    <p className="mt-2 text-right text-sm">
-                      Totalt försäljningsvärde:{" "}
-                      <strong>
-                        {Number(values.sellPrice || 0) *
-                          Math.abs(quantityChange)}{" "}
-                        kr
-                      </strong>
-                    </p>
-                  </>
-                )}
-
-                <Input
-                  id="transactionComment"
-                  name="transactionComment"
-                  label="Kommentar"
-                  type="text"
-                  value={values.transactionComment}
-                  containerClassName="mt-2"
-                  onChange={(event) => {
-                    void setFieldValue(
-                      "transactionComment",
-                      event.target.value,
-                    );
-                  }}
-                  placeholder="Ange en kommentar till uttaget"
-                />
-              </div>
-            )}
-
-            {requiresNewLocation && (
-              <QtyFromZeroNewLocation
+            {!hasInvalidQuantity && (isDecrease || requiresNewLocation) && (
+              <QuantityChangeDetails
+                article={currentArticle}
+                isDecrease={isDecrease}
+                requiresNewLocation={requiresNewLocation}
+                selectedCause={selectedCause}
+                setSelectedCause={setSelectedCause}
+                sellPrice={values.sellPrice}
+                setSellPrice={(value) => {
+                  void setFieldValue("sellPrice", value);
+                }}
+                sellPriceError={
+                  touched.sellPrice ? errors.sellPrice : undefined
+                }
+                comment={values.transactionComment}
+                setComment={(value) => {
+                  void setFieldValue("transactionComment", value);
+                }}
+                quantityChange={quantityChange}
                 selectedLocation={selectedLocation}
                 setSelectedLocation={setSelectedLocation}
-                article={currentArticle}
                 setError={setError}
               />
             )}

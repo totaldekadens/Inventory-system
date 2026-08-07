@@ -16,6 +16,7 @@ import { scrapCauses } from "@/lib/config";
 import { useRefreshArticles } from "@/lib/useRefreshArticles";
 import { articleApi } from "@/lib/api/articles";
 import QtyFromZeroNewLocation from "./QtyFromZeroNewLocationField";
+import QuantityChangeDetails from "./QuantityChangeDetails";
 
 interface Props {
   newQty: number;
@@ -204,79 +205,28 @@ const ScrapCause = ({
           Från <strong>{oldQty} st</strong> till <strong>{newQty} st</strong>.
         </p>
 
-        {requiresNewLocation && (
-          <QtyFromZeroNewLocation
-            selectedLocation={selectedLocation}
-            setSelectedLocation={setSelectedLocation}
-            article={article}
-            setError={setError}
-          />
-        )}
-
-        {isDecrease && (
-          <div className="mt-5">
-            <div className="mb-1 font-semibold">Anledning till uttag</div>
-
-            <SelectSimple
-              value={selectedScrapCause}
-              onChange={(value) => {
-                setSelectedScrapCause(value);
-                setError("");
-              }}
-              options={scrapCauses}
-            />
-
-            {selectedScrapCause === "sold" && (
-              <>
-                <Input
-                  id="sellPrice"
-                  name="sellPrice"
-                  label="Försäljningspris per enhet"
-                  type="number"
-                  min={0}
-                  value={formik.values.sellPrice}
-                  onBlur={formik.handleBlur}
-                  onChange={(event) => {
-                    const value = event.target.value;
-
-                    void formik.setFieldValue(
-                      "sellPrice",
-                      value === "" ? "" : Number(value),
-                    );
-
-                    setError("");
-                  }}
-                  error={
-                    formik.touched.sellPrice
-                      ? formik.errors.sellPrice
-                      : undefined
-                  }
-                  placeholder="Ange försäljningspris"
-                  suffix="kr/st"
-                  required
-                />
-
-                <p className="mt-2 text-right">
-                  Totalt försäljningsvärde:{" "}
-                  <strong>
-                    {Number(formik.values.sellPrice || 0) * quantityChange} kr
-                  </strong>
-                </p>
-              </>
-            )}
-
-            <Input
-              id="scrapComment"
-              name="scrapComment"
-              label="Kommentar"
-              type="text"
-              value={formik.values.scrapComment}
-              onChange={formik.handleChange}
-              containerClassName="mt-3"
-              placeholder="Ange en kommentar till uttaget"
-            />
-          </div>
-        )}
+        <QuantityChangeDetails
+          article={article}
+          isDecrease={isDecrease}
+          requiresNewLocation={requiresNewLocation}
+          selectedCause={selectedScrapCause}
+          setSelectedCause={setSelectedScrapCause}
+          sellPrice={formik.values.sellPrice}
+          setSellPrice={(value) => {
+            void formik.setFieldValue("sellPrice", value);
+          }}
+          sellPriceError={
+            formik.touched.sellPrice ? formik.errors.sellPrice : undefined
+          }
+          comment={formik.values.scrapComment}
+          setComment={(value) => {
+            void formik.setFieldValue("scrapComment", value);
+          }}
+          quantityChange={quantityChange}
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+          setError={setError}
+        />
 
         {error && <ErrorMessage message={error} />}
 
