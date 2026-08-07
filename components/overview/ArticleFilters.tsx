@@ -40,8 +40,10 @@ const ArticleFilters = () => {
         article.description?.toLowerCase().includes(normalizedQuery) ||
         article.supplierArtno?.toLowerCase().includes(normalizedQuery) ||
         article.comment?.toLowerCase().includes(normalizedQuery) ||
-        article.title?.toLowerCase().includes(normalizedQuery);
-      formatDate(article.createdDate).toLowerCase().includes(normalizedQuery) ||
+        article.title?.toLowerCase().includes(normalizedQuery) ||
+        formatDate(article.createdDate)
+          .toLowerCase()
+          .includes(normalizedQuery) ||
         formatDate(article.lastUpdated)
           .toLowerCase()
           .includes(normalizedQuery) ||
