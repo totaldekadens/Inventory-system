@@ -20,8 +20,8 @@ export interface PopulatedArticleDocument {
   images: string[];
   purchaseValue?: number;
   comment?: string;
-  createdDate: string;
-  lastUpdated?: string;
+  createdDate: Date;
+  lastUpdated: Date;
 }
 
 interface articleContextData {

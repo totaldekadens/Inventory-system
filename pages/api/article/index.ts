@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/dbConnect";
-import { getTodayDate } from "@/lib/setDate";
 import Article, { ArticleDocument } from "@/models/ArticleModel";
 import { NextApiRequest, NextApiResponse } from "next";
 import InventoryLocation from "@/models/InventoryLocationModel";
@@ -61,7 +60,7 @@ export default async function handler(
         const newArticleNumber = Number(getHeightestArtNo[0].article.artno) + 1;
 
         newArticle.artno = newArticleNumber;
-        newArticle.createdDate = getTodayDate();
+        newArticle.createdDate = new Date();
 
         const article = await Article.create(newArticle);
 
@@ -78,7 +77,7 @@ export default async function handler(
           qty: article.qty,
           article,
           comment: "",
-          createdDate: getTodayDate(),
+          createdDate: new Date(),
         };
 
         const transactionHistory = await TransactionHistory.create(
@@ -109,7 +108,7 @@ export default async function handler(
 
         const updateArticle: ArticleDocument = new Article(req.body);
 
-        updateArticle.lastUpdated = getTodayDate();
+        updateArticle.lastUpdated = new Date();
 
         const article = await Article.findOneAndUpdate(
           { _id: req.body._id },

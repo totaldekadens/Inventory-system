@@ -5,14 +5,12 @@ import ForSaleField from "../articleForm/ForSaleField";
 import { useContext, useEffect, useState } from "react";
 import UploadToImagesToServer from "@/lib/useUploadImagesToServer";
 import { useFormik } from "formik";
-import { getTodayDate } from "@/lib/setDate";
 import UploadImagesForm from "../articleForm/UploadImagesForm";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import * as Yup from "yup";
 import { useRefreshArticles } from "@/lib/useRefreshArticles";
 import { articleApi, UpdateArticleRequest } from "@/lib/api/articles";
-import { Types } from "mongoose";
 
 export const inputClass =
   "bg-dark-50/20 focus:ring-light-300 relative block h-11 w-full rounded-md border-0 py-3 mt-2 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:z-10  focus:ring-2 focus:ring-inset text-base sm:leading-6 md:h-auto";

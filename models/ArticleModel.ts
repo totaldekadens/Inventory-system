@@ -29,8 +29,15 @@ export const ArticleSchema = new Schema<ArticleDocument>({
   ],
   purchaseValue: { type: Number },
   comment: String,
-  createdDate: { type: String, required: true },
-  lastUpdated: String,
+  createdDate: {
+    type: Date,
+    required: true,
+  },
+
+  lastUpdated: {
+    type: Date,
+    required: true,
+  },
 });
 
 export interface ArticleDocument {
@@ -48,8 +55,8 @@ export interface ArticleDocument {
   images: string[];
   purchaseValue?: number;
   comment?: string;
-  createdDate: string;
-  lastUpdated?: string;
+  createdDate: Date;
+  lastUpdated: Date;
 }
 
 export default module.exports =

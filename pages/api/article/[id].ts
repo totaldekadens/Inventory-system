@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/dbConnect";
-import { getTodayDate } from "@/lib/setDate";
 import Article from "@/models/ArticleModel";
 import InventoryLocation from "@/models/InventoryLocationModel";
 import TransactionHistory from "@/models/TransactionHistoryModel";
@@ -80,7 +79,7 @@ export default async function handler(
             qty: article.qty,
             article: article.toObject(),
             comment: "",
-            createdDate: getTodayDate(),
+            createdDate: new Date(),
           },
         ],
         { session },

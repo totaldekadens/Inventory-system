@@ -1,6 +1,5 @@
 import { scrapCauses } from "@/lib/config";
 import dbConnect from "@/lib/dbConnect";
-import { getTodayDate } from "@/lib/setDate";
 import Article from "@/models/ArticleModel";
 import InventoryLocation from "@/models/InventoryLocationModel";
 import TransactionHistory from "@/models/TransactionHistoryModel";
@@ -269,7 +268,7 @@ export default async function handler(
       throw new Error("Artikelns nya lagerplats kunde inte hittas.");
     }
 
-    const now = getTodayDate();
+    const now = new Date();
 
     const articleUpdate: Record<string, unknown> = {
       qty: newQty,

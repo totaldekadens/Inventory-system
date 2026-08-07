@@ -28,7 +28,7 @@ export interface TransactionHistoryDocument {
   toLocation?: LocationSnapshot;
   pricePerUnit?: number;
   comment?: string;
-  createdDate: string;
+  createdDate: Date;
 }
 
 const LocationSnapshotSchema = new mongoose.Schema<LocationSnapshot>(
@@ -110,7 +110,7 @@ const TransactionHistorySchema =
       comment: String,
 
       createdDate: {
-        type: String,
+        type: Date,
         required: true,
       },
 
@@ -136,7 +136,7 @@ const TransactionHistorySchema =
     comment: String,
 
     createdDate: {
-      type: String,
+      type: Date,
       required: true,
     },
   });

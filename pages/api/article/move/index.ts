@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/dbConnect";
-import { getTodayDate } from "@/lib/setDate";
 import Article, { ArticleDocument } from "@/models/ArticleModel";
 import InventoryLocation, {
   InventoryLocationDocument,
@@ -101,7 +100,7 @@ export default async function handler(
       });
     }
 
-    const createdDate = getTodayDate();
+    const createdDate = new Date();
 
     const updatedArticle = await Article.findByIdAndUpdate(
       articleId,
