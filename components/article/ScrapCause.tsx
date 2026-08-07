@@ -6,11 +6,8 @@ import {
   PopulatedArticleDocument,
   articleContext,
 } from "../context/ArticleProvider";
-import { inventoryLocationContext } from "../context/InventoryLocationProvider";
-
 import Button from "../ui/Button";
 import Input from "../ui/Input";
-import SearchSelect from "../ui/SearchSelect";
 import SelectSimple from "../ui/SelectSimple";
 
 import { ErrorMessage } from "./articleForm/NewArticle";
@@ -18,6 +15,7 @@ import { InventoryLocationDocument } from "@/models/InventoryLocationModel";
 import { scrapCauses } from "@/lib/config";
 import { useRefreshArticles } from "@/lib/useRefreshArticles";
 import { articleApi } from "@/lib/api/articles";
+import QtyFromZeroNewLocation from "./QtyFromZeroNewLocationField";
 
 interface Props {
   newQty: number;
@@ -54,7 +52,6 @@ const ScrapCause = ({
   setClose,
 }: Props) => {
   const { setSectionDirty } = useContext(articleContext);
-  const { inventoryLocations } = useContext(inventoryLocationContext);
 
   const refreshArticles = useRefreshArticles();
 
@@ -78,23 +75,6 @@ const ScrapCause = ({
   const hasSelectedValidLocation =
     selectedLocation !== null &&
     String(selectedLocation._id) !== VIRTUAL_LOCATION_ID;
-
-  const inventoryLocationOptions = inventoryLocations
-    .filter((location) => String(location._id) !== VIRTUAL_LOCATION_ID)
-    .map((location) => ({
-      key: String(location._id),
-      value: location,
-      label: location.name,
-    }));
-
-  const selectedLocationOption =
-    selectedLocation && String(selectedLocation._id) !== VIRTUAL_LOCATION_ID
-      ? {
-          key: String(selectedLocation._id),
-          value: selectedLocation,
-          label: selectedLocation.name,
-        }
-      : null;
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -225,24 +205,12 @@ const ScrapCause = ({
         </p>
 
         {requiresNewLocation && (
-          <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 p-3">
-            <p className="font-semibold">Välj ny lagerplats</p>
-
-            <p className="mt-1 text-gray-700">
-              Artikeln ligger på den virtuella lagerplatsen 00. När saldot höjs
-              behöver artikeln placeras på en riktig lagerplats.
-            </p>
-
-            <SearchSelect
-              options={inventoryLocationOptions}
-              selectedOption={selectedLocationOption}
-              onChange={(option) => {
-                setSelectedLocation(option?.value ?? null);
-                setError("");
-              }}
-              placeholder="Välj lagerplats"
-            />
-          </div>
+          <QtyFromZeroNewLocation
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+            article={article}
+            setError={setError}
+          />
         )}
 
         {isDecrease && (

@@ -1,7 +1,4 @@
-import {
-  articleContext,
-  PopulatedArticleDocument,
-} from "@/components/context/ArticleProvider";
+import { articleContext } from "@/components/context/ArticleProvider";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import SelectSimple from "@/components/ui/SelectSimple";
@@ -20,10 +17,9 @@ import { ErrorMessage } from "../articleForm/NewArticle";
 import QuantityModeField, {
   UpdateMode,
 } from "../articleForm/QuantityModeField";
-import { inventoryLocationContext } from "@/components/context/InventoryLocationProvider";
-import SearchSelect from "@/components/ui/SearchSelect";
 import { useRefreshArticles } from "@/lib/useRefreshArticles";
 import { articleApi } from "@/lib/api/articles";
+import QtyFromZeroNewLocation from "../QtyFromZeroNewLocationField";
 
 interface Props {
   selectedLocation: InventoryLocationDocument | null;
@@ -82,27 +78,10 @@ const ArticleQuantitySection = ({
   setSelectedLocation,
 }: Props) => {
   const { currentArticle, setSectionDirty } = useContext(articleContext);
-  const { inventoryLocations } = useContext(inventoryLocationContext);
   const [updateMode, setUpdateMode] = useState<UpdateMode>("set");
   const [selectedCause, setSelectedCause] = useState("repair");
   const [error, setError] = useState("");
   const refreshArticles = useRefreshArticles();
-  const inventoryLocationOptions = inventoryLocations
-    .filter((location) => String(location._id) !== VIRTUAL_LOCATION_ID)
-    .map((location) => ({
-      key: String(location._id),
-      value: location,
-      label: location.name,
-    }));
-
-  const selectedLocationOption =
-    selectedLocation && String(selectedLocation._id) !== VIRTUAL_LOCATION_ID
-      ? {
-          key: String(selectedLocation._id),
-          value: selectedLocation,
-          label: selectedLocation.name,
-        }
-      : null;
 
   const formik = useFormik<QuantityFormValues>({
     initialValues: {
@@ -345,7 +324,7 @@ const ArticleQuantitySection = ({
 
             {isDecrease && !hasInvalidQuantity && (
               <div className="mt-4">
-                <div className="mb-2 font-medium">Anledning till uttag</div>
+                <div className="mb-2 font-bold">Anledning till uttag</div>
 
                 <SelectSimple
                   value={selectedCause}
@@ -380,6 +359,7 @@ const ArticleQuantitySection = ({
                       placeholder="Ange försäljningspris"
                       suffix="kr/st (inkl. moms)"
                       required
+                      containerClassName="mt-2"
                     />
 
                     <p className="mt-2 text-right text-sm">
@@ -412,26 +392,12 @@ const ArticleQuantitySection = ({
             )}
 
             {requiresNewLocation && (
-              <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 p-3">
-                <p className="font-medium">Välj lagerplats</p>
-
-                <p className="mt-1 text-sm text-gray-700">
-                  Artikeln ligger på den virtuella lagerplatsen 00. För att höja
-                  lagersaldot behöver du välja var artikeln ska placeras.
-                </p>
-
-                <div className="mt-3">
-                  <SearchSelect
-                    options={inventoryLocationOptions}
-                    selectedOption={selectedLocationOption}
-                    onChange={(option) => {
-                      setSelectedLocation(option?.value ?? null);
-                      setError("");
-                    }}
-                    placeholder="Välj lagerplats"
-                  />
-                </div>
-              </div>
+              <QtyFromZeroNewLocation
+                selectedLocation={selectedLocation}
+                setSelectedLocation={setSelectedLocation}
+                article={currentArticle}
+                setError={setError}
+              />
             )}
           </div>
         )}
