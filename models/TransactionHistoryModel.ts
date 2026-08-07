@@ -109,16 +109,6 @@ const TransactionHistorySchema =
       purchaseValue: Number,
       comment: String,
 
-      issue: [
-        {
-          sold: Boolean,
-          qty: Number,
-          unitPrice: Number,
-          comment: String,
-          date: Date,
-        },
-      ],
-
       createdDate: {
         type: String,
         required: true,
